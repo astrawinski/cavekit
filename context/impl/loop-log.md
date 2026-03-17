@@ -85,3 +85,11 @@
 - **Files:** internal/worktree/diff.go, internal/worktree/diff_test.go
 - **Validation:** Build P, Tests 5/5 P, Acceptance 3/3
 - **Next:** T-013 — Worktree discovery
+
+### Iteration 12 — 2026-03-17
+- **Task:** T-013 — Worktree discovery (scan sibling dirs)
+- **Tier:** 1
+- **Status:** DONE
+- **Files:** internal/worktree/discover.go, internal/worktree/discover_test.go
+- **Validation:** Build P, Tests 2/2 P, Acceptance 3/3
+- **Next:** T-014 — Task status tracking from impl files
