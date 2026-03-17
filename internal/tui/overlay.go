@@ -12,6 +12,7 @@ const (
 	OverlayTextInput
 	OverlayConfirmation
 	OverlayHelp
+	OverlayFrontierPicker
 )
 
 // Overlay renders a centered modal on top of the main content.

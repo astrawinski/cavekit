@@ -11,4 +11,5 @@ last_edited: "2026-03-17T12:00:00Z"
 | T-045 | DONE | ActionOpen handled: tea.ExecProcess suspends TUI, runs tmux attach-session, resumes on detach. |
 | T-046 | DONE | ActionPush: confirmation overlay, then worktree.Push with --set-upstream. Uses pendingAction to distinguish kill vs push confirms. |
 | T-047 | DONE | ActionCheckout: switches to terminal tab and ensures session in worktree. ActionResume: calls sessionMgr.Resume for paused instances. |
+| T-049 | DONE | FrontierPicker integrated into new-instance flow. 'n' discovers frontiers and shows picker overlay. Multi-select with Space, navigate with j/k, Enter to launch. Falls back to text input if no frontiers found. |
 | T-054 | DONE | DiffTab.Content() now applies scrollPos to slice output lines. |

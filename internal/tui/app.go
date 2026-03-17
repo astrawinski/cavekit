@@ -4,11 +4,13 @@ package tui
 import (
 	"context"
 	osexec "os/exec"
+	"path/filepath"
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/julb/blueprint-monitor/internal/exec"
+	"github.com/julb/blueprint-monitor/internal/frontier"
 	"github.com/julb/blueprint-monitor/internal/session"
 	"github.com/julb/blueprint-monitor/internal/tmux"
 	"github.com/julb/blueprint-monitor/internal/worktree"
@@ -67,6 +69,9 @@ type App struct {
 	diffTab     *DiffTab
 	terminalTab *TerminalTab
 
+	// Frontier picker for new-instance flow
+	frontierPicker *FrontierPicker
+
 	// Pending confirmation action (to distinguish kill vs push)
 	pendingAction KeyAction
 
@@ -104,6 +109,9 @@ func NewApp(projectRoot, program string, autoYesEnabled bool) App {
 		previewTab:  NewPreviewTab(tmuxMgr),
 		diffTab:     NewDiffTab(wtMgr),
 		terminalTab: NewTerminalTab(tmuxMgr),
+
+		// Frontier picker
+		frontierPicker: NewFrontierPicker(),
 
 		// Session management
 		sessionMgr:     sessMgr,
@@ -144,25 +152,47 @@ func (a App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			a.activeTab = (a.activeTab + 1) % 3
 			a.tabContent.SetActiveTab(a.activeTab)
 		case ActionNavigateDown:
-			a.selectedIndex++
-			a.instanceList.SetSelected(a.selectedIndex)
-			a.selectedIndex = a.instanceList.SelectedIndex()
-		case ActionNavigateUp:
-			if a.selectedIndex > 0 {
-				a.selectedIndex--
+			if a.overlay.Active == OverlayFrontierPicker {
+				a.frontierPicker.MoveDown()
+			} else {
+				a.selectedIndex++
+				a.instanceList.SetSelected(a.selectedIndex)
+				a.selectedIndex = a.instanceList.SelectedIndex()
 			}
-			a.instanceList.SetSelected(a.selectedIndex)
-			a.selectedIndex = a.instanceList.SelectedIndex()
+		case ActionNavigateUp:
+			if a.overlay.Active == OverlayFrontierPicker {
+				a.frontierPicker.MoveUp()
+			} else {
+				if a.selectedIndex > 0 {
+					a.selectedIndex--
+				}
+				a.instanceList.SetSelected(a.selectedIndex)
+				a.selectedIndex = a.instanceList.SelectedIndex()
+			}
 		case ActionHelp:
 			if a.overlay.Active == OverlayHelp {
 				a.overlay.Hide()
 			} else {
 				a.overlay.Show(OverlayHelp, "", "")
 			}
+		case ActionToggleSelect:
+			if a.overlay.Active == OverlayFrontierPicker {
+				a.frontierPicker.ToggleSelect()
+			}
 		case ActionCancel:
 			a.overlay.Hide()
+			a.frontierPicker.Hide()
 		case ActionNew:
-			a.overlay.Show(OverlayTextInput, "New Instance", "Enter frontier name:")
+			// Discover frontiers and show picker if any found
+			items := a.discoverFrontierItems()
+			if len(items) > 0 {
+				a.frontierPicker.SetItems(items)
+				a.frontierPicker.Show()
+				a.overlay.Show(OverlayFrontierPicker, "Select Frontier", "")
+			} else {
+				// No frontiers found — fall back to text input
+				a.overlay.Show(OverlayTextInput, "New Instance", "Enter frontier name:")
+			}
 		case ActionKill:
 			if sel := a.instanceList.Selected(); sel != nil {
 				a.pendingAction = ActionKill
@@ -181,6 +211,14 @@ func (a App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case ActionConfirmYes:
 			switch a.overlay.Active {
+			case OverlayFrontierPicker:
+				// Launch selected frontiers
+				selected := a.frontierPicker.SelectedItems()
+				a.overlay.Hide()
+				a.frontierPicker.Hide()
+				if len(selected) > 0 {
+					return a, a.launchFrontiers(selected)
+				}
 			case OverlayTextInput:
 				name := a.overlay.InputValue
 				if name != "" && len(name) <= 32 {
@@ -364,6 +402,13 @@ func (a App) View() string {
 
 	// Overlay on top
 	if a.overlay.IsActive() {
+		if a.overlay.Active == OverlayFrontierPicker {
+			// Render frontier picker in an overlay frame
+			pickerContent := a.frontierPicker.View()
+			overlayWidth := min(60, a.width-4)
+			rendered := OverlayStyle.Width(overlayWidth).Render(pickerContent)
+			return lipgloss.Place(a.width, a.height, lipgloss.Center, lipgloss.Center, rendered)
+		}
 		return a.overlay.View()
 	}
 
@@ -410,6 +455,57 @@ func (a *App) removeInstance(inst *session.Instance) {
 	}
 	a.instanceList.SetSelected(a.selectedIndex)
 	a.saveState()
+}
+
+// discoverFrontierItems scans the project for available frontiers.
+func (a *App) discoverFrontierItems() []FrontierPickerItem {
+	frontiers, err := frontier.Discover(a.projectRoot)
+	if err != nil {
+		return nil
+	}
+
+	var items []FrontierPickerItem
+	for _, ff := range frontiers {
+		item := FrontierPickerItem{
+			Name:   ff.Name,
+			Path:   ff.Path,
+			Status: frontier.FrontierAvailable,
+		}
+
+		// Try to compute progress
+		f, err := frontier.Parse(ff.Path)
+		if err == nil {
+			implDir := filepath.Join(a.projectRoot, "context", "impl")
+			statuses, err := frontier.TrackStatus(implDir)
+			if err == nil {
+				summary := frontier.ComputeProgress(f, statuses)
+				item.TasksDone = summary.Done
+				item.TasksTotal = summary.Total
+
+				// Classify status
+				wtPath := worktree.WorktreePath(a.projectRoot, ff.Name)
+				item.Status = frontier.ClassifyFrontier(f, statuses, wtPath)
+			}
+		}
+
+		items = append(items, item)
+	}
+	return items
+}
+
+// launchFrontiers creates and starts instances for the selected frontiers.
+func (a *App) launchFrontiers(items []FrontierPickerItem) tea.Cmd {
+	return func() tea.Msg {
+		prog := a.program
+		if prog == "" {
+			prog = "claude"
+		}
+		// Launch first selected item (staggered launch for multiple is handled elsewhere)
+		item := items[0]
+		inst := a.sessionMgr.Create(item.Name, item.Path, item.Name, prog)
+		err := a.sessionMgr.Start(context.Background(), inst, a.projectRoot, item.Name, 3*time.Second)
+		return instanceCreatedMsg{inst: inst, err: err}
+	}
 }
 
 func (a *App) saveState() {

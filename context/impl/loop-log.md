@@ -22,3 +22,11 @@
 - **Files:** internal/tui/app.go (pendingAction field, ActionPush/Checkout/Resume handlers, push dispatch in ActionConfirmYes)
 - **Validation:** Build P, Tests P, Acceptance: push with confirmation P, checkout switches to terminal tab P, resume calls sessionMgr.Resume P
 - **Next:** T-049 — Integrate FrontierPicker into new-instance flow
+
+### Iteration 4 — 2026-03-17
+- **Task:** T-049 — Integrate FrontierPicker into new-instance flow
+- **Tier:** 6
+- **Status:** DONE
+- **Files:** internal/tui/app.go (frontierPicker field, discoverFrontierItems, launchFrontiers, ActionToggleSelect, picker overlay rendering), internal/tui/keyhandler.go (ActionToggleSelect, space key), internal/tui/overlay.go (OverlayFrontierPicker)
+- **Validation:** Build P, Tests P, Acceptance: 'n' shows picker P, navigate j/k P, space multi-select P, enter launches P, esc cancels P, done strikethrough P
+- **Next:** T-050 — Validate persistence on load

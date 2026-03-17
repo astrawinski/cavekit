@@ -23,6 +23,7 @@ const (
 	ActionScrollDown
 	ActionTextInput
 	ActionBackspace
+	ActionToggleSelect
 )
 
 // MapKey maps a key string to an action, respecting overlay state.
@@ -51,6 +52,10 @@ func MapKey(key string, overlayActive bool, overlayType OverlayType) KeyAction {
 		case "backspace":
 			if overlayType == OverlayTextInput {
 				return ActionBackspace
+			}
+		case " ":
+			if overlayType == OverlayFrontierPicker {
+				return ActionToggleSelect
 			}
 		case "j", "down":
 			return ActionNavigateDown
