@@ -93,3 +93,11 @@
 - **Files:** internal/worktree/discover.go, internal/worktree/discover_test.go
 - **Validation:** Build P, Tests 2/2 P, Acceptance 3/3
 - **Next:** T-014 — Task status tracking from impl files
+
+### Iteration 13 — 2026-03-17
+- **Task:** T-014 — Task status tracking from impl files
+- **Tier:** 1
+- **Status:** DONE
+- **Files:** internal/frontier/tracking.go, internal/frontier/tracking_test.go
+- **Validation:** Build P, Tests 6/6 P, Acceptance 5/5
+- **Next:** T-015 — Frontier status classification

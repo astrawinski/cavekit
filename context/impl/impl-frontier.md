@@ -8,3 +8,4 @@ last_edited: "2026-03-17T00:00:00Z"
 |------|--------|-------|
 | T-005 | DONE | Frontier discovery in context/sites/ and context/frontiers/. Canonical name derivation matching bash sed chain. |
 | T-006 | DONE | Frontier markdown parsing: task IDs, tier structure, table rows with blockedBy/effort. internal/frontier/parser.go. |
+| T-014 | DONE | Task status tracking from impl-*.md files with word boundary matching. ComputeProgress for aggregates. internal/frontier/tracking.go. |
