@@ -1,5 +1,5 @@
-// Package frontier handles frontier file discovery, parsing, and task tracking.
-package frontier
+// Package site handles site file discovery, parsing, and task tracking.
+package site
 
 import (
 	"os"
@@ -8,9 +8,9 @@ import (
 	"strings"
 )
 
-// DeriveName applies the canonical name derivation from a frontier filename.
+// DeriveName applies the canonical name derivation from a site filename.
 // Mirrors the bash sed chain: strip prefixes (plan-, build-site-, feature-),
-// strip -?frontier-?, strip leading/trailing hyphens. Empty → "execute".
+// strip -?frontier-? or -?site-?, strip leading/trailing hyphens. Empty → "execute".
 func DeriveName(filename string) string {
 	// Strip extension
 	name := strings.TrimSuffix(filename, filepath.Ext(filename))
@@ -20,9 +20,11 @@ func DeriveName(filename string) string {
 		name = strings.TrimPrefix(name, prefix)
 	}
 
-	// Strip frontier with optional surrounding hyphens
-	re := regexp.MustCompile(`-?frontier-?`)
-	name = re.ReplaceAllString(name, "")
+	// Strip frontier or site with optional surrounding hyphens
+	reFrontier := regexp.MustCompile(`-?frontier-?`)
+	name = reFrontier.ReplaceAllString(name, "")
+	reSite := regexp.MustCompile(`-?site-?`)
+	name = reSite.ReplaceAllString(name, "")
 
 	// Strip leading/trailing hyphens
 	name = strings.Trim(name, "-")
@@ -33,21 +35,21 @@ func DeriveName(filename string) string {
 	return name
 }
 
-// FrontierFile represents a discovered frontier file.
-type FrontierFile struct {
+// SiteFile represents a discovered site file.
+type SiteFile struct {
 	Path string // Full path to the file
 	Name string // Derived name (used for worktree/branch naming)
 }
 
-// Discover scans context/sites/ (or context/frontiers/) for frontier markdown files.
+// Discover scans context/sites/ (or context/frontiers/) for site markdown files.
 // Excludes archive/ subdirectory.
-func Discover(projectRoot string) ([]FrontierFile, error) {
-	var results []FrontierFile
+func Discover(projectRoot string) ([]SiteFile, error) {
+	var results []SiteFile
 
 	// Try both directory names (sites is the newer convention, frontiers is legacy)
 	for _, dir := range []string{"context/sites", "context/frontiers"} {
-		frontierDir := filepath.Join(projectRoot, dir)
-		entries, err := os.ReadDir(frontierDir)
+		siteDir := filepath.Join(projectRoot, dir)
+		entries, err := os.ReadDir(siteDir)
 		if err != nil {
 			if os.IsNotExist(err) {
 				continue
@@ -69,8 +71,8 @@ func Discover(projectRoot string) ([]FrontierFile, error) {
 				continue
 			}
 
-			results = append(results, FrontierFile{
-				Path: filepath.Join(frontierDir, name),
+			results = append(results, SiteFile{
+				Path: filepath.Join(siteDir, name),
 				Name: DeriveName(name),
 			})
 		}

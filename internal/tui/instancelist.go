@@ -12,6 +12,7 @@ import (
 type InstanceList struct {
 	instances     []*session.Instance
 	selectedIndex int
+	scrollOffset  int
 	width         int
 	height        int
 }
@@ -35,6 +36,7 @@ func (l *InstanceList) SetSelected(index int) {
 		index = len(l.instances) - 1
 	}
 	l.selectedIndex = index
+	l.ensureVisible()
 }
 
 // Selected returns the currently selected instance, or nil.
@@ -59,59 +61,148 @@ func (l *InstanceList) SetSize(w, h int) {
 // View renders the instance list.
 func (l *InstanceList) View() string {
 	if len(l.instances) == 0 {
-		return lipgloss.NewStyle().
-			Foreground(ColorMuted).
-			Render("No instances.\n\nPress 'n' to create one.")
+		return l.renderEmptyState()
 	}
 
+	visibleRows := l.visibleRowCount()
 	var rows []string
-	for i, inst := range l.instances {
-		row := l.renderRow(i, inst, i == l.selectedIndex)
+
+	// Scroll indicator top
+	if l.scrollOffset > 0 {
+		rows = append(rows, ScrollIndicatorStyle.Width(l.width).Render("▲"))
+	}
+
+	endIdx := min(l.scrollOffset+visibleRows, len(l.instances))
+	for i := l.scrollOffset; i < endIdx; i++ {
+		row := l.renderRow(l.instances[i], i == l.selectedIndex)
 		rows = append(rows, row)
+	}
+
+	// Scroll indicator bottom
+	if endIdx < len(l.instances) {
+		rows = append(rows, ScrollIndicatorStyle.Width(l.width).Render("▼"))
 	}
 
 	return strings.Join(rows, "\n")
 }
 
-func (l *InstanceList) renderRow(index int, inst *session.Instance, selected bool) string {
+func (l *InstanceList) renderEmptyState() string {
+	content := lipgloss.NewStyle().Foreground(ColorMuted).Bold(true).Render("No agents yet") + "\n\n" +
+		lipgloss.NewStyle().Foreground(ColorSecondary).Render("Press ") +
+		MenuKeyStyle.Render("n") +
+		lipgloss.NewStyle().Foreground(ColorSecondary).Render(" to launch one")
+
+	return lipgloss.Place(l.width, l.height, lipgloss.Center, lipgloss.Center, content)
+}
+
+func (l *InstanceList) renderRow(inst *session.Instance, selected bool) string {
+	w := l.width
+	if w < 10 {
+		w = 10
+	}
+
 	// Status indicator
-	var statusIcon string
-	switch inst.Status {
-	case session.StatusRunning:
-		statusIcon = StatusRunning.String()
-	case session.StatusReady:
-		statusIcon = StatusReady.String()
-	case session.StatusLoading:
-		statusIcon = StatusLoading.String()
-	case session.StatusPaused:
-		statusIcon = StatusPaused.String()
-	case session.StatusDone:
-		statusIcon = StatusDone.String()
-	}
+	statusIcon := statusIconFor(inst.Status)
 
-	// Progress
-	progress := ""
+	// Line 1: border + status + title (left) + progress fraction (right)
+	title := inst.Title
+	progressStr := ""
 	if inst.TasksTotal > 0 {
-		progress = fmt.Sprintf(" %d/%d", inst.TasksDone, inst.TasksTotal)
+		progressStr = fmt.Sprintf("%d/%d", inst.TasksDone, inst.TasksTotal)
 	}
 
-	// Diff stats
+	titleMaxW := w - lipgloss.Width(statusIcon) - lipgloss.Width(progressStr) - 5
+	if titleMaxW < 3 {
+		titleMaxW = 3
+	}
+	if len(title) > titleMaxW {
+		title = title[:titleMaxW]
+	}
+
+	gap1 := max(w-3-lipgloss.Width(statusIcon)-len(title)-lipgloss.Width(progressStr), 0)
+
+	line1 := fmt.Sprintf(" %s %s%s%s", statusIcon, title, spaces(gap1), progressStr)
+
+	// Line 2: progress bar + diff stats + branch
+	barWidth := min(15, w/3)
+	bar := ""
+	if inst.TasksTotal > 0 {
+		bar = RenderProgressBar(inst.TasksDone, inst.TasksTotal, barWidth)
+	} else {
+		bar = strings.Repeat("░", barWidth)
+	}
+
 	diffStr := ""
 	if inst.DiffAdded > 0 || inst.DiffRemoved > 0 {
-		diffStr = fmt.Sprintf(" +%d/-%d", inst.DiffAdded, inst.DiffRemoved)
+		diffStr = fmt.Sprintf("+%d/-%d", inst.DiffAdded, inst.DiffRemoved)
 	}
 
-	// Branch name
 	branchStr := ""
 	if inst.BranchName != "" {
-		branchStr = " " + inst.BranchName
+		branchStr = inst.BranchName
 	}
 
-	// Build row text
-	text := fmt.Sprintf(" %d %s %s%s%s%s", index+1, statusIcon, inst.Title, progress, diffStr, branchStr)
+	line2Parts := " " + bar
+	if diffStr != "" {
+		line2Parts += "  " + diffStr
+	}
+	if branchStr != "" {
+		remaining := w - lipgloss.Width(line2Parts) - 2
+		if remaining > 3 {
+			if len(branchStr) > remaining {
+				branchStr = branchStr[:remaining-1] + "…"
+			}
+			line2Parts += "  " + lipgloss.NewStyle().Foreground(ColorMuted).Render(branchStr)
+		}
+	}
 
 	if selected {
-		return SelectedItemStyle.Width(l.width).Render(text)
+		border := InstanceSelectedBorder.String()
+		l1 := SelectedItemStyle.Width(w - 1).Render(line1)
+		l2 := SelectedItemStyle.Width(w - 1).Render(line2Parts)
+		return border + l1 + "\n" + border + l2
 	}
-	return NormalItemStyle.Width(l.width).Render(text)
+
+	border := InstanceNormalBorder.String()
+	l1 := NormalItemStyle.Width(w - 1).Render(line1)
+	l2 := NormalItemStyle.Width(w - 1).Render(line2Parts)
+	return border + l1 + "\n" + border + l2
+}
+
+func (l *InstanceList) visibleRowCount() int {
+	// Each row takes 2 lines
+	if l.height <= 0 {
+		return 0
+	}
+	return max(l.height/2, 1)
+}
+
+func (l *InstanceList) ensureVisible() {
+	visible := l.visibleRowCount()
+	if visible <= 0 {
+		return
+	}
+	if l.selectedIndex < l.scrollOffset {
+		l.scrollOffset = l.selectedIndex
+	}
+	if l.selectedIndex >= l.scrollOffset+visible {
+		l.scrollOffset = l.selectedIndex - visible + 1
+	}
+}
+
+func statusIconFor(status session.Status) string {
+	switch status {
+	case session.StatusRunning:
+		return StatusRunning.String()
+	case session.StatusReady:
+		return StatusReady.String()
+	case session.StatusLoading:
+		return StatusLoading.String()
+	case session.StatusPaused:
+		return StatusPaused.String()
+	case session.StatusDone:
+		return StatusDone.String()
+	default:
+		return "?"
+	}
 }

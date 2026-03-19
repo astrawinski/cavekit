@@ -4,83 +4,83 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/julb/blueprint-monitor/internal/frontier"
+	"github.com/julb/blueprint-monitor/internal/site"
 )
 
-// FrontierPicker shows available frontiers for selection.
-type FrontierPicker struct {
-	items         []FrontierPickerItem
+// SitePicker shows available sites for selection.
+type SitePicker struct {
+	items         []SitePickerItem
 	selectedIndex int
 	multiSelect   map[int]bool
 	visible       bool
 }
 
-// FrontierPickerItem represents a selectable frontier.
-type FrontierPickerItem struct {
+// SitePickerItem represents a selectable site.
+type SitePickerItem struct {
 	Name      string
 	Path      string
-	Status    frontier.FrontierStatus
+	Status    site.SiteStatus
 	TasksDone int
 	TasksTotal int
 }
 
-// NewFrontierPicker creates a frontier picker.
-func NewFrontierPicker() *FrontierPicker {
-	return &FrontierPicker{
+// NewSitePicker creates a site picker.
+func NewSitePicker() *SitePicker {
+	return &SitePicker{
 		multiSelect: make(map[int]bool),
 	}
 }
 
 // SetItems populates the picker.
-func (p *FrontierPicker) SetItems(items []FrontierPickerItem) {
+func (p *SitePicker) SetItems(items []SitePickerItem) {
 	p.items = items
 	p.selectedIndex = 0
 	p.multiSelect = make(map[int]bool)
 }
 
 // Show makes the picker visible.
-func (p *FrontierPicker) Show() {
+func (p *SitePicker) Show() {
 	p.visible = true
 }
 
 // Hide hides the picker.
-func (p *FrontierPicker) Hide() {
+func (p *SitePicker) Hide() {
 	p.visible = false
 }
 
 // IsVisible returns whether the picker is showing.
-func (p *FrontierPicker) IsVisible() bool {
+func (p *SitePicker) IsVisible() bool {
 	return p.visible
 }
 
 // MoveDown moves selection down.
-func (p *FrontierPicker) MoveDown() {
+func (p *SitePicker) MoveDown() {
 	if p.selectedIndex < len(p.items)-1 {
 		p.selectedIndex++
 	}
 }
 
 // MoveUp moves selection up.
-func (p *FrontierPicker) MoveUp() {
+func (p *SitePicker) MoveUp() {
 	if p.selectedIndex > 0 {
 		p.selectedIndex--
 	}
 }
 
 // ToggleSelect toggles multi-select on current item.
-func (p *FrontierPicker) ToggleSelect() {
+func (p *SitePicker) ToggleSelect() {
 	if p.selectedIndex < len(p.items) {
 		item := p.items[p.selectedIndex]
-		if item.Status == frontier.FrontierDone {
-			return // Can't select done frontiers
+		if item.Status == site.SiteDone {
+			return // Can't select done sites
 		}
 		p.multiSelect[p.selectedIndex] = !p.multiSelect[p.selectedIndex]
 	}
 }
 
-// SelectedItems returns the selected frontiers.
-func (p *FrontierPicker) SelectedItems() []FrontierPickerItem {
-	var result []FrontierPickerItem
+// SelectedItems returns the selected sites.
+func (p *SitePicker) SelectedItems() []SitePickerItem {
+	var result []SitePickerItem
 	if len(p.multiSelect) == 0 {
 		// Single select mode: return current
 		if p.selectedIndex < len(p.items) {
@@ -97,13 +97,13 @@ func (p *FrontierPicker) SelectedItems() []FrontierPickerItem {
 }
 
 // View renders the picker.
-func (p *FrontierPicker) View() string {
+func (p *SitePicker) View() string {
 	if !p.visible || len(p.items) == 0 {
 		return ""
 	}
 
 	var rows []string
-	rows = append(rows, OverlayTitleStyle.Render("Select Frontier")+"\n")
+	rows = append(rows, OverlayTitleStyle.Render("Select Site")+"\n")
 
 	for i, item := range p.items {
 		marker := "  "
@@ -118,7 +118,7 @@ func (p *FrontierPicker) View() string {
 		progress := fmt.Sprintf("%d/%d", item.TasksDone, item.TasksTotal)
 
 		style := NormalItemStyle
-		if item.Status == frontier.FrontierDone {
+		if item.Status == site.SiteDone {
 			style = style.Strikethrough(true).Foreground(ColorMuted)
 		}
 

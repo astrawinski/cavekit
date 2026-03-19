@@ -12,7 +12,7 @@ import (
 
 const (
 	// SessionPrefix is prepended to all Blueprint tmux session names.
-	SessionPrefix = "sdd_"
+	SessionPrefix = "bp_"
 	historyLimit  = "10000"
 )
 
@@ -83,7 +83,7 @@ func (m *Manager) Kill(ctx context.Context, name string) error {
 	return nil
 }
 
-// ListSessions returns all Blueprint tmux sessions (those with the sdd_ prefix).
+// ListSessions returns all Blueprint tmux sessions (those with the bp_ prefix).
 func (m *Manager) ListSessions(ctx context.Context) ([]string, error) {
 	res, err := m.exec.Run(ctx, "tmux", "list-sessions", "-F", "#{session_name}")
 	if err != nil {

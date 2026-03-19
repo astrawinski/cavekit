@@ -12,11 +12,11 @@ func TestSanitizeName(t *testing.T) {
 		input string
 		want  string
 	}{
-		{"auth", "sdd_auth"},
-		{"my session", "sdd_my_session"},
-		{"build.site", "sdd_build_site"},
-		{"sdd_already", "sdd_already"},
-		{"host:port", "sdd_host_port"},
+		{"auth", "bp_auth"},
+		{"my session", "bp_my_session"},
+		{"build.site", "bp_build_site"},
+		{"bp_already", "bp_already"},
+		{"host:port", "bp_host_port"},
 	}
 	for _, tt := range tests {
 		if got := SanitizeName(tt.input); got != tt.want {
@@ -50,12 +50,12 @@ func TestManager_CreateSession(t *testing.T) {
 	// Verify session name is sanitized
 	found := false
 	for _, arg := range c.Args {
-		if arg == "sdd_test" {
+		if arg == "bp_test" {
 			found = true
 		}
 	}
 	if !found {
-		t.Errorf("session name should be sdd_test, args: %v", c.Args)
+		t.Errorf("session name should be bp_test, args: %v", c.Args)
 	}
 }
 
@@ -106,7 +106,7 @@ func TestManager_ListSessions(t *testing.T) {
 	mock := exec.NewMockExecutor()
 	mock.OnCommand("tmux", func(c exec.Call) (exec.Result, error) {
 		return exec.Result{
-			Stdout:   "sdd_auth\nsdd_build\nother_session\n",
+			Stdout:   "bp_auth\nbp_build\nother_session\n",
 			ExitCode: 0,
 		}, nil
 	})
@@ -119,8 +119,8 @@ func TestManager_ListSessions(t *testing.T) {
 	if len(sessions) != 2 {
 		t.Fatalf("got %d sessions, want 2", len(sessions))
 	}
-	if sessions[0] != "sdd_auth" || sessions[1] != "sdd_build" {
-		t.Errorf("sessions = %v, want [sdd_auth sdd_build]", sessions)
+	if sessions[0] != "bp_auth" || sessions[1] != "bp_build" {
+		t.Errorf("sessions = %v, want [bp_auth bp_build]", sessions)
 	}
 }
 

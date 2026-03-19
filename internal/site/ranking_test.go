@@ -1,4 +1,4 @@
-package frontier
+package site
 
 import (
 	"strings"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestRankAndSelect_SingleCandidate(t *testing.T) {
-	candidates := []FrontierFile{
+	candidates := []SiteFile{
 		{Path: "/path/build-site.md", Name: "build"},
 	}
 
@@ -23,7 +23,7 @@ func TestRankAndSelect_SingleCandidate(t *testing.T) {
 }
 
 func TestRankAndSelect_ActiveLoopWins(t *testing.T) {
-	candidates := []FrontierFile{
+	candidates := []SiteFile{
 		{Path: "/a", Name: "alpha"},
 		{Path: "/b", Name: "beta"},
 	}
@@ -52,7 +52,7 @@ func TestRankAndSelect_ActiveLoopWins(t *testing.T) {
 }
 
 func TestRankAndSelect_AlphabeticalTieBreak(t *testing.T) {
-	candidates := []FrontierFile{
+	candidates := []SiteFile{
 		{Path: "/c", Name: "charlie"},
 		{Path: "/a", Name: "alpha"},
 		{Path: "/b", Name: "beta"},
@@ -76,7 +76,7 @@ func TestRankAndSelect_AlphabeticalTieBreak(t *testing.T) {
 }
 
 func TestRankAndSelect_FilterMatch(t *testing.T) {
-	candidates := []FrontierFile{
+	candidates := []SiteFile{
 		{Path: "/a", Name: "auth"},
 		{Path: "/b", Name: "payments"},
 	}
@@ -94,7 +94,7 @@ func TestRankAndSelect_FilterMatch(t *testing.T) {
 }
 
 func TestRankAndSelect_FilterNoMatch(t *testing.T) {
-	candidates := []FrontierFile{
+	candidates := []SiteFile{
 		{Path: "/a", Name: "auth"},
 	}
 
@@ -109,8 +109,8 @@ func TestRankAndSelect_FilterNoMatch(t *testing.T) {
 
 func TestFormatCandidates(t *testing.T) {
 	ranked := []RankedCandidate{
-		{File: FrontierFile{Name: "auth"}, Score: 3, Status: FrontierInProgress, Selected: true},
-		{File: FrontierFile{Name: "payments"}, Score: 2, Status: FrontierAvailable},
+		{File: SiteFile{Name: "auth"}, Score: 3, Status: SiteInProgress, Selected: true},
+		{File: SiteFile{Name: "payments"}, Score: 2, Status: SiteAvailable},
 	}
 
 	output := FormatCandidates(ranked)

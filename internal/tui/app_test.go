@@ -117,11 +117,9 @@ func TestApp_View_AfterResize(t *testing.T) {
 	updated := model.(App)
 	view := updated.View()
 
-	if !strings.Contains(view, "Preview") {
-		t.Error("view should contain Preview tab")
-	}
-	if !strings.Contains(view, "Diff") {
-		t.Error("view should contain Diff tab")
+	// With no instances selected, the right panel shows the dashboard
+	if !strings.Contains(view, "Blueprint") {
+		t.Error("view should contain Blueprint header or dashboard title")
 	}
 	if !strings.Contains(view, "quit") {
 		t.Error("view should contain menu with quit")

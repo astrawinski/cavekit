@@ -23,7 +23,7 @@ func NewTerminalTab(tmuxMgr *tmux.Manager) *TerminalTab {
 
 // EnsureSession creates a terminal session for the instance if it doesn't exist.
 func (t *TerminalTab) EnsureSession(ctx context.Context, instanceTitle, worktreePath string) string {
-	sessionName := "sdd_term_" + instanceTitle
+	sessionName := "bp_term_" + instanceTitle
 
 	if _, exists := t.sessions[instanceTitle]; !exists {
 		// Create the terminal session

@@ -1,4 +1,4 @@
-package frontier
+package site
 
 import (
 	"os"
@@ -6,11 +6,11 @@ import (
 	"testing"
 )
 
-const testFrontier = `---
+const testSite = `---
 created: "2026-03-17"
 ---
 
-# Test Frontier
+# Test Site
 
 ## Tier 0 — No Dependencies
 
@@ -32,27 +32,27 @@ created: "2026-03-17"
 func TestParse(t *testing.T) {
 	tmp := t.TempDir()
 	path := filepath.Join(tmp, "build-site.md")
-	os.WriteFile(path, []byte(testFrontier), 0644)
+	os.WriteFile(path, []byte(testSite), 0644)
 
-	f, err := Parse(path)
+	s, err := Parse(path)
 	if err != nil {
 		t.Fatalf("Parse: %v", err)
 	}
 
-	if f.TotalTasks() != 4 {
-		t.Errorf("TotalTasks() = %d, want 4", f.TotalTasks())
+	if s.TotalTasks() != 4 {
+		t.Errorf("TotalTasks() = %d, want 4", s.TotalTasks())
 	}
 
 	// Check tier counts
-	if f.TierCounts[0] != 2 {
-		t.Errorf("Tier 0 count = %d, want 2", f.TierCounts[0])
+	if s.TierCounts[0] != 2 {
+		t.Errorf("Tier 0 count = %d, want 2", s.TierCounts[0])
 	}
-	if f.TierCounts[1] != 2 {
-		t.Errorf("Tier 1 count = %d, want 2", f.TierCounts[1])
+	if s.TierCounts[1] != 2 {
+		t.Errorf("Tier 1 count = %d, want 2", s.TierCounts[1])
 	}
 
 	// Check T-001
-	t001 := f.TaskByID("T-001")
+	t001 := s.TaskByID("T-001")
 	if t001 == nil {
 		t.Fatal("T-001 not found")
 	}
@@ -76,7 +76,7 @@ func TestParse(t *testing.T) {
 	}
 
 	// Check T-010 (has blockedBy)
-	t010 := f.TaskByID("T-010")
+	t010 := s.TaskByID("T-010")
 	if t010 == nil {
 		t.Fatal("T-010 not found")
 	}
@@ -112,8 +112,8 @@ func TestParse_TaskIDPattern(t *testing.T) {
 }
 
 func TestTaskByID_NotFound(t *testing.T) {
-	f := &Frontier{}
-	if f.TaskByID("T-999") != nil {
+	s := &Site{}
+	if s.TaskByID("T-999") != nil {
 		t.Error("TaskByID should return nil for non-existent task")
 	}
 }

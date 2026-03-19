@@ -1,6 +1,6 @@
 ---
 created: "2026-03-17T00:00:00Z"
-last_edited: "2026-03-17T00:00:00Z"
+last_edited: "2026-03-19T00:00:00Z"
 ---
 
 # Spec: Git Worktree Management
@@ -32,7 +32,7 @@ Creating and managing git worktrees for isolated agent execution. Each agent get
 **Description:** Find all existing Blueprint worktrees for the current project.
 **Acceptance Criteria:**
 - [ ] Scans `{project_root}/../{project_name}-blueprint-*` directories
-- [ ] Returns worktree path, branch name, and derived frontier name for each
+- [ ] Returns worktree path, branch name, and derived site name for each
 - [ ] Detects if a worktree has an active Ralph Loop (`.claude/ralph-loop.local.md` exists)
 **Dependencies:** R1
 
@@ -51,4 +51,4 @@ Creating and managing git worktrees for isolated agent execution. Each agent get
 
 ## Cross-References
 - See also: blueprint-session.md (creates worktrees per session)
-- See also: blueprint-site.md (frontier name drives worktree naming)
+- See also: blueprint-site.md (site name drives worktree naming)

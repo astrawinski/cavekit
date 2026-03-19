@@ -1,4 +1,4 @@
-package frontier
+package site
 
 import (
 	"bufio"
@@ -11,7 +11,7 @@ import (
 // TaskID pattern: T-001, T-AUTH-001, etc.
 var taskIDPattern = regexp.MustCompile(`T-([A-Za-z0-9]+-)*[A-Za-z0-9]+`)
 
-// Task represents a single task from a frontier file.
+// Task represents a single task from a site file.
 type Task struct {
 	ID        string
 	Title     string
@@ -22,8 +22,8 @@ type Task struct {
 	Tier      int
 }
 
-// Frontier represents a parsed frontier file.
-type Frontier struct {
+// Site represents a parsed site file.
+type Site struct {
 	Path       string
 	Name       string
 	Tasks      []Task
@@ -31,29 +31,29 @@ type Frontier struct {
 }
 
 // TotalTasks returns the total number of tasks.
-func (f *Frontier) TotalTasks() int {
-	return len(f.Tasks)
+func (s *Site) TotalTasks() int {
+	return len(s.Tasks)
 }
 
 // TaskByID returns a task by its ID, or nil if not found.
-func (f *Frontier) TaskByID(id string) *Task {
-	for i := range f.Tasks {
-		if f.Tasks[i].ID == id {
-			return &f.Tasks[i]
+func (s *Site) TaskByID(id string) *Task {
+	for i := range s.Tasks {
+		if s.Tasks[i].ID == id {
+			return &s.Tasks[i]
 		}
 	}
 	return nil
 }
 
-// Parse reads and parses a frontier markdown file.
-func Parse(path string) (*Frontier, error) {
+// Parse reads and parses a site markdown file.
+func Parse(path string) (*Site, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	f := &Frontier{
+	s := &Site{
 		Path:       path,
 		TierCounts: make(map[int]int),
 	}
@@ -78,13 +78,13 @@ func Parse(path string) (*Frontier, error) {
 		if strings.HasPrefix(line, "| T-") {
 			task := parseTableRow(line, currentTier)
 			if task != nil {
-				f.Tasks = append(f.Tasks, *task)
-				f.TierCounts[currentTier]++
+				s.Tasks = append(s.Tasks, *task)
+				s.TierCounts[currentTier]++
 			}
 		}
 	}
 
-	return f, scanner.Err()
+	return s, scanner.Err()
 }
 
 func parseTableRow(line string, tier int) *Task {

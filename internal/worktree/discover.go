@@ -10,7 +10,7 @@ import (
 type DiscoveredWorktree struct {
 	Path         string // Full worktree path
 	Branch       string // Branch name (blueprint/xxx)
-	FrontierName string // Derived frontier name
+	SiteName string // Derived site name
 	HasRalphLoop bool   // .claude/ralph-loop.local.md exists
 }
 
@@ -36,7 +36,7 @@ func DiscoverAll(projectRoot string) ([]DiscoveredWorktree, error) {
 			continue
 		}
 
-		frontierName := strings.TrimPrefix(name, pattern)
+		siteName := strings.TrimPrefix(name, pattern)
 		wtPath := filepath.Join(parentDir, name)
 
 		// Check for active Ralph Loop
@@ -45,8 +45,8 @@ func DiscoverAll(projectRoot string) ([]DiscoveredWorktree, error) {
 
 		results = append(results, DiscoveredWorktree{
 			Path:         wtPath,
-			Branch:       BranchName(frontierName),
-			FrontierName: frontierName,
+			Branch:       BranchName(siteName),
+			SiteName: siteName,
 			HasRalphLoop: hasRalphLoop,
 		})
 	}

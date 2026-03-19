@@ -1,4 +1,4 @@
-package frontier
+package site
 
 import (
 	"os"
@@ -88,7 +88,7 @@ func TestTrackStatus_MultipleDirs(t *testing.T) {
 }
 
 func TestComputeProgress(t *testing.T) {
-	frontier := &Frontier{
+	s := &Site{
 		Tasks: []Task{
 			{ID: "T-001"},
 			{ID: "T-002"},
@@ -104,7 +104,7 @@ func TestComputeProgress(t *testing.T) {
 		"T-003": TaskInProgress,
 	}
 
-	summary := ComputeProgress(frontier, statuses)
+	summary := ComputeProgress(s, statuses)
 	if summary.Total != 5 {
 		t.Errorf("Total = %d, want 5", summary.Total)
 	}

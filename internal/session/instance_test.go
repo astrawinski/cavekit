@@ -30,7 +30,7 @@ func TestStatus_Icon(t *testing.T) {
 }
 
 func TestNewInstance(t *testing.T) {
-	inst := NewInstance("auth", "/path/to/frontier.md", "claude")
+	inst := NewInstance("auth", "/path/to/site.md", "claude")
 	if inst.Title != "auth" {
 		t.Errorf("Title = %q, want %q", inst.Title, "auth")
 	}

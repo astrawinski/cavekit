@@ -11,8 +11,8 @@ func TestInstanceList_Empty(t *testing.T) {
 	list := NewInstanceList()
 	list.SetSize(40, 20)
 	view := list.View()
-	if !strings.Contains(view, "No instances") {
-		t.Errorf("empty list should say no instances: %q", view)
+	if !strings.Contains(view, "No agents yet") {
+		t.Errorf("empty list should say no agents: %q", view)
 	}
 }
 
@@ -84,7 +84,7 @@ func TestTabContent_EmptyContent(t *testing.T) {
 	tc.SetActiveTab(TabDiff)
 
 	view := tc.View()
-	if !strings.Contains(view, "No diff available") {
+	if !strings.Contains(view, "No changes yet") {
 		t.Error("should show default diff message")
 	}
 }
@@ -120,8 +120,8 @@ func TestOverlay_Help(t *testing.T) {
 		t.Error("should be active")
 	}
 	view := o.View()
-	if !strings.Contains(view, "Keyboard Shortcuts") {
-		t.Error("help overlay should contain Keyboard Shortcuts")
+	if !strings.Contains(view, "Navigation") {
+		t.Error("help overlay should contain Navigation")
 	}
 }
 

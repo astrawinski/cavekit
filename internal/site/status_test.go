@@ -1,4 +1,4 @@
-package frontier
+package site
 
 import (
 	"os"
@@ -6,8 +6,8 @@ import (
 	"testing"
 )
 
-func TestClassifyFrontier_Done(t *testing.T) {
-	f := &Frontier{
+func TestClassifySite_Done(t *testing.T) {
+	s := &Site{
 		Tasks: []Task{{ID: "T-001"}, {ID: "T-002"}},
 	}
 	statuses := TaskStatusMap{
@@ -15,64 +15,64 @@ func TestClassifyFrontier_Done(t *testing.T) {
 		"T-002": TaskDone,
 	}
 
-	status := ClassifyFrontier(f, statuses, "")
-	if status != FrontierDone {
+	status := ClassifySite(s, statuses, "")
+	if status != SiteDone {
 		t.Errorf("should be Done, got %v", status)
 	}
 }
 
-func TestClassifyFrontier_InProgress(t *testing.T) {
+func TestClassifySite_InProgress(t *testing.T) {
 	tmp := t.TempDir()
 	os.MkdirAll(filepath.Join(tmp, ".claude"), 0755)
 	os.WriteFile(filepath.Join(tmp, ".claude", "ralph-loop.local.md"), []byte("active"), 0644)
 
-	f := &Frontier{
+	s := &Site{
 		Tasks: []Task{{ID: "T-001"}, {ID: "T-002"}},
 	}
 	statuses := TaskStatusMap{
 		"T-001": TaskDone,
 	}
 
-	status := ClassifyFrontier(f, statuses, tmp)
-	if status != FrontierInProgress {
+	status := ClassifySite(s, statuses, tmp)
+	if status != SiteInProgress {
 		t.Errorf("should be InProgress, got %v", status)
 	}
 }
 
-func TestClassifyFrontier_Available(t *testing.T) {
-	f := &Frontier{
+func TestClassifySite_Available(t *testing.T) {
+	s := &Site{
 		Tasks: []Task{{ID: "T-001"}, {ID: "T-002"}},
 	}
 	statuses := TaskStatusMap{
 		"T-001": TaskDone,
 	}
 
-	status := ClassifyFrontier(f, statuses, "")
-	if status != FrontierAvailable {
+	status := ClassifySite(s, statuses, "")
+	if status != SiteAvailable {
 		t.Errorf("should be Available, got %v", status)
 	}
 }
 
-func TestFrontierStatus_String(t *testing.T) {
-	if FrontierDone.String() != "done" {
-		t.Errorf("FrontierDone.String() = %q", FrontierDone.String())
+func TestSiteStatus_String(t *testing.T) {
+	if SiteDone.String() != "done" {
+		t.Errorf("SiteDone.String() = %q", SiteDone.String())
 	}
-	if FrontierInProgress.String() != "in-progress" {
-		t.Errorf("FrontierInProgress.String() = %q", FrontierInProgress.String())
+	if SiteInProgress.String() != "in-progress" {
+		t.Errorf("SiteInProgress.String() = %q", SiteInProgress.String())
 	}
-	if FrontierAvailable.String() != "available" {
-		t.Errorf("FrontierAvailable.String() = %q", FrontierAvailable.String())
+	if SiteAvailable.String() != "available" {
+		t.Errorf("SiteAvailable.String() = %q", SiteAvailable.String())
 	}
 }
 
-func TestFrontierStatus_Icon(t *testing.T) {
-	if FrontierDone.Icon() != "✓" {
-		t.Errorf("FrontierDone.Icon() = %q", FrontierDone.Icon())
+func TestSiteStatus_Icon(t *testing.T) {
+	if SiteDone.Icon() != "✓" {
+		t.Errorf("SiteDone.Icon() = %q", SiteDone.Icon())
 	}
-	if FrontierInProgress.Icon() != "⟳" {
-		t.Errorf("FrontierInProgress.Icon() = %q", FrontierInProgress.Icon())
+	if SiteInProgress.Icon() != "⟳" {
+		t.Errorf("SiteInProgress.Icon() = %q", SiteInProgress.Icon())
 	}
-	if FrontierAvailable.Icon() != "·" {
-		t.Errorf("FrontierAvailable.Icon() = %q", FrontierAvailable.Icon())
+	if SiteAvailable.Icon() != "·" {
+		t.Errorf("SiteAvailable.Icon() = %q", SiteAvailable.Icon())
 	}
 }

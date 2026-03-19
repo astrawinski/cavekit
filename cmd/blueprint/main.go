@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/julb/blueprint-monitor/internal/exec"
-	"github.com/julb/blueprint-monitor/internal/frontier"
+	"github.com/julb/blueprint-monitor/internal/site"
 	"github.com/julb/blueprint-monitor/internal/session"
 	"github.com/julb/blueprint-monitor/internal/tmux"
 	"github.com/julb/blueprint-monitor/internal/tui"
@@ -110,36 +110,36 @@ func runStatus() {
 		// Try to compute progress
 		done, total := computeWorktreeProgress(wt.Path)
 		if total > 0 {
-			fmt.Printf("%s %s: %d/%d tasks done\n", icon, wt.FrontierName, done, total)
+			fmt.Printf("%s %s: %d/%d tasks done\n", icon, wt.SiteName, done, total)
 		} else {
-			fmt.Printf("%s %s: %s\n", icon, wt.FrontierName, wt.Path)
+			fmt.Printf("%s %s: %s\n", icon, wt.SiteName, wt.Path)
 		}
 	}
 }
 
-// computeWorktreeProgress reads frontier and impl files to compute task progress.
+// computeWorktreeProgress reads site and impl files to compute task progress.
 func computeWorktreeProgress(wtPath string) (done, total int) {
-	// Look for frontier files in worktree
+	// Look for site files in worktree
 	sitesDir := filepath.Join(wtPath, "context", "sites")
-	frontiers, err := frontier.Discover(sitesDir)
-	if err != nil || len(frontiers) == 0 {
+	sites, err := site.Discover(sitesDir)
+	if err != nil || len(sites) == 0 {
 		return 0, 0
 	}
 
-	// Parse first frontier
-	f, err := frontier.Parse(frontiers[0].Path)
+	// Parse first site
+	f, err := site.Parse(sites[0].Path)
 	if err != nil {
 		return 0, 0
 	}
 
 	// Track status from impl files
 	implDir := filepath.Join(wtPath, "context", "impl")
-	statuses, err := frontier.TrackStatus(implDir)
+	statuses, err := site.TrackStatus(implDir)
 	if err != nil {
 		return 0, len(f.Tasks)
 	}
 
-	summary := frontier.ComputeProgress(f, statuses)
+	summary := site.ComputeProgress(f, statuses)
 	return summary.Done, summary.Total
 }
 
@@ -163,7 +163,7 @@ func runKill() {
 	worktrees, _ := worktree.DiscoverAll(root)
 	cleaned := 0
 	for _, wt := range worktrees {
-		wtMgr.Remove(nil, root, wt.FrontierName)
+		wtMgr.Remove(nil, root, wt.SiteName)
 		cleaned++
 	}
 

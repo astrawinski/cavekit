@@ -1,6 +1,6 @@
 ---
 created: "2026-03-17T00:00:00Z"
-last_edited: "2026-03-17T12:00:00Z"
+last_edited: "2026-03-19T00:00:00Z"
 ---
 
 # Spec: Terminal User Interface
@@ -105,13 +105,13 @@ The bubbletea-based TUI that replaces the current tmux split-pane layout. Render
 - [ ] Esc or Ctrl+C closes overlays
 **Dependencies:** R1
 
-### R11: Frontier Picker Integration
-**Description:** On startup (or when pressing `n`), show available frontiers for selection.
+### R11: Site Picker Integration
+**Description:** On startup (or when pressing `n`), show available sites for selection.
 **Acceptance Criteria:**
-- [ ] Lists frontiers from `context/frontiers/` with status (available/in-progress/done)
-- [ ] Shows task count per frontier
-- [ ] Done frontiers shown as struck-through/disabled
-- [ ] In-progress frontiers shown with resume indicator
+- [ ] Lists sites from `context/frontiers/` with status (available/in-progress/done)
+- [ ] Shows task count per site
+- [ ] Done sites shown as struck-through/disabled
+- [ ] In-progress sites shown with resume indicator
 - [ ] Multi-select support for launching multiple agents at once
 **Dependencies:** R8, blueprint-site R1, blueprint-site R4
 

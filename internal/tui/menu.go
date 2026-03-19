@@ -13,12 +13,22 @@ func DefaultMenu() []MenuItem {
 	return []MenuItem{
 		{"n", "new"},
 		{"D", "kill"},
-		{"Enter", "open"},
+		{"Enter", "attach"},
+		{"i", "input"},
 		{"p", "push"},
 		{"c", "checkout"},
+		{"]/[", "file nav"},
 		{"tab", "switch tab"},
 		{"?", "help"},
 		{"q", "quit"},
+	}
+}
+
+// InputModeMenu returns menu items for input mode.
+func InputModeMenu() []MenuItem {
+	return []MenuItem{
+		{"Esc", "exit input"},
+		{"", "typing into session..."},
 	}
 }
 
@@ -88,7 +98,7 @@ func OverlayMenu(overlayType OverlayType) []MenuItem {
 			{"n", "no"},
 			{"Esc", "cancel"},
 		}
-	case OverlayFrontierPicker:
+	case OverlaySitePicker:
 		return []MenuItem{
 			{"j/k", "navigate"},
 			{"Space", "select"},

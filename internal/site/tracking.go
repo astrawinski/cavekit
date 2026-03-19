@@ -1,4 +1,4 @@
-package frontier
+package site
 
 import (
 	"bufio"
@@ -113,13 +113,13 @@ func parseStatus(s string) TaskStatus {
 	}
 }
 
-// ComputeProgress computes aggregate progress for a frontier given its task list and status map.
-func ComputeProgress(frontier *Frontier, statuses TaskStatusMap) ProgressSummary {
+// ComputeProgress computes aggregate progress for a site given its task list and status map.
+func ComputeProgress(s *Site, statuses TaskStatusMap) ProgressSummary {
 	summary := ProgressSummary{
-		Total: frontier.TotalTasks(),
+		Total: s.TotalTasks(),
 	}
 
-	for _, task := range frontier.Tasks {
+	for _, task := range s.Tasks {
 		status, exists := statuses[task.ID]
 		if !exists {
 			summary.Remaining++

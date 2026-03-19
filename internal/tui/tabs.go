@@ -16,6 +16,9 @@ type TabContent struct {
 	previewContent  string
 	diffContent     string
 	terminalContent string
+
+	// Badge data
+	diffStats string
 }
 
 // NewTabContent creates a new tabbed content component.
@@ -51,6 +54,11 @@ func (t *TabContent) SetTerminal(content string) {
 	t.terminalContent = content
 }
 
+// SetDiffStats sets the diff badge text (e.g. "+45/-12").
+func (t *TabContent) SetDiffStats(stats string) {
+	t.diffStats = stats
+}
+
 // View renders the tabbed content panel.
 func (t *TabContent) View() string {
 	tabBar := t.renderTabBar()
@@ -60,17 +68,17 @@ func (t *TabContent) View() string {
 	case TabPreview:
 		content = t.previewContent
 		if content == "" {
-			content = "Select an instance to preview."
+			content = t.renderEmpty("Select an instance to preview")
 		}
 	case TabDiff:
 		content = t.diffContent
 		if content == "" {
-			content = "No diff available."
+			content = t.renderEmpty("No changes yet")
 		}
 	case TabTerminal:
 		content = t.terminalContent
 		if content == "" {
-			content = "Press Enter to open terminal."
+			content = t.renderEmpty("Press Enter to open a shell")
 		}
 	}
 
@@ -84,13 +92,31 @@ func (t *TabContent) View() string {
 	return tabBar + "\n" + strings.Join(lines, "\n")
 }
 
+func (t *TabContent) renderEmpty(msg string) string {
+	styled := lipgloss.NewStyle().Foreground(ColorMuted).Render(msg)
+	contentH := max(t.height-3, 1)
+	return lipgloss.Place(t.width, contentH, lipgloss.Center, lipgloss.Center, styled)
+}
+
 func (t *TabContent) renderTabBar() string {
 	var tabs []string
-	for _, tab := range []Tab{TabPreview, TabDiff, TabTerminal} {
+	sep := TabSepStyle.Render(" │ ")
+
+	for i, tab := range []Tab{TabPreview, TabDiff, TabTerminal} {
+		if i > 0 {
+			tabs = append(tabs, sep)
+		}
+
+		label := tab.String()
+		// Add badge to Diff tab
+		if tab == TabDiff && t.diffStats != "" {
+			label += " " + TabBadgeStyle.Render("("+t.diffStats+")")
+		}
+
 		if tab == t.activeTab {
-			tabs = append(tabs, ActiveTabStyle.Render(tab.String()))
+			tabs = append(tabs, ActiveTabStyle.Render(label))
 		} else {
-			tabs = append(tabs, InactiveTabStyle.Render(tab.String()))
+			tabs = append(tabs, InactiveTabStyle.Render(label))
 		}
 	}
 	return lipgloss.JoinHorizontal(lipgloss.Top, tabs...)

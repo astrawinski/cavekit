@@ -3,18 +3,18 @@ package session
 import (
 	"path/filepath"
 
-	"github.com/julb/blueprint-monitor/internal/frontier"
+	"github.com/julb/blueprint-monitor/internal/site"
 )
 
 // UpdateProgress refreshes the progress fields on an instance
-// by reading the frontier file and impl tracking files.
+// by reading the site file and impl tracking files.
 func UpdateProgress(inst *Instance) error {
-	if inst.FrontierPath == "" {
+	if inst.SitePath == "" {
 		return nil
 	}
 
-	// Parse the frontier file
-	f, err := frontier.Parse(inst.FrontierPath)
+	// Parse the site file
+	f, err := site.Parse(inst.SitePath)
 	if err != nil {
 		return err
 	}
@@ -26,20 +26,20 @@ func UpdateProgress(inst *Instance) error {
 	}
 
 	// Track task statuses
-	statuses, err := frontier.TrackStatus(implDirs...)
+	statuses, err := site.TrackStatus(implDirs...)
 	if err != nil {
 		return err
 	}
 
 	// Compute summary
-	summary := frontier.ComputeProgress(f, statuses)
+	summary := site.ComputeProgress(f, statuses)
 	inst.TasksDone = summary.Done
 	inst.TasksTotal = summary.Total
 
 	// Find current tier and task
 	for _, task := range f.Tasks {
 		status, exists := statuses[task.ID]
-		if !exists || status == frontier.TaskPending {
+		if !exists || status == site.TaskPending {
 			inst.CurrentTier = task.Tier
 			inst.CurrentTask = task.ID
 			break

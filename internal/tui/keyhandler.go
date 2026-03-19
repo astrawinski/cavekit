@@ -24,10 +24,23 @@ const (
 	ActionTextInput
 	ActionBackspace
 	ActionToggleSelect
+	ActionEnterInput
+	ActionExitInput
+	ActionForwardKey
+	ActionNextFile
+	ActionPrevFile
 )
 
-// MapKey maps a key string to an action, respecting overlay state.
-func MapKey(key string, overlayActive bool, overlayType OverlayType) KeyAction {
+// MapKey maps a key string to an action, respecting overlay and input mode state.
+func MapKey(key string, overlayActive bool, overlayType OverlayType, inputMode bool) KeyAction {
+	// Input mode: forward everything except Esc
+	if inputMode {
+		if key == "esc" {
+			return ActionExitInput
+		}
+		return ActionForwardKey
+	}
+
 	// When overlay is active, only overlay-specific keys work
 	if overlayActive {
 		switch key {
@@ -54,7 +67,7 @@ func MapKey(key string, overlayActive bool, overlayType OverlayType) KeyAction {
 				return ActionBackspace
 			}
 		case " ":
-			if overlayType == OverlayFrontierPicker {
+			if overlayType == OverlaySitePicker {
 				return ActionToggleSelect
 			}
 		case "j", "down":
@@ -77,6 +90,8 @@ func MapKey(key string, overlayActive bool, overlayType OverlayType) KeyAction {
 		return ActionKill
 	case "enter", "o":
 		return ActionOpen
+	case "i":
+		return ActionEnterInput
 	case "p":
 		return ActionPush
 	case "c":
@@ -97,6 +112,10 @@ func MapKey(key string, overlayActive bool, overlayType OverlayType) KeyAction {
 		return ActionScrollUp
 	case "shift+down", "J":
 		return ActionScrollDown
+	case "]":
+		return ActionNextFile
+	case "[":
+		return ActionPrevFile
 	}
 	return ActionNone
 }

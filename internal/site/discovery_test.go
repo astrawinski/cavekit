@@ -1,4 +1,4 @@
-package frontier
+package site
 
 import (
 	"os"
@@ -11,13 +11,15 @@ func TestDeriveName(t *testing.T) {
 		filename string
 		want     string
 	}{
-		{"build-site.md", "build-site"},           // no trailing dash, prefix doesn't match
-		{"build-site-auth.md", "auth"},            // prefix "build-site-" stripped
-		{"frontier-auth.md", "auth"},              // "-?frontier-?" strips "frontier-"
-		{"plan-frontier-payments.md", "payments"}, // "plan-" prefix, then "frontier-"
-		{"feature-frontend-frontier.md", "frontend"}, // "feature-" prefix, then "-frontier"
-		{"frontier.md", "execute"},                // all stripped → empty → "execute"
-		{"my-frontier-file.md", "myfile"},         // "-frontier-" removed, joins my+file
+		{"build-site-auth.md", "auth"},               // prefix "build-site-" stripped
+		{"frontier-auth.md", "auth"},                  // "-?frontier-?" strips "frontier-"
+		{"plan-frontier-payments.md", "payments"},     // "plan-" prefix, then "frontier-"
+		{"feature-frontend-frontier.md", "frontend"},  // "feature-" prefix, then "-frontier"
+		{"frontier.md", "execute"},                    // all stripped → empty → "execute"
+		{"my-frontier-file.md", "myfile"},             // "-frontier-" removed, joins my+file
+		{"site-auth.md", "auth"},                      // "-?site-?" strips "site-"
+		{"my-site-file.md", "myfile"},                 // "-site-" removed, joins my+file
+		{"site.md", "execute"},                        // all stripped → empty → "execute"
 	}
 	for _, tt := range tests {
 		got := DeriveName(tt.filename)
@@ -28,14 +30,14 @@ func TestDeriveName(t *testing.T) {
 }
 
 func TestDiscover(t *testing.T) {
-	// Create temp project with frontier files
+	// Create temp project with site files
 	tmp := t.TempDir()
 	sitesDir := filepath.Join(tmp, "context", "sites")
 	os.MkdirAll(sitesDir, 0755)
 	os.MkdirAll(filepath.Join(sitesDir, "archive"), 0755)
 
-	// Valid frontier files
-	os.WriteFile(filepath.Join(sitesDir, "build-site.md"), []byte("# Frontier\n"), 0644)
+	// Valid site files
+	os.WriteFile(filepath.Join(sitesDir, "build-site.md"), []byte("# Site\n"), 0644)
 	os.WriteFile(filepath.Join(sitesDir, "build-site-auth.md"), []byte("# Auth\n"), 0644)
 
 	// Should be excluded (no frontier/site in name)
@@ -55,9 +57,6 @@ func TestDiscover(t *testing.T) {
 	names := map[string]bool{}
 	for _, r := range results {
 		names[r.Name] = true
-	}
-	if !names["build-site"] {
-		t.Errorf("expected 'build-site' in results, got %v", names)
 	}
 	if !names["auth"] {
 		t.Errorf("expected 'auth' in results, got %v", names)

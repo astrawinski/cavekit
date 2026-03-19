@@ -1,6 +1,9 @@
 package tui
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/charmbracelet/lipgloss"
 )
 
@@ -12,17 +15,17 @@ const (
 	OverlayTextInput
 	OverlayConfirmation
 	OverlayHelp
-	OverlayFrontierPicker
+	OverlaySitePicker
 )
 
 // Overlay renders a centered modal on top of the main content.
 type Overlay struct {
-	Active      OverlayType
-	Title       string
-	Message     string
-	InputValue  string
-	Width       int
-	Height      int
+	Active     OverlayType
+	Title      string
+	Message    string
+	InputValue string
+	Width      int
+	Height     int
 }
 
 // NewOverlay creates an inactive overlay.
@@ -66,45 +69,71 @@ func (o *Overlay) View() string {
 	var content string
 	switch o.Active {
 	case OverlayTextInput:
-		content = OverlayTitleStyle.Render(o.Title) + "\n\n" +
-			o.Message + "\n\n" +
-			"> " + o.InputValue + "█" + "\n\n" +
-			MenuDescStyle.Render("Enter to confirm · Esc to cancel")
-
+		content = o.renderTextInput()
 	case OverlayConfirmation:
 		content = OverlayTitleStyle.Render(o.Title) + "\n\n" +
 			o.Message + "\n\n" +
 			MenuKeyStyle.Render("y") + " yes  " +
 			MenuKeyStyle.Render("n") + " no"
-
 	case OverlayHelp:
-		content = OverlayTitleStyle.Render("Keyboard Shortcuts") + "\n\n" +
-			helpText() + "\n\n" +
-			MenuDescStyle.Render("Press Esc or ? to close")
+		content = o.renderHelp()
 	}
 
-	// Calculate overlay dimensions
 	overlayWidth := min(60, o.Width-4)
 	rendered := OverlayStyle.Width(overlayWidth).Render(content)
 
-	// Center vertically and horizontally
 	return lipgloss.Place(o.Width, o.Height, lipgloss.Center, lipgloss.Center, rendered)
 }
 
-func helpText() string {
-	return `Navigation:
-  j/k, ↑/↓    Navigate instances
-  Tab          Switch tab (Preview/Diff/Terminal)
-  Enter/o      Attach to selected instance
-  Ctrl+Q       Detach from instance
+func (o *Overlay) renderTextInput() string {
+	charCount := fmt.Sprintf("%d/32", len(o.InputValue))
 
-Instance Management:
-  n            New instance
-  D            Kill selected instance
-  p            Push branch
-  c            Checkout worktree
+	inputContent := o.InputValue + "█"
+	inputBox := InputFieldStyle.Width(40).Render(inputContent)
 
-Other:
-  ?            Toggle help
-  q, Ctrl+C   Quit`
+	return OverlayTitleStyle.Render(o.Title) + "\n\n" +
+		lipgloss.NewStyle().Foreground(ColorSecondary).Render(o.Message) + "\n\n" +
+		inputBox + "  " + lipgloss.NewStyle().Foreground(ColorMuted).Render(charCount) + "\n\n" +
+		MenuDescStyle.Render("Enter to confirm · Esc to cancel")
+}
+
+func (o *Overlay) renderHelp() string {
+	leftCol := OverlayTitleStyle.Render("Navigation") + "\n\n" +
+		helpLine("j/k ↑/↓", "Navigate instances") +
+		helpLine("Tab", "Switch tab") +
+		helpLine("Enter/o", "Attach to session") +
+		helpLine("i", "Input mode") +
+		helpLine("Esc", "Exit input mode") +
+		helpLine("J/K", "Scroll diff") +
+		helpLine("]/[", "Next/prev file in diff")
+
+	rightCol := OverlayTitleStyle.Render("Actions") + "\n\n" +
+		helpLine("n", "New instance") +
+		helpLine("D", "Kill instance") +
+		helpLine("p", "Push branch") +
+		helpLine("c", "Checkout worktree") +
+		helpLine("r", "Resume paused") +
+		helpLine("?", "Toggle help") +
+		helpLine("q", "Quit")
+
+	left := lipgloss.NewStyle().Width(28).Render(leftCol)
+	right := lipgloss.NewStyle().Width(28).Render(rightCol)
+
+	return lipgloss.JoinHorizontal(lipgloss.Top, left, right) + "\n\n" +
+		MenuDescStyle.Render("Press Esc or ? to close")
+}
+
+func helpLine(key, desc string) string {
+	return "  " + MenuKeyStyle.Render(key) +
+		strings.Repeat(" ", max(12-len(key), 1)) +
+		lipgloss.NewStyle().Foreground(ColorSecondary).Render(desc) + "\n"
+}
+
+// DimView applies a faint effect to each line of the base view.
+func DimView(base string) string {
+	lines := strings.Split(base, "\n")
+	for i, line := range lines {
+		lines[i] = DimmedStyle.Render(line)
+	}
+	return strings.Join(lines, "\n")
 }

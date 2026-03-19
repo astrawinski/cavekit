@@ -14,9 +14,9 @@ func TestStore_SaveLoad(t *testing.T) {
 	instances := []*Instance{
 		{
 			Title:        "auth",
-			FrontierPath: "/path/frontier.md",
+			SitePath:     "/path/site.md",
 			WorktreePath: "/code/project-blueprint-auth",
-			TmuxSession:  "sdd_auth",
+			TmuxSession:  "bp_auth",
 			Status:       StatusRunning,
 			Program:      "claude",
 			CreatedAt:    time.Now(),

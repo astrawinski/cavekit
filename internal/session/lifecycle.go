@@ -23,42 +23,42 @@ func NewManager(tmuxMgr *tmux.Manager, wtMgr *worktree.Manager) *Manager {
 	}
 }
 
-// Create allocates a new instance with the given title and frontier info.
-func (m *Manager) Create(title, frontierPath, frontierName, program string) *Instance {
-	inst := NewInstance(title, frontierPath, program)
-	inst.TmuxSession = tmux.SessionName(frontierName)
+// Create allocates a new instance with the given title and site info.
+func (m *Manager) Create(title, sitePath, siteName, program string) *Instance {
+	inst := NewInstance(title, sitePath, program)
+	inst.TmuxSession = tmux.SessionName(siteName)
 	return inst
 }
 
 // Start creates the worktree and tmux session, then sends the build command.
-func (m *Manager) Start(ctx context.Context, inst *Instance, projectRoot, frontierName string, startupDelay time.Duration) error {
+func (m *Manager) Start(ctx context.Context, inst *Instance, projectRoot, siteName string, startupDelay time.Duration) error {
 	inst.Status = StatusLoading
 
 	// Create worktree
-	wtPath, err := m.worktree.Create(ctx, projectRoot, frontierName)
+	wtPath, err := m.worktree.Create(ctx, projectRoot, siteName)
 	if err != nil {
 		return fmt.Errorf("create worktree: %w", err)
 	}
 	inst.WorktreePath = wtPath
 
 	// Create tmux session
-	err = m.tmux.CreateSession(ctx, frontierName, wtPath, inst.Program)
+	err = m.tmux.CreateSession(ctx, siteName, wtPath, inst.Program)
 	if err != nil {
 		return fmt.Errorf("create tmux session: %w", err)
 	}
-	inst.TmuxSession = tmux.SessionName(frontierName)
+	inst.TmuxSession = tmux.SessionName(siteName)
 	inst.Status = StatusRunning
 
 	// Wait for startup, then send the build command
 	if startupDelay > 0 {
 		go func() {
 			time.Sleep(startupDelay)
-			cmd := fmt.Sprintf("/bp:build --filter %s", frontierName)
-			m.tmux.SendCommand(ctx, frontierName, cmd)
+			cmd := fmt.Sprintf("/bp:build --filter %s", siteName)
+			m.tmux.SendCommand(ctx, siteName, cmd)
 		}()
 	} else {
-		cmd := fmt.Sprintf("/bp:build --filter %s", frontierName)
-		m.tmux.SendCommand(ctx, frontierName, cmd)
+		cmd := fmt.Sprintf("/bp:build --filter %s", siteName)
+		m.tmux.SendCommand(ctx, siteName, cmd)
 	}
 
 	return nil
@@ -84,10 +84,10 @@ func (m *Manager) Kill(ctx context.Context, inst *Instance, projectRoot string, 
 	}
 
 	if removeWorktree && inst.WorktreePath != "" {
-		// Derive frontier name from worktree path
-		frontierName := deriveFrontierNameFromWorktree(inst.WorktreePath, projectRoot)
-		if frontierName != "" {
-			m.worktree.Remove(ctx, projectRoot, frontierName)
+		// Derive site name from worktree path
+		siteName := deriveSiteNameFromWorktree(inst.WorktreePath, projectRoot)
+		if siteName != "" {
+			m.worktree.Remove(ctx, projectRoot, siteName)
 		}
 	}
 
@@ -95,9 +95,9 @@ func (m *Manager) Kill(ctx context.Context, inst *Instance, projectRoot string, 
 	return nil
 }
 
-func deriveFrontierNameFromWorktree(wtPath, projectRoot string) string {
-	// WorktreePath format: {root}/../{name}-blueprint-{frontier}
-	// We need to extract the frontier name
+func deriveSiteNameFromWorktree(wtPath, projectRoot string) string {
+	// WorktreePath format: {root}/../{name}-blueprint-{site}
+	// We need to extract the site name
 	prefix := worktree.WorktreePath(projectRoot, "")
 	if len(wtPath) > len(prefix) {
 		return wtPath[len(prefix):]

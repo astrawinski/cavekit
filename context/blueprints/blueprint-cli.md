@@ -1,6 +1,6 @@
 ---
 created: "2026-03-17T00:00:00Z"
-last_edited: "2026-03-17T12:00:00Z"
+last_edited: "2026-03-19T00:00:00Z"
 ---
 
 # Spec: CLI Interface
@@ -30,7 +30,7 @@ The command-line interface that replaces the current `blueprint` bash script. Pr
 **Dependencies:** R1, blueprint-tui R1
 
 ### R3: Status Command
-**Description:** Shows frontier progress without launching the TUI.
+**Description:** Shows site progress without launching the TUI.
 **Acceptance Criteria:**
 - [ ] `blueprint status` prints per-worktree progress to stdout
 - [ ] Format: `{name}: {icon} {done}/{total} tasks done`

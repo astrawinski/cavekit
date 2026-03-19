@@ -33,15 +33,15 @@ func newTestManager() (*Manager, *exec.MockExecutor) {
 
 func TestManager_Create(t *testing.T) {
 	mgr, _ := newTestManager()
-	inst := mgr.Create("auth", "/path/frontier.md", "auth", "claude")
+	inst := mgr.Create("auth", "/path/site.md", "auth", "claude")
 
 	if inst.Title != "auth" {
 		t.Errorf("Title = %q", inst.Title)
 	}
-	if inst.FrontierPath != "/path/frontier.md" {
-		t.Errorf("FrontierPath = %q", inst.FrontierPath)
+	if inst.SitePath != "/path/site.md" {
+		t.Errorf("SitePath = %q", inst.SitePath)
 	}
-	if inst.TmuxSession != "sdd_auth" {
+	if inst.TmuxSession != "bp_auth" {
 		t.Errorf("TmuxSession = %q", inst.TmuxSession)
 	}
 	if inst.Status != StatusLoading {
@@ -51,7 +51,7 @@ func TestManager_Create(t *testing.T) {
 
 func TestManager_Start(t *testing.T) {
 	mgr, mock := newTestManager()
-	inst := mgr.Create("auth", "/path/frontier.md", "auth", "claude")
+	inst := mgr.Create("auth", "/path/site.md", "auth", "claude")
 
 	err := mgr.Start(context.Background(), inst, "/code/project", "auth", 0)
 	if err != nil {

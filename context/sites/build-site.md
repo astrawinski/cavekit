@@ -1,9 +1,9 @@
 ---
 created: "2026-03-17T00:00:00Z"
-last_edited: "2026-03-17T12:00:00Z"
+last_edited: "2026-03-19T00:00:00Z"
 ---
 
-# Feature Frontier
+# Feature Site
 
 42 tasks across 6 tiers from 6 specs.
 
@@ -17,8 +17,8 @@ last_edited: "2026-03-17T12:00:00Z"
 | T-002 | Tmux session create/kill/exists | spec-tmux.md | R1 | M |
 | T-003 | Tmux pane content capture | spec-tmux.md | R2 | S |
 | T-004 | Git worktree create/detect/remove | spec-worktree.md | R1 | M |
-| T-005 | Frontier file discovery and name derivation | spec-frontier.md | R1 | M |
-| T-006 | Frontier markdown parsing (tasks, tiers, table rows) | spec-frontier.md | R2 | M |
+| T-005 | Site file discovery and name derivation | spec-site.md | R1 | M |
+| T-006 | Site markdown parsing (tasks, tiers, table rows) | spec-site.md | R2 | M |
 | T-007 | Session instance model and status enum | spec-session.md | R1 | S |
 | T-008 | Command executor abstraction (for testability) | spec-tmux.md | R1 | S |
 
@@ -33,10 +33,10 @@ last_edited: "2026-03-17T12:00:00Z"
 | T-011 | Tmux input injection (keystrokes, prompts) | spec-tmux.md | R5 | T-002 | S |
 | T-012 | Git diff stats (files changed, insertions, deletions) | spec-worktree.md | R2 | T-004 | S |
 | T-013 | Worktree discovery (scan sibling dirs) | spec-worktree.md | R3 | T-004 | S |
-| T-014 | Task status tracking from impl files | spec-frontier.md | R3 | T-005, T-006 | M |
-| T-015 | Frontier status classification (done/in-progress/available) | spec-frontier.md | R4 | T-005, T-014 | S |
-| T-016 | Frontier multi-candidate ranking and selection | spec-frontier.md | R6 | T-005, T-014 | M |
-| T-017 | Progress summary string generation | spec-frontier.md | R5 | T-014, T-015 | S |
+| T-014 | Task status tracking from impl files | spec-site.md | R3 | T-005, T-006 | M |
+| T-015 | Site status classification (done/in-progress/available) | spec-site.md | R4 | T-005, T-014 | S |
+| T-016 | Site multi-candidate ranking and selection | spec-site.md | R6 | T-005, T-014 | M |
+| T-017 | Progress summary string generation | spec-site.md | R5 | T-014, T-015 | S |
 | T-018 | Bubbletea app shell (alt-screen, mouse, resize) | spec-tui.md | R1 | T-001 | M |
 | T-019 | Lipgloss styles and constants | spec-tui.md | R1 | T-001 | S |
 
@@ -68,7 +68,7 @@ last_edited: "2026-03-17T12:00:00Z"
 | T-032 | New instance flow (name input → start) | spec-tui.md | R8 | T-024, T-027, T-020 | M |
 | T-033 | SDD progress display in instance list | spec-tui.md | R9 | T-024, T-023, T-017 | M |
 | T-034 | Staggered launch for multiple instances | spec-session.md | R4 | T-020 | S |
-| T-035 | Frontier picker integration | spec-tui.md | R11 | T-027, T-005, T-015 | M |
+| T-035 | Site picker integration | spec-tui.md | R11 | T-027, T-005, T-015 | M |
 | T-036 | Key handling: kill, push, checkout, resume | spec-tui.md | R8 | T-024, T-027, T-020, T-028 | M |
 
 ---
@@ -118,10 +118,10 @@ last_edited: "2026-03-17T12:00:00Z"
 | T-046 | Handle ActionPush: branch push with confirmation overlay | spec-tui.md | R13 | T-028, T-027, T-037 | S | F-006 |
 | T-047 | Handle ActionCheckout/ActionResume | spec-tui.md | R13 | T-037 | S | F-006 |
 | T-048 | Handle ActionScrollUp/Down for preview and diff tabs | spec-tui.md | R13 | T-029, T-030, T-037 | S | F-008 |
-| T-049 | Integrate FrontierPicker into new-instance flow | spec-tui.md | R11 | T-035, T-032 | M | F-007 |
+| T-049 | Integrate SitePicker into new-instance flow | spec-tui.md | R11 | T-035, T-032 | M | F-007 |
 | T-050 | Validate persistence on load (tmux/worktree existence) | spec-session.md | R3 | T-021 | S | F-009 |
 | T-051 | Parse --autoyes/-y flag, pass to TUI and AutoYes | spec-cli.md | R2 | T-039 | S | F-010 |
-| T-052 | Status command: show progress counts from frontier tracking | spec-cli.md | R3 | T-040, T-014, T-017 | S | F-012 |
+| T-052 | Status command: show progress counts from site tracking | spec-cli.md | R3 | T-040, T-014, T-017 | S | F-012 |
 | T-053 | Instance list: add branch name and diff stats to rows | spec-tui.md | R2 | T-024, T-012 | S | F-011 |
 | T-054 | DiffTab: apply scrollPos to Content() output | spec-tui.md | R5 | T-030 | S | F-014 |
 | T-055 | Context-adaptive menu items | spec-tui.md | R7 | T-026 | S | F-013 |

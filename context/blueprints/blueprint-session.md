@@ -1,19 +1,19 @@
 ---
 created: "2026-03-17T00:00:00Z"
-last_edited: "2026-03-17T12:00:00Z"
+last_edited: "2026-03-19T00:00:00Z"
 ---
 
 # Spec: Session Management
 
 ## Scope
-The session (or "instance") model that ties together a tmux session, git worktree, and frontier into a single manageable unit. Handles persistence, state transitions, and lifecycle orchestration.
+The session (or "instance") model that ties together a tmux session, git worktree, and site into a single manageable unit. Handles persistence, state transitions, and lifecycle orchestration.
 
 ## Requirements
 
 ### R1: Instance Model
-**Description:** A session instance represents one Claude Code agent working on one frontier.
+**Description:** A session instance represents one Claude Code agent working on one site.
 **Acceptance Criteria:**
-- [ ] Instance has: title, frontier path, worktree path, tmux session reference, status, program name, creation timestamp
+- [ ] Instance has: title, site path, worktree path, tmux session reference, status, program name, creation timestamp
 - [ ] Status enum: Loading, Running, Ready, Paused, Done
 - [ ] "Running" = Claude is actively generating output (pane content changing)
 - [ ] "Ready" = Claude is waiting for input (permission prompt or idle)
@@ -23,7 +23,7 @@ The session (or "instance") model that ties together a tmux session, git worktre
 ### R2: Instance Lifecycle
 **Description:** Create, start, pause, resume, and kill instances.
 **Acceptance Criteria:**
-- [ ] Creating an instance: allocates title, sets frontier path, derives worktree name
+- [ ] Creating an instance: allocates title, sets site path, derives worktree name
 - [ ] Starting: creates worktree (if needed), creates tmux session, sends `/bp:build --filter {name}` after startup delay
 - [ ] Pausing: detaches tmux session from TUI tracking (session keeps running)
 - [ ] Resuming: re-attaches tmux session to TUI tracking
@@ -34,7 +34,7 @@ The session (or "instance") model that ties together a tmux session, git worktre
 **Description:** Save and restore instance state across TUI restarts.
 **Acceptance Criteria:**
 - [ ] Instances are saved to `~/.blueprint-monitor/state.json` (or configurable path)
-- [ ] Saved state includes: title, frontier path, worktree path, program, status
+- [ ] Saved state includes: title, site path, worktree path, program, status
 - [ ] On load, validates that tmux sessions and worktrees still exist
 - [ ] Stale instances (tmux session gone) are marked accordingly
 **Dependencies:** R1
@@ -56,7 +56,7 @@ The session (or "instance") model that ties together a tmux session, git worktre
 **Dependencies:** R2, blueprint-tmux R4
 
 ### R6: Blueprint Progress Integration
-**Description:** Each instance tracks its frontier progress for display.
+**Description:** Each instance tracks its site progress for display.
 **Acceptance Criteria:**
 - [ ] Instance exposes: tasks done, tasks total, current tier, current task ID
 - [ ] Progress is updated periodically (every 500ms metadata tick)

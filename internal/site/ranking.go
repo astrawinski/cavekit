@@ -1,27 +1,27 @@
-package frontier
+package site
 
 import (
 	"fmt"
 	"sort"
 )
 
-// RankedCandidate represents a frontier with its computed score.
+// RankedCandidate represents a site with its computed score.
 type RankedCandidate struct {
-	File     FrontierFile
+	File     SiteFile
 	Score    int
-	Status   FrontierStatus
+	Status   SiteStatus
 	Selected bool
 }
 
-// RankAndSelect ranks frontier candidates and selects the best one.
-// Returns error if filter is set and matches zero frontiers.
+// RankAndSelect ranks site candidates and selects the best one.
+// Returns error if filter is set and matches zero sites.
 //
 // Scoring: active worktree with Ralph Loop = 3, worktree exists or incomplete tasks = 2, base = 1.
 // Ties break alphabetically (first in order wins, using > not >= for determinism).
-func RankAndSelect(candidates []FrontierFile, statuses TaskStatusMap, filter string, worktreeChecker func(name string) (bool, bool)) ([]RankedCandidate, error) {
+func RankAndSelect(candidates []SiteFile, statuses TaskStatusMap, filter string, worktreeChecker func(name string) (bool, bool)) ([]RankedCandidate, error) {
 	// Apply filter if set
 	if filter != "" {
-		var filtered []FrontierFile
+		var filtered []SiteFile
 		for _, c := range candidates {
 			if c.Name == filter {
 				filtered = append(filtered, c)
@@ -32,7 +32,7 @@ func RankAndSelect(candidates []FrontierFile, statuses TaskStatusMap, filter str
 			for i, c := range candidates {
 				names[i] = c.Name
 			}
-			return nil, fmt.Errorf("filter %q matches no frontiers. Available: %v", filter, names)
+			return nil, fmt.Errorf("filter %q matches no sites. Available: %v", filter, names)
 		}
 		candidates = filtered
 	}
@@ -84,14 +84,14 @@ func RankAndSelect(candidates []FrontierFile, statuses TaskStatusMap, filter str
 	return ranked, nil
 }
 
-func classifyFromScore(score int) FrontierStatus {
+func classifyFromScore(score int) SiteStatus {
 	switch score {
 	case 3:
-		return FrontierInProgress
+		return SiteInProgress
 	case 2:
-		return FrontierAvailable
+		return SiteAvailable
 	default:
-		return FrontierAvailable
+		return SiteAvailable
 	}
 }
 

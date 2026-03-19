@@ -42,7 +42,7 @@ func TestManager_SendKeys(t *testing.T) {
 	}
 
 	args := mock.Calls[0].Args
-	// Should include: send-keys -t sdd_test /bp:build Enter
+	// Should include: send-keys -t bp_test /bp:build Enter
 	if args[0] != "send-keys" {
 		t.Errorf("first arg should be send-keys, got %s", args[0])
 	}

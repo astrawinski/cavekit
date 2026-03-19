@@ -27,7 +27,7 @@ func NewStaggeredLauncher(mgr *Manager, projectRoot string, delay time.Duration)
 // LaunchAll starts multiple instances with a delay between each.
 // The first starts immediately; subsequent wait for the delay.
 // Runs in background — returns immediately.
-func (l *StaggeredLauncher) LaunchAll(ctx context.Context, instances []*Instance, frontierNames []string) {
+func (l *StaggeredLauncher) LaunchAll(ctx context.Context, instances []*Instance, siteNames []string) {
 	go func() {
 		for i, inst := range instances {
 			if i > 0 {
@@ -37,7 +37,7 @@ func (l *StaggeredLauncher) LaunchAll(ctx context.Context, instances []*Instance
 					return
 				}
 			}
-			l.mgr.Start(ctx, inst, l.projectRoot, frontierNames[i], 3*time.Second)
+			l.mgr.Start(ctx, inst, l.projectRoot, siteNames[i], 3*time.Second)
 		}
 	}()
 }

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/julb/blueprint-monitor/internal/exec"
-	"github.com/julb/blueprint-monitor/internal/frontier"
+	"github.com/julb/blueprint-monitor/internal/site"
 	"github.com/julb/blueprint-monitor/internal/tmux"
 	"github.com/julb/blueprint-monitor/internal/worktree"
 )
@@ -71,12 +71,12 @@ func TestTerminalTab_NoSession(t *testing.T) {
 	}
 }
 
-func TestFrontierPicker_View(t *testing.T) {
-	picker := NewFrontierPicker()
-	picker.SetItems([]FrontierPickerItem{
-		{Name: "auth", Status: frontier.FrontierAvailable, TasksDone: 0, TasksTotal: 12},
-		{Name: "payments", Status: frontier.FrontierInProgress, TasksDone: 5, TasksTotal: 10},
-		{Name: "done", Status: frontier.FrontierDone, TasksDone: 8, TasksTotal: 8},
+func TestSitePicker_View(t *testing.T) {
+	picker := NewSitePicker()
+	picker.SetItems([]SitePickerItem{
+		{Name: "auth", Status: site.SiteAvailable, TasksDone: 0, TasksTotal: 12},
+		{Name: "payments", Status: site.SiteInProgress, TasksDone: 5, TasksTotal: 10},
+		{Name: "done", Status: site.SiteDone, TasksDone: 8, TasksTotal: 8},
 	})
 	picker.Show()
 
@@ -89,11 +89,11 @@ func TestFrontierPicker_View(t *testing.T) {
 	}
 }
 
-func TestFrontierPicker_Selection(t *testing.T) {
-	picker := NewFrontierPicker()
-	picker.SetItems([]FrontierPickerItem{
-		{Name: "auth", Status: frontier.FrontierAvailable},
-		{Name: "payments", Status: frontier.FrontierAvailable},
+func TestSitePicker_Selection(t *testing.T) {
+	picker := NewSitePicker()
+	picker.SetItems([]SitePickerItem{
+		{Name: "auth", Status: site.SiteAvailable},
+		{Name: "payments", Status: site.SiteAvailable},
 	})
 
 	// Single select
@@ -112,15 +112,15 @@ func TestFrontierPicker_Selection(t *testing.T) {
 	}
 }
 
-func TestFrontierPicker_CantSelectDone(t *testing.T) {
-	picker := NewFrontierPicker()
-	picker.SetItems([]FrontierPickerItem{
-		{Name: "done", Status: frontier.FrontierDone},
+func TestSitePicker_CantSelectDone(t *testing.T) {
+	picker := NewSitePicker()
+	picker.SetItems([]SitePickerItem{
+		{Name: "done", Status: site.SiteDone},
 	})
 
 	picker.ToggleSelect()
 	if picker.multiSelect[0] {
-		t.Error("should not be able to select done frontiers")
+		t.Error("should not be able to select done sites")
 	}
 }
 
@@ -139,7 +139,7 @@ func TestMapKey_Normal(t *testing.T) {
 		{"enter", ActionOpen},
 	}
 	for _, tt := range tests {
-		got := MapKey(tt.key, false, OverlayNone)
+		got := MapKey(tt.key, false, OverlayNone, false)
 		if got != tt.want {
 			t.Errorf("MapKey(%q, false) = %d, want %d", tt.key, got, tt.want)
 		}
@@ -148,19 +148,19 @@ func TestMapKey_Normal(t *testing.T) {
 
 func TestMapKey_Overlay(t *testing.T) {
 	// In overlay mode, 'n' maps to ConfirmNo in confirmation
-	got := MapKey("n", true, OverlayConfirmation)
+	got := MapKey("n", true, OverlayConfirmation, false)
 	if got != ActionConfirmNo {
 		t.Errorf("in confirmation overlay, 'n' should be ConfirmNo, got %d", got)
 	}
 
 	// Esc always cancels
-	got = MapKey("esc", true, OverlayHelp)
+	got = MapKey("esc", true, OverlayHelp, false)
 	if got != ActionCancel {
 		t.Errorf("esc should cancel in overlay, got %d", got)
 	}
 
 	// Regular keys don't work in overlay
-	got = MapKey("D", true, OverlayHelp)
+	got = MapKey("D", true, OverlayHelp, false)
 	if got != ActionNone {
 		t.Errorf("D should be None in overlay, got %d", got)
 	}

@@ -36,7 +36,7 @@ func TestDiscoverAll(t *testing.T) {
 	// Find auth and payments
 	byName := map[string]DiscoveredWorktree{}
 	for _, r := range results {
-		byName[r.FrontierName] = r
+		byName[r.SiteName] = r
 	}
 
 	auth, ok := byName["auth"]

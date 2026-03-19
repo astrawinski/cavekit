@@ -1,58 +1,58 @@
-package frontier
+package site
 
 import (
 	"os"
 	"path/filepath"
 )
 
-// FrontierStatus classifies the overall status of a frontier.
-type FrontierStatus int
+// SiteStatus classifies the overall status of a site.
+type SiteStatus int
 
 const (
-	FrontierAvailable  FrontierStatus = iota // Has incomplete tasks, no active worktree
-	FrontierInProgress                       // Has an active worktree with Ralph Loop running
-	FrontierDone                             // All tasks complete
+	SiteAvailable  SiteStatus = iota // Has incomplete tasks, no active worktree
+	SiteInProgress                   // Has an active worktree with Ralph Loop running
+	SiteDone                         // All tasks complete
 )
 
-func (s FrontierStatus) String() string {
+func (s SiteStatus) String() string {
 	switch s {
-	case FrontierDone:
+	case SiteDone:
 		return "done"
-	case FrontierInProgress:
+	case SiteInProgress:
 		return "in-progress"
 	default:
 		return "available"
 	}
 }
 
-// Icon returns a display icon for the frontier status.
-func (s FrontierStatus) Icon() string {
+// Icon returns a display icon for the site status.
+func (s SiteStatus) Icon() string {
 	switch s {
-	case FrontierDone:
+	case SiteDone:
 		return "✓"
-	case FrontierInProgress:
+	case SiteInProgress:
 		return "⟳"
 	default:
 		return "·"
 	}
 }
 
-// ClassifyFrontier determines the overall status of a frontier.
-func ClassifyFrontier(f *Frontier, statuses TaskStatusMap, worktreePath string) FrontierStatus {
-	summary := ComputeProgress(f, statuses)
+// ClassifySite determines the overall status of a site.
+func ClassifySite(s *Site, statuses TaskStatusMap, worktreePath string) SiteStatus {
+	summary := ComputeProgress(s, statuses)
 
 	// All done?
 	if summary.Done == summary.Total && summary.Total > 0 {
-		return FrontierDone
+		return SiteDone
 	}
 
 	// Check for active Ralph Loop in worktree
 	if worktreePath != "" {
 		ralphLoopPath := filepath.Join(worktreePath, ".claude", "ralph-loop.local.md")
 		if _, err := os.Stat(ralphLoopPath); err == nil {
-			return FrontierInProgress
+			return SiteInProgress
 		}
 	}
 
-	return FrontierAvailable
+	return SiteAvailable
 }

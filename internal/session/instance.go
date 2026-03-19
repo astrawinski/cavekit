@@ -1,5 +1,5 @@
 // Package session defines the instance model that ties together a tmux session,
-// git worktree, and frontier into a single manageable unit.
+// git worktree, and site into a single manageable unit.
 package session
 
 import "time"
@@ -50,17 +50,17 @@ func (s Status) Icon() string {
 	}
 }
 
-// Instance represents one Claude Code agent working on one frontier.
+// Instance represents one Claude Code agent working on one site.
 type Instance struct {
 	Title        string    `json:"title"`
-	FrontierPath string    `json:"frontier_path"`
+	SitePath     string    `json:"site_path"`
 	WorktreePath string    `json:"worktree_path"`
 	TmuxSession  string    `json:"tmux_session"`
 	Status       Status    `json:"status"`
 	Program      string    `json:"program"`
 	CreatedAt    time.Time `json:"created_at"`
 
-	// Progress fields (updated periodically from frontier tracking).
+	// Progress fields (updated periodically from site tracking).
 	TasksDone  int    `json:"tasks_done"`
 	TasksTotal int    `json:"tasks_total"`
 	CurrentTier int   `json:"current_tier"`
@@ -73,10 +73,10 @@ type Instance struct {
 }
 
 // NewInstance creates a new instance with default values.
-func NewInstance(title, frontierPath, program string) *Instance {
+func NewInstance(title, sitePath, program string) *Instance {
 	return &Instance{
-		Title:        title,
-		FrontierPath: frontierPath,
+		Title:    title,
+		SitePath: sitePath,
 		Status:       StatusLoading,
 		Program:      program,
 		CreatedAt:    time.Now(),
