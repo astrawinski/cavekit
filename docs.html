@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blueprint Documentation — Specification-Driven Development for AI Coding Agents</title>
+  <meta name="description" content="Full reference documentation for Blueprint: commands, methodology, Codex integration, skills, and configuration.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📐</text></svg>">
+  <style>
+    /* ===== CSS Custom Properties (shared with landing page) ===== */
+    :root {
+      --bg: #0f1a2e;
+      --grid-fine: rgba(74,158,255,0.08);
+      --grid-major: rgba(74,158,255,0.12);
+      --blueprint: #4a9eff;
+      --blueprint-dim: rgba(74,158,255,0.7);
+      --blueprint-decoration: rgba(74,158,255,0.3);
+      --blueprint-fill: rgba(74,158,255,0.06);
+      --text-primary: #e8edf3;
+      --text-secondary: rgba(200,215,235,0.65);
+      --red-diagnostic: #ff6464;
+      --green-pass: #00ff88;
+      --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+      /* Docs-specific tokens */
+      --sidebar-width: 240px;
+      --toc-width: 200px;
+      --topbar-height: 56px;
+      --content-max: 780px;
+      --glass-bg: rgba(15,26,46,0.75);
+      --glass-border: rgba(74,158,255,0.15);
+      --glass-blur: 12px;
+    }
+
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--topbar-height) + 24px);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      background-color: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.7;
+      overflow-x: hidden;
+      background-image:
+        linear-gradient(var(--grid-fine) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-fine) 1px, transparent 1px),
+        linear-gradient(var(--grid-major) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-major) 1px, transparent 1px);
+      background-size:
+        16px 16px,
+        16px 16px,
+        80px 80px,
+        80px 80px;
+    }
+
+    /* ===== Skip Link ===== */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      z-index: 10000;
+      padding: 8px 16px;
+      background: var(--blueprint);
+      color: var(--bg);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: top 0.2s;
+    }
+    .skip-link:focus {
+      top: 8px;
+      opacity: 1;
+    }
+
+    /* ===== Links ===== */
+    a {
+      color: var(--blueprint);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    a:hover { text-decoration: underline; }
+    a:focus-visible {
+      outline: 2px solid var(--blueprint);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    /* ===== Top Bar (R3) ===== */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--topbar-height);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .topbar-logo {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+    .topbar-logo:hover { text-decoration: none; opacity: 0.85; }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .topbar-link {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+    .topbar-link:hover { color: var(--text-primary); text-decoration: none; }
+
+    .version-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--blueprint);
+      border: 1px solid var(--blueprint-decoration);
+      border-radius: 999px;
+      padding: 2px 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--glass-border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      cursor: pointer;
+      padding: 6px 8px;
+      line-height: 1;
+    }
+    .hamburger-btn svg {
+      display: block;
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+    .hamburger-btn:focus-visible {
+      outline: 2px solid var(--blueprint);
+      outline-offset: 2px;
+    }
+
+    /* ===== Layout Shell (R2) ===== */
+    .docs-layout {
+      display: grid;
+      grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--toc-width);
+      min-height: 100vh;
+      padding-top: var(--topbar-height);
+    }
+
+    /* ===== Left Sidebar (R4 partial) ===== */
+    .sidebar {
+      position: sticky;
+      top: var(--topbar-height);
+      height: calc(100vh - var(--topbar-height));
+      overflow-y: auto;
+      padding: 20px 16px;
+      border-right: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      scrollbar-width: thin;
+      scrollbar-color: var(--blueprint-decoration) transparent;
+    }
+
+    .sidebar-filter-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+    }
+
+    .sidebar-filter {
+      width: 100%;
+      padding: 8px 12px;
+      margin-bottom: 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-primary);
+      background: rgba(74,158,255,0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .sidebar-filter::placeholder { color: var(--text-secondary); }
+    .sidebar-filter:focus { border-color: var(--blueprint); }
+
+    .nav-section { margin-bottom: 6px; }
+
+    .nav-section-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      padding: 6px 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      text-align: left;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-section-title:hover {
+      color: var(--text-primary);
+      background: var(--blueprint-fill);
+    }
+    .nav-section-title:focus-visible {
+      outline: 2px solid var(--blueprint);
+      outline-offset: 1px;
+    }
+
+    .nav-chevron {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.2s;
+    }
+    .nav-section.collapsed .nav-chevron { transform: rotate(-90deg); }
+
+    .nav-children {
+      list-style: none;
+      padding-left: 26px;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .nav-section.collapsed .nav-children {
+      max-height: 0 !important;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 4px 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      border-radius: 0 4px 4px 0;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .nav-link:hover {
+      color: var(--text-primary);
+      text-decoration: none;
+      background: var(--blueprint-fill);
+    }
+    .nav-link.active {
+      color: var(--blueprint);
+      border-left-color: var(--blueprint);
+      background: var(--blueprint-fill);
+    }
+    .nav-link:focus-visible {
+      outline: 2px solid var(--blueprint);
+      outline-offset: 1px;
+    }
+
+    .sidebar-footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--glass-border);
+    }
+    .sidebar-footer a {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* ===== Main Content ===== */
+    .content {
+      padding: 40px 48px 120px;
+      max-width: calc(var(--content-max) + 96px);
+      min-width: 0;
+    }
+
+    .content h1 {
+      font-family: var(--font-sans);
+      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      text-wrap: balance;
+    }
+
+    .content .page-subtitle {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 48px;
+    }
+
+    /* R13: Content Styling */
+    .content h2 {
+      font-family: var(--font-sans);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 64px;
+      margin-bottom: 16px;
+      padding-left: 16px;
+      border-left: 3px solid var(--blueprint);
+      text-wrap: balance;
+    }
+
+    .content h3 {
+      font-family: var(--font-sans);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 40px;
+      margin-bottom: 12px;
+      padding-left: 16px;
+      border-left: 3px solid var(--blueprint-decoration);
+      text-wrap: balance;
+    }
+
+    .content p {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      max-width: 65ch;
+      text-wrap: pretty;
+    }
+
+    .content a {
+      color: var(--blueprint);
+      text-decoration: none;
+    }
+    .content a:hover { text-decoration: underline; }
+
+    /* Inline code */
+    .content code {
+      font-family: var(--font-mono);
+      font-size: 0.875em;
+      color: var(--blueprint);
+      background: rgba(74,158,255,0.1);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    /* Code blocks — glassmorphism terminal */
+    .content pre {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 16px 0 24px;
+      overflow-x: auto;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .content pre code {
+      background: none;
+      padding: 0;
+      color: var(--text-primary);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    /* Syntax coloring classes */
+    .content pre .cmd { color: var(--blueprint); }
+    .content pre .out { color: var(--green-pass); }
+    .content pre .err { color: var(--red-diagnostic); }
+    .content pre .cmt { color: var(--text-secondary); }
+
+    /* Tables — glassmorphism rows */
+    .content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+    .content table th {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--blueprint-dim);
+      text-align: left;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .content table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(74,158,255,0.06);
+      color: var(--text-secondary);
+    }
+    .content table tr:nth-child(even) td {
+      background: rgba(74,158,255,0.03);
+    }
+    .content .table-wrap {
+      overflow-x: auto;
+    }
+
+    /* Command entries — card format */
+    .command-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 24px;
+      margin: 16px 0;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    /* Phase badges */
+    .phase-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--blueprint-decoration);
+      color: var(--blueprint);
+      margin-left: 8px;
+      vertical-align: middle;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Placeholder section styling */
+    .placeholder-note {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+      opacity: 0.5;
+      padding: 24px 0;
+    }
+
+    /* ===== Right Sidebar / TOC (R5 partial) ===== */
+    .toc {
+      position: sticky;
+      top: var(--topbar-height);
+      height: calc(100vh - var(--topbar-height));
+      overflow-y: auto;
+      padding: 20px 16px;
+      border-left: 1px solid var(--glass-border);
+      scrollbar-width: thin;
+      scrollbar-color: var(--blueprint-decoration) transparent;
+    }
+
+    .toc-heading {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .toc-list {
+      list-style: none;
+    }
+    .toc-link {
+      display: block;
+      padding: 4px 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .toc-link:hover {
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .toc-link.active {
+      color: var(--blueprint);
+    }
+
+    /* ===== Mobile Sidebar Overlay ===== */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 900;
+      background: rgba(0,0,0,0.6);
+    }
+    .sidebar-overlay.open { display: block; }
+
+    .sidebar-mobile {
+      display: none;
+      position: fixed;
+      top: var(--topbar-height);
+      left: 0;
+      bottom: 0;
+      width: min(300px, 85vw);
+      z-index: 950;
+      background: var(--bg);
+      border-right: 1px solid var(--glass-border);
+      overflow-y: auto;
+      padding: 20px 16px;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+    }
+    .sidebar-mobile.open {
+      display: block;
+      transform: translateX(0);
+    }
+
+    /* ===== Responsive (R14) ===== */
+
+    /* Tablet: <1024px */
+    @media (max-width: 1023px) {
+      .docs-layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar { display: none; }
+      .toc { display: none; }
+      .hamburger-btn { display: block; }
+      .sidebar-mobile { display: block; }
+      .content {
+        padding: 32px 24px 120px;
+      }
+    }
+
+    /* Mobile: <768px */
+    @media (max-width: 767px) {
+      .content {
+        padding: 24px 16px 100px;
+      }
+      .content h2 {
+        font-size: 1.25rem;
+        margin-top: 48px;
+      }
+      .content h3 {
+        font-size: 1.05rem;
+        margin-top: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- R15: Skip link -->
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <!-- R3: Top Bar -->
+  <header class="topbar" role="banner">
+    <a href="index.html" class="topbar-logo">Blueprint</a>
+    <div class="topbar-right">
+      <a href="https://github.com/JuliusBrussee/blueprint" class="topbar-link" target="_blank" rel="noopener">GitHub</a>
+      <span class="version-badge">v2.1.0</span>
+      <button class="hamburger-btn" aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle navigation menu">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile sidebar overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- Mobile sidebar (clone of nav, shown on tablet/mobile) -->
+  <nav class="sidebar-mobile" id="mobile-nav" aria-label="Documentation navigation (mobile)">
+    <label for="mobile-filter" class="sidebar-filter-label">Filter navigation</label>
+    <input type="text" id="mobile-filter" class="sidebar-filter" placeholder="Filter...">
+    <div class="nav-tree" data-mobile="true">
+      <!-- populated by JS from desktop nav -->
+    </div>
+    <div class="sidebar-footer">
+      <a href="index.html">&larr; Back to Home</a>
+    </div>
+  </nav>
+
+  <div class="docs-layout">
+    <!-- R4: Left Sidebar -->
+    <nav class="sidebar" aria-label="Documentation navigation">
+      <label for="sidebar-filter" class="sidebar-filter-label">Filter navigation</label>
+      <input type="text" id="sidebar-filter" class="sidebar-filter" placeholder="Filter...">
+
+      <div class="nav-tree" id="nav-tree">
+        <!-- Overview -->
+        <div class="nav-section">
+          <a href="#overview" class="nav-section-title nav-link-top">Overview</a>
+        </div>
+
+        <!-- Quick Start -->
+        <div class="nav-section">
+          <button class="nav-section-title" aria-expanded="true">
+            <svg class="nav-chevron" viewBox="0 0 12 12"><polyline points="4 2 8 6 4 10"/></svg>
+            Quick Start
+          </button>
+          <ul class="nav-children">
+            <li><a href="#greenfield" class="nav-link">Greenfield</a></li>
+            <li><a href="#brownfield" class="nav-link">Brownfield</a></li>
+          </ul>
+        </div>
+
+        <!-- Commands -->
+        <div class="nav-section">
+          <button class="nav-section-title" aria-expanded="true">
+            <svg class="nav-chevron" viewBox="0 0 12 12"><polyline points="4 2 8 6 4 10"/></svg>
+            Commands
+          </button>
+          <ul class="nav-children">
+            <li><a href="#cmd-draft" class="nav-link">/bp:draft</a></li>
+            <li><a href="#cmd-architect" class="nav-link">/bp:architect</a></li>
+            <li><a href="#cmd-build" class="nav-link">/bp:build</a></li>
+            <li><a href="#cmd-inspect" class="nav-link">/bp:inspect</a></li>
+            <li><a href="#cmd-research" class="nav-link">/bp:research</a></li>
+            <li><a href="#cmd-progress" class="nav-link">/bp:progress</a></li>
+            <li><a href="#cmd-gap-analysis" class="nav-link">/bp:gap-analysis</a></li>
+            <li><a href="#cmd-revise" class="nav-link">/bp:revise</a></li>
+            <li><a href="#cmd-codex-review" class="nav-link">/bp:codex-review</a></li>
+            <li><a href="#cmd-help" class="nav-link">/bp:help</a></li>
+          </ul>
+        </div>
+
+        <!-- Methodology -->
+        <div class="nav-section">
+          <button class="nav-section-title" aria-expanded="true">
+            <svg class="nav-chevron" viewBox="0 0 12 12"><polyline points="4 2 8 6 4 10"/></svg>
+            Methodology
+          </button>
+          <ul class="nav-children">
+            <li><a href="#dabi-lifecycle" class="nav-link">DABI Lifecycle</a></li>
+            <li><a href="#source-of-truth" class="nav-link">Source of Truth</a></li>
+            <li><a href="#scientific-method" class="nav-link">Scientific Method</a></li>
+          </ul>
+        </div>
+
+        <!-- Codex Integration -->
+        <div class="nav-section">
+          <button class="nav-section-title" aria-expanded="true">
+            <svg class="nav-chevron" viewBox="0 0 12 12"><polyline points="4 2 8 6 4 10"/></svg>
+            Codex Integration
+          </button>
+          <ul class="nav-children">
+            <li><a href="#design-challenge" class="nav-link">Design Challenge</a></li>
+            <li><a href="#tier-gate" class="nav-link">Tier Gate</a></li>
+            <li><a href="#speculative-review" class="nav-link">Speculative Review</a></li>
+            <li><a href="#command-safety-gate" class="nav-link">Command Safety Gate</a></li>
+            <li><a href="#graceful-degradation" class="nav-link">Graceful Degradation</a></li>
+          </ul>
+        </div>
+
+        <!-- Skills Reference -->
+        <div class="nav-section">
+          <button class="nav-section-title" aria-expanded="true">
+            <svg class="nav-chevron" viewBox="0 0 12 12"><polyline points="4 2 8 6 4 10"/></svg>
+            Skills Reference
+          </button>
+          <ul class="nav-children">
+            <li><a href="#skill-blueprint-writing" class="nav-link">Blueprint Writing</a></li>
+            <li><a href="#skill-convergence-monitoring" class="nav-link">Convergence Monitoring</a></li>
+            <li><a href="#skill-peer-review" class="nav-link">Peer Review</a></li>
+            <li><a href="#skill-validation-first" class="nav-link">Validation-First Design</a></li>
+            <li><a href="#skill-context-architecture" class="nav-link">Context Architecture</a></li>
+            <li><a href="#skill-revision" class="nav-link">Revision</a></li>
+            <li><a href="#skill-brownfield-adoption" class="nav-link">Brownfield Adoption</a></li>
+            <li><a href="#skill-speculative-pipeline" class="nav-link">Speculative Pipeline</a></li>
+            <li><a href="#skill-prompt-pipeline" class="nav-link">Prompt Pipeline</a></li>
+            <li><a href="#skill-impl-tracking" class="nav-link">Impl Tracking</a></li>
+            <li><a href="#skill-doc-inversion" class="nav-link">Documentation Inversion</a></li>
+            <li><a href="#skill-peer-review-loop" class="nav-link">Peer Review Loop</a></li>
+            <li><a href="#skill-core-methodology" class="nav-link">Core Methodology</a></li>
+          </ul>
+        </div>
+
+        <!-- Configuration -->
+        <div class="nav-section">
+          <button class="nav-section-title" aria-expanded="true">
+            <svg class="nav-chevron" viewBox="0 0 12 12"><polyline points="4 2 8 6 4 10"/></svg>
+            Configuration
+          </button>
+          <ul class="nav-children">
+            <li><a href="#settings-reference" class="nav-link">Settings Reference</a></li>
+            <li><a href="#file-structure" class="nav-link">File Structure</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <a href="index.html">&larr; Back to Home</a>
+      </div>
+    </nav>
+
+    <!-- R2/R15: Main Content -->
+    <main class="content" id="main-content">
+      <h1>Blueprint Documentation</h1>
+      <p class="page-subtitle">Specification-Driven Development for AI Coding Agents</p>
+
+      <!-- Overview -->
+      <section id="overview">
+        <h2>Overview</h2>
+        <p class="placeholder-note">Content will be added in a later task.</p>
+      </section>
+
+      <!-- Quick Start -->
+      <section id="quick-start">
+        <h2>Quick Start</h2>
+        <section id="greenfield">
+          <h3>Greenfield</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="brownfield">
+          <h3>Brownfield</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+      </section>
+
+      <!-- Commands -->
+      <section id="commands">
+        <h2>Commands</h2>
+        <section id="cmd-draft">
+          <h3><code>/bp:draft</code></h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="cmd-architect">
+          <h3><code>/bp:architect</code></h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="cmd-build">
+          <h3><code>/bp:build</code></h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="cmd-inspect">
+          <h3><code>/bp:inspect</code></h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="cmd-research">
+          <h3><code>/bp:research</code></h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="cmd-progress">
+          <h3><code>/bp:progress</code></h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="cmd-gap-analysis">
+          <h3><code>/bp:gap-analysis</code></h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="cmd-revise">
+          <h3><code>/bp:revise</code></h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="cmd-codex-review">
+          <h3><code>/bp:codex-review</code></h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="cmd-help">
+          <h3><code>/bp:help</code></h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+      </section>
+
+      <!-- Methodology -->
+      <section id="methodology">
+        <h2>Methodology</h2>
+        <section id="dabi-lifecycle">
+          <h3>DABI Lifecycle</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="source-of-truth">
+          <h3>Blueprints as Source of Truth</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="scientific-method">
+          <h3>Scientific Method Applied</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+      </section>
+
+      <!-- Codex Integration -->
+      <section id="codex-integration">
+        <h2>Codex Integration</h2>
+        <section id="design-challenge">
+          <h3>Design Challenge</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="tier-gate">
+          <h3>Tier Gate</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="speculative-review">
+          <h3>Speculative Review</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="command-safety-gate">
+          <h3>Command Safety Gate</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="graceful-degradation">
+          <h3>Graceful Degradation</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+      </section>
+
+      <!-- Skills Reference -->
+      <section id="skills-reference">
+        <h2>Skills Reference</h2>
+        <section id="skill-blueprint-writing">
+          <h3>Blueprint Writing</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="skill-convergence-monitoring">
+          <h3>Convergence Monitoring</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="skill-peer-review">
+          <h3>Peer Review</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="skill-validation-first">
+          <h3>Validation-First Design</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="skill-context-architecture">
+          <h3>Context Architecture</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="skill-revision">
+          <h3>Revision</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="skill-brownfield-adoption">
+          <h3>Brownfield Adoption</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="skill-speculative-pipeline">
+          <h3>Speculative Pipeline</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="skill-prompt-pipeline">
+          <h3>Prompt Pipeline</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="skill-impl-tracking">
+          <h3>Implementation Tracking</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="skill-doc-inversion">
+          <h3>Documentation Inversion</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="skill-peer-review-loop">
+          <h3>Peer Review Loop</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="skill-core-methodology">
+          <h3>Core Methodology</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+      </section>
+
+      <!-- Configuration -->
+      <section id="configuration">
+        <h2>Configuration</h2>
+        <section id="settings-reference">
+          <h3>Settings Reference</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+        <section id="file-structure">
+          <h3>File Structure</h3>
+          <p class="placeholder-note">Content will be added in a later task.</p>
+        </section>
+      </section>
+    </main>
+
+    <!-- R5: Right Sidebar (On This Page) -->
+    <aside class="toc" aria-label="On this page">
+      <div class="toc-heading">On this page</div>
+      <ul class="toc-list" id="toc-list">
+        <!-- Populated dynamically by JS based on current section -->
+      </ul>
+    </aside>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ===== Sidebar toggle (hamburger) =====
+      var hamburgerBtn = document.querySelector('.hamburger-btn');
+      var mobileNav = document.getElementById('mobile-nav');
+      var overlay = document.getElementById('sidebar-overlay');
+
+      function openMobileNav() {
+        mobileNav.classList.add('open');
+        overlay.classList.add('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeMobileNav() {
+        mobileNav.classList.remove('open');
+        overlay.classList.remove('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+
+      hamburgerBtn.addEventListener('click', function() {
+        var isOpen = mobileNav.classList.contains('open');
+        if (isOpen) closeMobileNav(); else openMobileNav();
+      });
+
+      overlay.addEventListener('click', closeMobileNav);
+
+      // Clone desktop nav into mobile nav using safe DOM cloning
+      var desktopTree = document.getElementById('nav-tree');
+      var mobileTree = mobileNav.querySelector('.nav-tree');
+      var clonedNav = desktopTree.cloneNode(true);
+      clonedNav.removeAttribute('id');
+      while (mobileTree.firstChild) { mobileTree.removeChild(mobileTree.firstChild); }
+      while (clonedNav.firstChild) { mobileTree.appendChild(clonedNav.firstChild); }
+
+      // ===== Collapsible nav sections =====
+      function setupCollapseButtons(container) {
+        container.querySelectorAll('.nav-section-title[aria-expanded]').forEach(function(btn) {
+          var section = btn.closest('.nav-section');
+          var children = section.querySelector('.nav-children');
+          if (children) {
+            children.style.maxHeight = children.scrollHeight + 'px';
+          }
+          btn.addEventListener('click', function() {
+            var isExpanded = btn.getAttribute('aria-expanded') === 'true';
+            btn.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+            section.classList.toggle('collapsed', isExpanded);
+            if (!isExpanded && children) {
+              children.style.maxHeight = children.scrollHeight + 'px';
+            }
+          });
+        });
+      }
+
+      setupCollapseButtons(document.querySelector('.sidebar'));
+      setupCollapseButtons(mobileNav);
+
+      // Close mobile nav on link click
+      mobileNav.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', closeMobileNav);
+      });
+
+      // ===== Filter =====
+      function setupFilter(input, container) {
+        input.addEventListener('input', function() {
+          var query = input.value.toLowerCase().trim();
+          container.querySelectorAll('.nav-section').forEach(function(section) {
+            var links = section.querySelectorAll('.nav-link, .nav-link-top');
+            var titleBtn = section.querySelector('.nav-section-title');
+            var titleText = titleBtn ? titleBtn.textContent.toLowerCase() : '';
+            var anyMatch = false;
+
+            links.forEach(function(link) {
+              var text = link.textContent.toLowerCase();
+              var match = !query || text.includes(query);
+              link.style.display = match ? '' : 'none';
+              if (match) anyMatch = true;
+            });
+
+            var titleMatch = !query || titleText.includes(query);
+            if (titleMatch) anyMatch = true;
+
+            section.style.display = anyMatch ? '' : 'none';
+          });
+        });
+      }
+
+      setupFilter(document.getElementById('sidebar-filter'), desktopTree);
+      setupFilter(document.getElementById('mobile-filter'), mobileTree);
+
+      // ===== Scrollspy =====
+      var sections = document.querySelectorAll('main section[id]');
+      var navLinks = document.querySelectorAll('.sidebar .nav-link, .sidebar .nav-link-top');
+      var tocList = document.getElementById('toc-list');
+      var currentTopSection = null;
+
+      function updateTOC(topSectionId) {
+        if (topSectionId === currentTopSection) return;
+        currentTopSection = topSectionId;
+
+        var topSection = document.getElementById(topSectionId);
+        // Clear TOC safely
+        while (tocList.firstChild) { tocList.removeChild(tocList.firstChild); }
+        if (!topSection) return;
+
+        var h3s = topSection.querySelectorAll(':scope > section > h3, :scope > h3');
+        h3s.forEach(function(h3) {
+          var parent = h3.closest('section[id]');
+          if (parent) {
+            var li = document.createElement('li');
+            var a = document.createElement('a');
+            a.href = '#' + parent.id;
+            a.className = 'toc-link';
+            a.textContent = h3.textContent;
+            li.appendChild(a);
+            tocList.appendChild(li);
+          }
+        });
+      }
+
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var id = entry.target.id;
+
+            // Update nav active state
+            navLinks.forEach(function(link) {
+              var href = link.getAttribute('href');
+              if (href === '#' + id) {
+                link.classList.add('active');
+                link.setAttribute('aria-current', 'true');
+              } else {
+                link.classList.remove('active');
+                link.removeAttribute('aria-current');
+              }
+            });
+
+            // Determine top-level section for TOC
+            var el = entry.target;
+            var topId = id;
+            while (el.parentElement && el.parentElement.tagName !== 'MAIN') {
+              el = el.parentElement;
+              if (el.id) topId = el.id;
+            }
+            updateTOC(topId);
+
+            // Update TOC active state
+            tocList.querySelectorAll('.toc-link').forEach(function(tl) {
+              tl.classList.toggle('active', tl.getAttribute('href') === '#' + id);
+            });
+
+            // Update URL hash without scrolling
+            if (history.replaceState) {
+              history.replaceState(null, '', '#' + id);
+            }
+          }
+        });
+      }, {
+        rootMargin: '-' + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--topbar-height')) || 56) + 'px 0px -60% 0px',
+        threshold: 0
+      });
+
+      sections.forEach(function(section) {
+        observer.observe(section);
+      });
+
+      // ===== Hash navigation on load =====
+      if (location.hash) {
+        var target = document.querySelector(location.hash);
+        if (target) {
+          setTimeout(function() { target.scrollIntoView(); }, 100);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
