@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".codex-plugin/logo.svg" alt="Blueprint" height="80">
+  <img src=".codex-plugin/logo.svg" alt="Cavekit" height="80">
 </p>
 
 <h3 align="center">Specification-driven development for AI coding agents</h3>
