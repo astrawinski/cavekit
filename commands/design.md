@@ -8,7 +8,7 @@ argument-hint: "[--import <name>] [--from-site <url>] [--audit] [--section <1-9>
 
 # Cavekit Design — Create or Update DESIGN.md
 
-Create, import, update, or audit the project's visual design system document. DESIGN.md follows the 9-section Google Stitch format and serves as the authoritative visual reference for all UI-building agents across the DABI pipeline.
+Create, import, update, or audit the project's visual design system document. DESIGN.md follows the 9-section Google Stitch format and serves as the authoritative visual reference for all UI-building agents across the Hunt pipeline.
 
 **DESIGN.md is a parallel constraint layer** — it is not a cavekit or a plan, but a cross-cutting visual specification that every phase consults. Think of it as CLAUDE.md for visual design.
 

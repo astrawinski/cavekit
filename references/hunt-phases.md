@@ -1,12 +1,12 @@
-# DABI Phases Reference
+# Hunt Phases Reference
 
-Complete reference for the four-phase Cavekit lifecycle: **D**raft, **A**rchitect, **B**uild, **I**nspect.
+Complete reference for the four-phase Cavekit lifecycle: **S**ketch, **M**ap, **M**ake, **C**heck.
 
 ---
 
 ## 1. Overview
 
-DABI is the four-phase lifecycle of Cavekit. Each phase has dedicated prompts that drive it, explicit inputs and outputs, and defined roles for both the AI agent and the human engineer.
+The Hunt is the four-phase lifecycle of Cavekit. Each phase has dedicated prompts that drive it, explicit inputs and outputs, and defined roles for both the AI agent and the human engineer.
 
 The core principle that governs all phases:
 
@@ -269,7 +269,7 @@ Plans and implementation tracking files update each other. The Architect phase r
 
 ## 4. The Human is an Auditor, Not an Implementer
 
-This is a critical principle throughout DABI:
+This is a critical principle throughout the Hunt:
 
 > The human monitors the process, requests changes as needed, and makes systemic improvements to kits and prompts. The human does NOT write code.
 
@@ -368,9 +368,9 @@ Each stage feeds the next. Failures at any stage propagate back to the appropria
 
 ---
 
-## 7. When to Use Full DABI vs. Lightweight Cavekit
+## 7. When to Use Full Hunt vs. Lightweight Cavekit
 
-### Full DABI
+### Full Hunt
 
 Use when:
 - The project spans multiple modules or has significant architectural surface area
@@ -390,7 +390,7 @@ Use when:
 **Lightweight approach:**
 1. Write a focused `context/kits/cavekit-task.md` capturing requirements
 2. Add a `context/plans/plan-task.md` sequencing the implementation
-3. Skip full DABI; just run the execution loop against the plan
+3. Skip full Hunt; just run the execution loop against the plan
 
 This minimal approach captures the key advantages — clear intent, reproducible outcomes, traceable decisions — without a full multi-phase setup.
 
@@ -455,7 +455,7 @@ context/
 |   +-- CLAUDE.md      # "Plans define HOW to implement something"
 +-- impl/              # Living implementation tracking
 |   +-- CLAUDE.md      # "Impls record implementation progress"
-+-- prompts/           # DABI pipeline prompts (001, 002, 003...)
++-- prompts/           # Hunt pipeline prompts (001, 002, 003...)
 ```
 
 Each subdirectory gets a `CLAUDE.md` that describes its conventions. Agents automatically load these when working in that directory. CLAUDE.md is hierarchical -- it loads from the directory AND all parent directories.

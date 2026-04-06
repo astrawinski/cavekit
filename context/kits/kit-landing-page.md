@@ -25,8 +25,8 @@ A single-file (`index.html`) premium marketing landing page for the Cavekit Clau
 **Description:** Full-viewport hero section that immediately communicates what Cavekit is and provides the install command.
 **Acceptance Criteria:**
 - [ ] Section fills 100vh, content is centered vertically and horizontally
-- [ ] Contains, top to bottom: version badge pill (`v2.1.0`), title ("Cavekit" in display font ~72px desktop), subtitle, DABI pipeline SVG diagram, install terminal block, two links (GitHub + Docs)
-- [ ] DABI pipeline SVG shows the full flow: YOU → DRAFT → ARCHITECT → fan-out to 3 agents → MERGE → main
+- [ ] Contains, top to bottom: version badge pill (`v2.1.0`), title ("Cavekit" in display font ~72px desktop), subtitle, Hunt pipeline SVG diagram, install terminal block, two links (GitHub + Docs)
+- [ ] Hunt pipeline SVG shows the full flow: YOU → DRAFT → ARCHITECT → fan-out to 3 agents → MERGE → main
 - [ ] Pipeline SVG boxes have glassmorphism fills
 - [ ] A glowing particle traces the pipeline path on page load using SVG `<animateMotion>` with glow `drop-shadow` filter
 - [ ] Install terminal block has glassmorphism surface, monospace text showing the two install commands, and a copy button
@@ -43,7 +43,7 @@ A single-file (`index.html`) premium marketing landing page for the Cavekit Clau
 - [ ] Severity bars fill from 0% to target width on scroll-trigger, using `ease-out` timing over 800ms
 - [ ] Cards stagger in on scroll with 80ms delay between each, using `translateY(12px)` entrance
 
-### R4: How It Works Section (DABI Phases)
+### R4: How It Works Section (Hunt Phases)
 **Description:** Explains the 4-phase workflow with visual phase cards.
 **Acceptance Criteria:**
 - [ ] Section label: "HOW IT WORKS"

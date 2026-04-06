@@ -2,7 +2,7 @@
 name: validation-first
 description: |
   Validation-first design for AI agent output — every spec requirement must be automatically verifiable.
-  Covers the 6-gate validation pipeline, phase gates between DABI phases, merge protocol,
+  Covers the 6-gate validation pipeline, phase gates between Hunt phases, merge protocol,
   completion signals, and acceptance criteria design patterns.
   Trigger phrases: "validation gates", "quality gates", "validation-first design",
   "how to validate agent output", "acceptance criteria design"
@@ -242,9 +242,9 @@ Either way, an unmapped requirement will not be reliably met by an agent.
 
 ---
 
-## Phase Gates Between DABI Phases
+## Phase Gates Between Hunt Phases
 
-Phase gates are mandatory verification checkpoints between DABI phases. They ensure that the output of one phase is solid before the next phase builds on it.
+Phase gates are mandatory verification checkpoints between Hunt phases. They ensure that the output of one phase is solid before the next phase builds on it.
 
 ### Phase Gate Definitions
 
@@ -435,7 +435,7 @@ Validation results are recorded in the implementation tracking document's Test H
 
 ### With `ck:methodology`
 
-Validation gates operate continuously across all DABI phases. Phase gates control transitions between phases. The iteration loop uses gate results as convergence signals.
+Validation gates operate continuously across all Hunt phases. Phase gates control transitions between phases. The iteration loop uses gate results as convergence signals.
 
 ---
 
@@ -445,7 +445,7 @@ Validation gates operate continuously across all DABI phases. Phase gates contro
 2. **6 gates in order:** Compilation → Unit Verification → Integration → Benchmarks → Smoke Test → Manual Audit
 3. **Earlier gates are cheaper** — catch problems at the build stage, not at launch
 4. **Every spec requirement maps to at least one gate** — unmapped requirements are unvalidated
-5. **Phase gates control DABI transitions** — do not proceed until the current phase passes its gate
+5. **Phase gates control Hunt transitions** — do not proceed until the current phase passes its gate
 6. **Merge one at a time** — validate between each merge to pinpoint failures
 7. **Completion signals enable automation** — agents emit a specific string when all gates pass
 8. **Regression is P0** — when a passing gate starts failing, stop and fix before proceeding

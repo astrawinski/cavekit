@@ -230,7 +230,7 @@ Existing codebase          context/refs/              context/kits/
 2. **Reference docs capture** the current system's behavior, APIs, data models, and UI patterns
 3. **Agent generates kits** from reference docs — implementation-agnostic requirements
 4. **Validate kits against existing code** — verify acceptance criteria match current behavior
-5. **Proceed with normal DABI** — kits drive the new implementation
+5. **Proceed with normal Hunt** — kits drive the new implementation
 
 ### Rewrite Prompt Pattern
 

@@ -421,7 +421,7 @@ Implementation tracking documents live in `context/impl/`. When files grow too l
 
 ### With `ck:methodology`
 
-Implementation tracking is used primarily during the Implement and Iterate phases of DABI. The iteration loop reads and updates tracking documents every pass. The Monitor phase reviews tracking documents for progress signals.
+Implementation tracking is used primarily during the Implement and Iterate phases of the Hunt. The iteration loop reads and updates tracking documents every pass. The Monitor phase reviews tracking documents for progress signals.
 
 ---
 

@@ -194,7 +194,7 @@ These still work but are superseded by the three main commands:
 
 | Skill | Topic |
 |-------|-------|
-| `ck:methodology` | Core DABI lifecycle |
+| `ck:methodology` | Core Hunt lifecycle |
 | `ck:design-system` | How to write and maintain DESIGN.md (9-section Stitch format) |
 | `ck:cavekit-writing` | How to write kits with testable criteria |
 | `ck:peer-review` | Cross-model review patterns |

@@ -260,7 +260,7 @@ After the bootstrap prompt converges, validate that the generated kits accuratel
 | **Cavekit and code disagree on behavior** | Determine which is correct; update the other |
 | **Code has bugs that kits documented as-is** | Mark as known issue in cavekit; fix via normal Cavekit |
 
-### Step 6: Proceed with Normal DABI
+### Step 6: Proceed with Normal Hunt
 
 Once kits are validated, the project is ready for full Cavekit. All future changes flow through kits first:
 
@@ -453,7 +453,7 @@ Track your brownfield adoption progress with these milestones:
 
 ### Milestone 5: Full Cavekit
 - [ ] All domains have kits
-- [ ] All changes flow through DABI
+- [ ] All changes flow through the Hunt
 - [ ] Convergence monitoring active
 - [ ] Team comfortable with the process
 ```

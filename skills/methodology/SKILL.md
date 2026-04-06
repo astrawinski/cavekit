@@ -1,9 +1,9 @@
 ---
 name: methodology
 description: |
-  Core Cavekit methodology — the master skill that teaches the DABI lifecycle
+  Core Cavekit methodology — the master skill that teaches the Hunt lifecycle
   and routes to all sub-skills. Covers the Specify Before Building principle, the scientific method analogy,
-  the four-phase DABI lifecycle, decision matrix for when to use Cavekit, and build pipeline analogy.
+  the four-phase Hunt lifecycle, decision matrix for when to use Cavekit, and build pipeline analogy.
   Trigger phrases: "use Cavekit", "cavekit methodology", "start Cavekit project", "cavekit methodology",
   "how should I structure this project for AI agents"
 ---
@@ -54,9 +54,9 @@ The outcome: a disciplined, repeatable engineering process layered on top of pro
 
 ---
 
-## The 5 DABI Phases
+## The 5 Hunt Phases
 
-DABI stands for **Draft, Architect, Build, Inspect**. Each phase has dedicated prompts that drive it.
+The Hunt is the four-phase lifecycle: **Sketch, Map, Make, Check**. Each phase has dedicated prompts that drive it.
 
 | Phase | Input | Output | AI Role | Human Role |
 |-------|-------|--------|---------|------------|
@@ -78,7 +78,7 @@ Each phase has **gate conditions** that must be met before moving to the next:
 
 The **Inspect** phase is where the human serves as **reviewer and decision-maker**, not hands-on coder. You monitor the process, request changes as needed, and make systemic improvements to kits and prompts.
 
-> For the full DABI phase reference, see `references/dabi-phases.md`.
+> For the full Hunt phase reference, see `references/hunt-phases.md`.
 
 ---
 
@@ -97,7 +97,7 @@ Use when the project has significant scope, evolving requirements, or needs auto
 | Team structure | Multi-team or cross-team |
 | Execution mode | Long-running autonomous work (overnight, unattended) |
 
-**What you get:** Full DABI lifecycle, context directory with kits/plans/impl tracking, prompt pipeline, convergence loops, revision, validation gates.
+**What you get:** Full Hunt lifecycle, context directory with kits/plans/impl tracking, prompt pipeline, convergence loops, revision, validation gates.
 
 ### Lightweight Cavekit
 
@@ -113,7 +113,7 @@ Use when scope is moderate — too complex for ad-hoc but not worth a full pipel
 **What you do:**
 1. Write a focused `context/kits/cavekit-task.md` capturing requirements
 2. Add a `context/plans/plan-task.md` sequencing the implementation
-3. Skip full DABI — just run an iteration loop against the plan
+3. Skip full Hunt — just run an iteration loop against the plan
 
 This is the "Cavekit floor" — most of the benefit without the overhead of a full multi-phase pipeline.
 
@@ -194,7 +194,7 @@ Cavekit is composed of techniques that work together. This methodology skill is 
 
 | Skill | Purpose | When to Use |
 |-------|---------|-------------|
-| `ck:prompt-pipeline` | Design numbered prompt pipelines for DABI | Setting up automation |
+| `ck:prompt-pipeline` | Design numbered prompt pipelines for the Hunt | Setting up automation |
 | `ck:revision` | Trace bugs back to kits and fix at the source | Inspect phase — after finding gaps |
 | `cavekit:brownfield-adoption` | Adopt Cavekit on existing codebases | Starting Cavekit on legacy projects |
 
@@ -233,7 +233,7 @@ Cavekit works **with** existing skills, not as a replacement:
    ├── kits/     # Implementation-agnostic kits
    ├── plans/          # Framework-specific implementation plans
    ├── impl/           # Living implementation tracking
-   └── prompts/        # DABI pipeline prompts
+   └── prompts/        # Hunt pipeline prompts
    ```
 
 2. **Write kits** from your reference materials (see `ck:cavekit-writing`)
@@ -248,7 +248,7 @@ Cavekit works **with** existing skills, not as a replacement:
 2. **Designate existing codebase as reference material**
 3. **Generate kits from code** (see `cavekit:brownfield-adoption`)
 4. **Validate kits match behavior** — run tests against generated kits
-5. **Proceed with normal DABI** — future changes flow through kits first
+5. **Proceed with normal Hunt** — future changes flow through kits first
 
 ---
 

@@ -63,7 +63,7 @@ context/
 │   └── archive/                           # Compacted/archived tracking
 ```
 
-> **Note:** `designs/` is a **cross-cutting constraint layer**, not a fifth tier. DESIGN.md (at project root) is read by agents at every DABI phase — Draft reads it to constrain visual decisions, Architect references tokens in task descriptions, Build uses it for implementation, Inspect validates against it. It parallels how CLAUDE.md files provide conventions, but for visual design.
+> **Note:** `designs/` is a **cross-cutting constraint layer**, not a fifth tier. DESIGN.md (at project root) is read by agents at every Hunt phase — Draft reads it to constrain visual decisions, Architect references tokens in task descriptions, Build uses it for implementation, Inspect validates against it. It parallels how CLAUDE.md files provide conventions, but for visual design.
 
 ### Backward Compatibility: sites/ → plans/
 
@@ -266,7 +266,7 @@ Each framework repo includes the shared context as a submodule. Updates propagat
 | `ck:impl-tracking` | Tracking lives in `context/impl/`, compacted when exceeding ~500 lines |
 | `ck:validation-first` | Validation results recorded in impl tracking within the hierarchy |
 | `ck:revision` | `/ck:revise` traverses CLAUDE.md edges in reverse to trace bugs to specs |
-| `ck:methodology` | Context structure established during Draft phase, maintained throughout DABI |
+| `ck:methodology` | Context structure established during Draft phase, maintained throughout the Hunt |
 
 ---
 

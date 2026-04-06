@@ -47,7 +47,7 @@ A single-file (`docs.html`) documentation page with sticky sidebar navigation, d
   - Overview
   - Quick Start (children: Greenfield, Brownfield)
   - Commands (children: all 10 `/ck:*` commands)
-  - Methodology (children: DABI Lifecycle, Kits as Source of Truth, Scientific Method Applied)
+  - Methodology (children: Hunt Lifecycle, Kits as Source of Truth, Scientific Method Applied)
   - Codex Integration (children: Design Challenge, Tier Gate, Speculative Review, Command Safety Gate, Graceful Degradation)
   - Skills Reference (children: all 13 skills)
   - Configuration (children: Settings Reference, File Structure)
@@ -67,10 +67,10 @@ A single-file (`docs.html`) documentation page with sticky sidebar navigation, d
 - [ ] Heading: "On this page" in monospace, muted
 
 ### R6: Overview Section
-**Description:** Introduction to what Cavekit is and the DABI lifecycle.
+**Description:** Introduction to what Cavekit is and the Hunt lifecycle.
 **Acceptance Criteria:**
 - [ ] Content explains: what Cavekit is, who it's for, the core idea (specification layer between intent and code)
-- [ ] Brief DABI lifecycle summary with the 4 phases
+- [ ] Brief Hunt lifecycle summary with the 4 phases
 - [ ] Links to each phase's detailed section in Commands and Methodology
 - [ ] Content derived from README "The Idea" and "How It Works" intro sections
 
@@ -99,8 +99,8 @@ A single-file (`docs.html`) documentation page with sticky sidebar navigation, d
 ### R9: Methodology Section
 **Description:** The Cavekit methodology and philosophy.
 **Acceptance Criteria:**
-- [ ] Three subsections: The DABI Lifecycle, Kits as Source of Truth, Scientific Method Applied
-- [ ] DABI Lifecycle: detailed walkthrough of each phase with what it produces and why
+- [ ] Three subsections: The Hunt Lifecycle, Kits as Source of Truth, Scientific Method Applied
+- [ ] Hunt Lifecycle: detailed walkthrough of each phase with what it produces and why
 - [ ] Kits as Source of Truth: explains why specs drive development, not memory
 - [ ] Scientific Method: maps hypothesis→test→observe→refine to kits→gates→loops→revision
 - [ ] Content derived from README "Methodology" and "Why Cavekit" sections

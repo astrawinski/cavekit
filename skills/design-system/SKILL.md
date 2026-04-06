@@ -13,7 +13,7 @@ description: |
 
 ## Core Principle: DESIGN.md Describes WHAT It Looks Like, Not HOW to Build It
 
-DESIGN.md is the visual equivalent of kits. It defines the project's visual language — colors, typography, spacing, components, responsive behavior — in a format AI agents can read and apply consistently. It is a **parallel constraint layer** that all DABI phases consult.
+DESIGN.md is the visual equivalent of kits. It defines the project's visual language — colors, typography, spacing, components, responsive behavior — in a format AI agents can read and apply consistently. It is a **parallel constraint layer** that all Hunt phases consult.
 
 | Document | Defines | Audience |
 |----------|---------|----------|
@@ -439,7 +439,7 @@ Task-builder agents follow this protocol for UI work:
 
 ## Revision Patterns
 
-When visual fixes are made manually (outside the DABI loop), `/ck:revise` traces them back to DESIGN.md:
+When visual fixes are made manually (outside the Hunt loop), `/ck:revise` traces them back to DESIGN.md:
 
 ### Visual Fix Classification
 

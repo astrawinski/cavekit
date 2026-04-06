@@ -1,16 +1,16 @@
 ---
 name: prompt-pipeline
 description: >
-  How to design the numbered prompt pipeline that drives DABI phases in Cavekit.
+  How to design the numbered prompt pipeline that drives Hunt phases in Cavekit.
   Covers greenfield 3-prompt patterns, rewrite 6-9 prompt patterns, shared principles,
   prompt engineering best practices, task templates, and time guards.
-  Trigger phrases: "prompt pipeline", "design prompts for SDD", "create DABI prompts",
+  Trigger phrases: "prompt pipeline", "design prompts for SDD", "create Hunt prompts",
   "pipeline prompts", "how many prompts do I need"
 ---
 
 # Prompt Pipeline Design
 
-The prompt pipeline is the engine of SDD. Each numbered prompt drives one phase of the DABI lifecycle (Spec, Plan, Implement, Iterate, Monitor). Prompts are structured markdown files that instruct an AI agent to perform a specific phase, with detailed information delegated to specs, plans, and reference materials.
+The prompt pipeline is the engine of SDD. Each numbered prompt drives one phase of the Hunt lifecycle (Spec, Plan, Implement, Iterate, Monitor). Prompts are structured markdown files that instruct an AI agent to perform a specific phase, with detailed information delegated to specs, plans, and reference materials.
 
 **Core principle:** Prompts should be as lightweight and systemic as possible. They define the *process*, not the *content* -- specs and plans hold the content.
 
@@ -116,7 +116,7 @@ These principles apply regardless of whether the pipeline is greenfield, rewrite
 
 | Principle | Detail |
 |-----------|--------|
-| **One prompt per DABI phase** | Each prompt maps to exactly one phase. Do not combine phases. |
+| **One prompt per Hunt phase** | Each prompt maps to exactly one phase. Do not combine phases. |
 | **Explicit input/output directories** | Every prompt declares what it reads and what it writes. No implicit side effects. |
 | **Git-based continuity** | Agents read git history (`git log`, `git diff`, `git status`) between iterations to understand what was done before. |
 | **Explicit done-conditions with termination markers** | Every prompt concludes with a verifiable checklist of conditions and a distinct output token that the iteration loop uses to detect completion. |

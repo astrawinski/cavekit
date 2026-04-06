@@ -546,7 +546,7 @@ Ships with 9 specialized agents (including **design-reviewer** for UI validation
 | [Implementation Tracking](skills/impl-tracking) | Living records of build progress |
 | [Documentation Inversion](skills/documentation-inversion) | Docs for agents, not just humans |
 | [Peer Review Loop](skills/peer-review-loop) | Combine build loop with cross-model review |
-| [Core Methodology](skills/methodology) | The full DABI lifecycle |
+| [Core Methodology](skills/methodology) | The full Hunt lifecycle |
 | [Caveman](skills/caveman) | Token-compressed output (~75% savings), built-in for build/inspect phases |
 
 </details>

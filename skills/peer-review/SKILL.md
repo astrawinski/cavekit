@@ -409,9 +409,9 @@ from diverse perspectives.
 
 ## Integration with Cavekit Lifecycle
 
-Peer review fits into the DABI lifecycle at multiple points:
+Peer review fits into the Hunt lifecycle at multiple points:
 
-| DABI Phase | Peer Review Role |
+| Hunt Phase | Peer Review Role |
 |-------------|-----------------|
 | **Draft** | Review kits for completeness, ambiguity, missing edge cases |
 | **Architect** | Architecture Review: challenge the plan before implementation begins |
@@ -428,6 +428,6 @@ that neither automated tests nor single-agent convergence loops find.
 
 - **convergence-monitoring** -- How to detect when peer review iterations have converged
 - **validation-first** -- Peer review is Gate 6 (human/agent review) in the validation pipeline
-- **prompt-pipeline** -- How to structure builder and reviewer prompts in the DABI pipeline
+- **prompt-pipeline** -- How to structure builder and reviewer prompts in the Hunt pipeline
 - **revision** -- When the peer reviewer finds a cavekit gap, revise the fix into kits
 - **impl-tracking** -- Record peer review findings in implementation tracking documents

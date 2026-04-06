@@ -263,6 +263,6 @@ When setting up a speculative-pipeline pipeline:
 
 - **prompt-pipeline** -- How to design the prompt files that each stage executes
 - **convergence-monitoring** -- How to detect convergence vs ceiling in each stage
-- **methodology** -- Where speculative-pipeline fits in the DABI lifecycle
+- **methodology** -- Where speculative-pipeline fits in the Hunt lifecycle
 - **validation-first** -- Validation gates that run after each stage completes
 - **context-architecture** -- Directory structure that stages read from and write to

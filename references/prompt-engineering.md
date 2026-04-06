@@ -1,18 +1,18 @@
 # Prompt Engineering Reference
 
-Best practices for designing prompts that drive DABI phases. Covers runtime inputs, agent team structures, batching, file ownership, exit criteria, completion signals, spawn templates, halting conditions, sub-agent delegation, task templates, and time guards.
+Best practices for designing prompts that drive Hunt phases. Covers runtime inputs, agent team structures, batching, file ownership, exit criteria, completion signals, spawn templates, halting conditions, sub-agent delegation, task templates, and time guards.
 
 ---
 
 ## 1. Overview
 
-Prompts in Cavekit are carefully structured markdown files that instruct AI agents to perform specific phases of DABI. Well-designed prompts are the difference between agents that converge on correct solutions and agents that thrash endlessly.
+Prompts in Cavekit are carefully structured markdown files that instruct AI agents to perform specific phases of the Hunt. Well-designed prompts are the difference between agents that converge on correct solutions and agents that thrash endlessly.
 
 **Core Principles:**
 - Prompts should be as lightweight and systemic as possible
 - Detailed information belongs in kits, plans, and reference materials -- not in the prompt itself
 - Prompts define the process; kits and plans define the content
-- One prompt per DABI phase
+- One prompt per Hunt phase
 
 ---
 
@@ -246,7 +246,7 @@ If ANY gate fails:
 Gate order matters: build before test, test before verify.
 ```
 
-### Between DABI Phases
+### Between Hunt Phases
 
 ```markdown
 ## Transition Gate: Architect -> Build

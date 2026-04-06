@@ -343,9 +343,9 @@ For each cavekit requirement with performance criteria:
 
 ---
 
-## 9. Phase Gates Between DABI Phases
+## 9. Phase Gates Between Hunt Phases
 
-Phase gates are broader than the 6-gate pipeline. They govern transitions between DABI phases.
+Phase gates are broader than the 6-gate pipeline. They govern transitions between Hunt phases.
 
 ### Cavekit -> Plan Phase Gate
 

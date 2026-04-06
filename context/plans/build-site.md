@@ -39,14 +39,14 @@ last_edited: "2026-04-01T12:00:00Z"
 |------|-------|-----------|-------------|-----------|--------|
 | T-002 | Hero section: title, pipeline SVG, particle, install block | cavekit-landing-page.md | R2 | T-001 | L |
 | T-003 | Problem section: 4 diagnostic cards with severity bars | cavekit-landing-page.md | R3 | T-001 | M |
-| T-004 | How It Works: 4 DABI phase cards with glow connections | cavekit-landing-page.md | R4 | T-001 | M |
+| T-004 | How It Works: 4 Hunt phase cards with glow connections | cavekit-landing-page.md | R4 | T-001 | M |
 | T-005 | Dual-Model Advantage: 3 review cards with mini diagrams | cavekit-landing-page.md | R5 | T-001 | L |
 | T-006 | Ralph Loop: elliptical SVG, orbiting particle, metrics | cavekit-landing-page.md | R6 | T-001 | L |
 | T-007 | Parallel Execution: wave visualization with task cards | cavekit-landing-page.md | R7 | T-001 | M |
 | T-008 | Get Started + Footer: terminal, typewriter, CTAs, footer | cavekit-landing-page.md | R8, R9 | T-001 | M |
 | T-009 | Docs page foundation: shared identity, layout, top bar | cavekit-docs-page.md | R1, R2, R3, R13, R14, R15, R16 (partial) | T-001 | L |
 
-**T-002 details:** Full hero section — 100vh centered layout. Version badge pill. "Cavekit" title in display font at ~72px with glow text-shadow. Subtitle. DABI pipeline SVG: boxes (YOU, DRAFT, ARCHITECT, AGENT 1/2/3, MERGE) with glassmorphism fills, dashed connecting paths, glowing particle tracing the full pipeline via `<animateMotion>` with `drop-shadow` filter. Install terminal block with glassmorphism surface, two commands in monospace, copy button that morphs "COPY" → "COPIED ✓" with green flash (reverts after 2s). Two links: "View on GitHub →", "Read the Docs →". Staggered load animation: badge → title → subtitle → pipeline → install → links (50-100ms delays). Copy button has `scale(0.97)` on `:active`.
+**T-002 details:** Full hero section — 100vh centered layout. Version badge pill. "Cavekit" title in display font at ~72px with glow text-shadow. Subtitle. Hunt pipeline SVG: boxes (YOU, DRAFT, ARCHITECT, AGENT 1/2/3, MERGE) with glassmorphism fills, dashed connecting paths, glowing particle tracing the full pipeline via `<animateMotion>` with `drop-shadow` filter. Install terminal block with glassmorphism surface, two commands in monospace, copy button that morphs "COPY" → "COPIED ✓" with green flash (reverts after 2s). Two links: "View on GitHub →", "Read the Docs →". Staggered load animation: badge → title → subtitle → pipeline → install → links (50-100ms delays). Copy button has `scale(0.97)` on `:active`.
 
 **T-003 details:** "THE PROBLEM" section. Headline: "AI coding agents are powerful. They fail in predictable ways." 2×2 card grid (1-col mobile). Cards: glassmorphism + red-tinted border, neon-red monospace title with glow, description, severity bar (fills 70-90% on scroll, `ease-out` 800ms). Stagger: 80ms between cards, `translateY(12px)` entrance.
 
@@ -83,15 +83,15 @@ last_edited: "2026-04-01T12:00:00Z"
 |------|-------|-----------|-------------|-----------|--------|
 | T-012 | Docs content: Overview + Quick Start | cavekit-docs-page.md | R6, R7 | T-010, T-011 | M |
 | T-013 | Docs content: Commands reference (all 10 commands) | cavekit-docs-page.md | R8 | T-010, T-011 | M |
-| T-014 | Docs content: Methodology (DABI, source of truth, scientific method) | cavekit-docs-page.md | R9 | T-010, T-011 | M |
+| T-014 | Docs content: Methodology (the Hunt, source of truth, scientific method) | cavekit-docs-page.md | R9 | T-010, T-011 | M |
 | T-015 | Docs content: Codex Integration (5 subsections) | cavekit-docs-page.md | R10 | T-010, T-011 | M |
 | T-016 | Docs content: Skills Reference + Configuration | cavekit-docs-page.md | R11, R12 | T-010, T-011 | M |
 
-**T-012 details:** Overview section: what Cavekit is, who it's for, specification layer concept, brief DABI summary with links to Commands/Methodology sections. Quick Start: Greenfield subsection (annotated `/ck:sketch` → `/ck:map` → `/ck:make` conversation) and Brownfield subsection (`--from-code` → `--filter` conversation). Content from README "The Idea", "How It Works" intro, and "Quick Start".
+**T-012 details:** Overview section: what Cavekit is, who it's for, specification layer concept, brief Hunt summary with links to Commands/Methodology sections. Quick Start: Greenfield subsection (annotated `/ck:sketch` → `/ck:map` → `/ck:make` conversation) and Brownfield subsection (`--from-code` → `--filter` conversation). Content from README "The Idea", "How It Works" intro, and "Quick Start".
 
 **T-013 details:** Commands section with 10 command entries. Each: monospace heading, phase badge (Draft/Architect/Build/Inspect/Utility), description, terminal usage example, flags/options table where applicable, related command links. Commands: `/ck:sketch` (flags: `--from-code`), `/ck:map` (flags: `--filter`), `/ck:make` (flags: `--peer-review`), `/ck:check`, `/ck:research`, `/ck:progress`, `/ck:scan`, `/ck:revise`, `/ck:judge`, `/ck:help`. Content from README "Commands" + CLI help.
 
-**T-014 details:** Methodology section. DABI Lifecycle: detailed phase walkthrough with what each produces. Kits as Source of Truth: why specs drive development. Scientific Method Applied: hypothesis→test→observe→refine mapped to kits→gates→loops→revision. Content from README "Methodology" and "Why Cavekit".
+**T-014 details:** Methodology section. Hunt Lifecycle: detailed phase walkthrough with what each produces. Kits as Source of Truth: why specs drive development. Scientific Method Applied: hypothesis→test→observe→refine mapped to kits→gates→loops→revision. Content from README "Methodology" and "Why Cavekit".
 
 **T-015 details:** Codex Integration section. 5 subsections: Design Challenge (pre-build review flow, critical vs advisory findings, auto-fix loop), Tier Gate (P0-P3 severity, gate modes table, fix cycle), Speculative Review (background review, timeout, fallback), Command Safety Gate (allowlist/blocklist, classification, verdict cache), Graceful Degradation (behavior without Codex). Content from README "Codex Adversarial Review".
 

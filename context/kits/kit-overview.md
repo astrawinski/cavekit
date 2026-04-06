@@ -11,7 +11,7 @@ Premium GitHub Pages website for the Cavekit Claude Code plugin. Two static HTML
 ## Domain Index
 | Domain | Cavekit File | Requirements | Status | Description |
 |--------|-----------|-------------|--------|-------------|
-| Marketing Landing Page | cavekit-landing-page.md | 13 | DRAFT | 8-section scroll experience: hero, problem, DABI phases, Codex review, Ralph Loop, parallel execution, install, footer |
+| Marketing Landing Page | cavekit-landing-page.md | 13 | DRAFT | 8-section scroll experience: hero, problem, Hunt phases, Codex review, Ralph Loop, parallel execution, install, footer |
 | Documentation Page | cavekit-docs-page.md | 16 | DRAFT | Single-page docs with sidebar nav: overview, quick start, commands, methodology, Codex integration, skills, configuration |
 
 ## Cross-Reference Map
