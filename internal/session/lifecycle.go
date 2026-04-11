@@ -32,7 +32,7 @@ func (m *Manager) Create(title, sitePath, siteName, program string) *Instance {
 	return inst
 }
 
-// Start creates the worktree and tmux session, then sends the build command.
+// Start creates the worktree and tmux session, then sends the initial Cavekit prompt.
 func (m *Manager) Start(ctx context.Context, inst *Instance, projectRoot, siteName string, startupDelay time.Duration) error {
 	inst.Status = StatusLoading
 
@@ -55,15 +55,19 @@ func (m *Manager) Start(ctx context.Context, inst *Instance, projectRoot, siteNa
 	if startupDelay > 0 {
 		go func() {
 			time.Sleep(startupDelay)
-			cmd := fmt.Sprintf("/ck:make --filter %s", siteName)
+			cmd := buildPrompt(siteName)
 			m.tmux.SendCommand(ctx, siteName, cmd)
 		}()
 	} else {
-		cmd := fmt.Sprintf("/ck:make --filter %s", siteName)
+		cmd := buildPrompt(siteName)
 		m.tmux.SendCommand(ctx, siteName, cmd)
 	}
 
 	return nil
+}
+
+func buildPrompt(siteName string) string {
+	return fmt.Sprintf("$ck-make for the build site named %s. Continue the Cavekit build loop for that site only, validate each task against the relevant kits, and keep progress artifacts up to date.", siteName)
 }
 
 // Pause detaches an instance from TUI tracking (session keeps running).

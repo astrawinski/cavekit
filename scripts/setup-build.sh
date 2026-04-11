@@ -90,7 +90,7 @@ HELP_EOF
       ;;
     *)
       # Positional argument: treat as explicit file path
-      # Strip leading @ (Claude Code convention)
+      # Strip leading @ for compatibility with older prompt-style examples
       arg="${1#@}"
       if [[ -n "$EXPLICIT_FILE" ]]; then
         echo "❌ Unexpected argument: $1 (file already set to $EXPLICIT_FILE)" >&2
@@ -178,7 +178,7 @@ fi
 
 if [[ ${#CANDIDATES[@]} -eq 0 ]]; then
   echo "❌ No build site or plan found in context/plans/ or context/sites/" >&2
-  echo "   Run /ck:map first to generate one." >&2
+  echo "   Run \$ck-map first to generate one." >&2
   exit 1
 fi
 

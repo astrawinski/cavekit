@@ -3,7 +3,7 @@ name: ck-scan
 description: Compare what was built against what was intended
 ---
 
-> **Note:** `/bp:gap-analysis`, `/ck:gap-analysis`, `/bp:scan` are deprecated aliases. Use `/ck:scan` instead.
+> **Note:** `$bp-gap-analysis`, `$ck-gap-analysis`, `$bp-scan` are deprecated aliases. Use `$ck-scan` instead.
 
 # Cavekit Gap Analysis — Built vs. Intended
 
@@ -109,7 +109,7 @@ For each gap (PARTIAL, MISSING, OVER-BUILT, UNTESTABLE), determine the root caus
 | P1 | plan-{domain}.md | {what to update} | R{n} |
 
 ### Recommended Next Steps
-1. Run `/ck:revise` to trace gaps into context files
+1. Run `$ck-revise` to trace gaps into context files
 2. {Specific cavekit updates needed}
 3. {Specific plan updates needed}
 4. {Implementation work remaining}

@@ -17,7 +17,7 @@ func TestManager_CapturePane(t *testing.T) {
 			if !strings.Contains(args, "-p") || !strings.Contains(args, "-e") || !strings.Contains(args, "-J") {
 				t.Errorf("capture-pane missing flags, got: %s", args)
 			}
-			return exec.Result{Stdout: "$ claude\nThinking...\n", ExitCode: 0}, nil
+			return exec.Result{Stdout: "$ codex\nThinking...\n", ExitCode: 0}, nil
 		}
 		return exec.Result{ExitCode: 0}, nil
 	})
@@ -27,7 +27,7 @@ func TestManager_CapturePane(t *testing.T) {
 	if err != nil {
 		t.Fatalf("CapturePane: %v", err)
 	}
-	if content != "$ claude\nThinking...\n" {
+	if content != "$ codex\nThinking...\n" {
 		t.Errorf("content = %q, unexpected", content)
 	}
 }

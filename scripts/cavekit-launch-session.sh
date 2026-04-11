@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # cavekit-launch-session — Creates a tmux session with one pane per build site.
-# Each pane runs Claude in the project directory with /ck:make.
+# Each pane runs Codex in the project directory and then receives a $ck-make prompt.
 #
 # Usage: cavekit-launch-session.sh [--expanded] <frontier-path> [<frontier-path> ...]
 #
@@ -32,7 +32,7 @@ fi
 # ─── Preflight ────────────────────────────────────────────────────────────────
 
 command -v tmux &>/dev/null || { echo "tmux not found. Install: brew install tmux" >&2; exit 1; }
-command -v claude &>/dev/null || { echo "claude not found." >&2; exit 1; }
+command -v codex &>/dev/null || { echo "codex not found." >&2; exit 1; }
 
 PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
@@ -80,10 +80,10 @@ write_launcher() {
   local frontier_basename
   frontier_basename=$(basename "$frontier_path")
 
-  local claude_cmd="claude"
+  local agent_cmd="codex"
   local mode_label="NEW"
   if [[ "$resuming" == "true" ]]; then
-    claude_cmd="claude --resume"
+    agent_cmd="codex resume --last"
     mode_label="RESUME"
   fi
 
@@ -95,7 +95,7 @@ echo "Cavekit Agent: $name [$mode_label]"
 echo "Directory: $project_dir"
 echo "Frontier: $frontier_basename"
 echo ""
-$claude_cmd
+$agent_cmd
 LAUNCHER_EOF
   chmod +x "$launcher"
   echo "$launcher"
@@ -181,16 +181,16 @@ else
   tmux select-pane -t "$SESSION_NAME:0.0"
 fi
 
-# ─── Staggered /ck:make launch ──────────────────────────────────────
+# ─── Staggered $ck-make launch ──────────────────────────────────────
 
-# Background process that sends /ck:make to NEW panes (resumed ones already have context)
+# Background process that sends the Codex-native Cavekit prompt to NEW panes.
 (
-  sleep 3  # Wait for Claude instances to start
+  sleep 3  # Wait for Codex instances to start
 
   for i in "${!NAMES[@]}"; do
     name="${NAMES[$i]}"
 
-    # Resumed sessions already have their loop — skip sending /ck:make
+    # Resumed sessions already have their loop — skip sending the initial prompt
     if [[ "${RESUMING[$i]}" == "true" ]]; then
       continue
     fi
@@ -201,7 +201,7 @@ fi
       target="$SESSION_NAME:0.${i}"
     fi
 
-    tmux send-keys -t "$target" "/ck:make --filter ${name}" Enter
+    tmux send-keys -t "$target" "\$ck-make for the build site named ${name}. Continue the Cavekit build loop for that site only, validate each task against the relevant kits, and keep progress artifacts up to date." Enter
 
     # Stagger between launches (skip delay after last one)
     sleep "$STAGGER_DELAY"

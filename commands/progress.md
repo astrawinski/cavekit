@@ -4,7 +4,7 @@ description: "Show progress against the build site or plan — tasks done, in pr
 argument-hint: "[--filter PATTERN]"
 ---
 
-> **Note:** `/bp:progress` is deprecated and will be removed in a future version. Use `/ck:progress` instead.
+> **Note:** `$bp-progress` is deprecated and will be removed in a future version. Use `$ck-progress` instead.
 
 # Cavekit Progress
 
@@ -14,7 +14,7 @@ Show the user a progress report by comparing the build site against implementati
 
 Look in `context/plans/` then `context/sites/` for `*site*`, `*plan*`, or `*frontier*` files (exclude `*overview*`). If `--filter` is set (parse from `$ARGUMENTS`), match against it.
 
-If no site/plan found: "No build site or plan found. Run `/ck:map` first."
+If no site/plan found: "No build site or plan found. Run `$ck-map` first."
 
 ## Step 2: Read State
 
@@ -74,7 +74,7 @@ For each task in the site:
 ### Loop Status
 - Iterations completed: {n}
 - Last iteration: {timestamp}
-- Active: {yes/no — .claude/ralph-loop.local.md exists?}
+- Active: {yes/no — loop state file exists?}
 ```
 
 Display this to the user.

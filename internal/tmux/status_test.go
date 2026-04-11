@@ -64,7 +64,7 @@ func TestStatusDetector_Prompt(t *testing.T) {
 	mock := exec.NewMockExecutor()
 	mock.OnCommand("tmux", func(c exec.Call) (exec.Result, error) {
 		return exec.Result{
-			Stdout:   "Claude wants to edit file.go\nAllow once\nNo, and tell Claude what to do differently\n",
+			Stdout:   "Codex wants to edit file.go\nAllow once\nNo, and tell Codex what to do differently\n",
 			ExitCode: 0,
 		}, nil
 	})

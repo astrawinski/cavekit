@@ -23,9 +23,9 @@ The command-line interface that replaces the current `cavekit` bash script. Prov
 **Description:** The primary command that launches the TUI.
 **Acceptance Criteria:**
 - [ ] `cavekit` or `cavekit monitor` launches the TUI
-- [ ] `--program <cmd>` overrides the default program (default: `claude`)
+- [ ] `--program <cmd>` overrides the default program (default: `codex`)
 - [ ] `--autoyes` / `-y` enables auto-approval of permission prompts
-- [ ] Preflight checks: tmux installed, program (claude) installed, git repo detected
+- [ ] Preflight checks: tmux installed, program (`codex` by default) installed, git repo detected
 - [ ] Loads persisted instances from previous session
 **Dependencies:** R1, cavekit-tui R1
 
@@ -60,7 +60,7 @@ The command-line interface that replaces the current `cavekit` bash script. Prov
 
 ## Out of Scope
 - Analytics command (keep as separate bash script for now)
-- Merge command (keep as Claude Code slash command)
+- Merge command (keep as a separate advanced workflow)
 - Plugin system
 
 ## Cross-References
@@ -69,5 +69,5 @@ The command-line interface that replaces the current `cavekit` bash script. Prov
 
 ## Changes
 - 2026-03-17: R2 acceptance criteria clarified — must parse --autoyes/-y flag and pass to TUI (finding F-010)
-- 2026-03-17: R2 acceptance criteria clarified — preflight must check program (claude) is installed (finding F-015)
+- 2026-03-17: R2 acceptance criteria clarified — preflight must check the selected program is installed (finding F-015)
 - 2026-03-17: R3 acceptance criteria clarified — must compute and display progress counts, not just worktree paths (finding F-012)

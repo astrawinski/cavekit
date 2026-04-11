@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# codex-detect.sh — Codex binary and plugin detection utilities
+# codex-detect.sh — Codex binary and local integration detection utilities
 # Source this file from other scripts: source "$(dirname "$0")/codex-detect.sh"
 #
 # Provides:
 #   CODEX_BINARY_AVAILABLE  (true/false) — codex binary on PATH and responsive
-#   CODEX_PLUGIN_PRESENT    (true/false) — Codex Claude Code plugin installed
-#   codex_available         (true/false) — both binary AND plugin present
+#   CODEX_PLUGIN_PRESENT    (true/false) — local Codex integration/config detected
+#   codex_available         (true/false) — Codex is available for Cavekit workflows
 #   bp_codex_nudge          — one-time install suggestion (no-op if already shown)
 
 # Guard against double-sourcing
@@ -23,11 +23,11 @@ if command -v codex &>/dev/null; then
   fi
 fi
 
-# ── Plugin presence check (T-002) ──────────────────────────────────────
+# ── Local integration check (T-002) ────────────────────────────────────
 
 CODEX_PLUGIN_PRESENT=false
 
-# Check standard Claude Code plugin locations
+# Check legacy plugin and current Codex config locations
 _bp_check_codex_plugin() {
   local claude_dir="${HOME}/.claude"
 
@@ -90,7 +90,7 @@ bp_codex_nudge() {
     echo "Tip: Install Codex for adversarial code review: npm install -g @openai/codex" >&2
   fi
   if [[ "$CODEX_PLUGIN_PRESENT" != "true" && "$CODEX_BINARY_AVAILABLE" == "true" ]]; then
-    echo "Tip: Codex binary found but plugin not detected. Run: codex setup" >&2
+    echo "Tip: Codex binary found but no local Codex integration was detected. Run: codex setup" >&2
   fi
 
   touch "$_BP_NUDGE_FILE"

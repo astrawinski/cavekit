@@ -30,15 +30,15 @@ func TestStatus_Icon(t *testing.T) {
 }
 
 func TestNewInstance(t *testing.T) {
-	inst := NewInstance("auth", "/path/to/site.md", "claude")
+	inst := NewInstance("auth", "/path/to/site.md", "codex")
 	if inst.Title != "auth" {
 		t.Errorf("Title = %q, want %q", inst.Title, "auth")
 	}
 	if inst.Status != StatusLoading {
 		t.Errorf("Status = %v, want %v", inst.Status, StatusLoading)
 	}
-	if inst.Program != "claude" {
-		t.Errorf("Program = %q, want %q", inst.Program, "claude")
+	if inst.Program != "codex" {
+		t.Errorf("Program = %q, want %q", inst.Program, "codex")
 	}
 	if inst.CreatedAt.IsZero() {
 		t.Error("CreatedAt should not be zero")
@@ -46,7 +46,7 @@ func TestNewInstance(t *testing.T) {
 }
 
 func TestInstance_IsActive(t *testing.T) {
-	inst := NewInstance("test", "", "claude")
+	inst := NewInstance("test", "", "codex")
 
 	inst.Status = StatusRunning
 	if !inst.IsActive() {
@@ -65,7 +65,7 @@ func TestInstance_IsActive(t *testing.T) {
 }
 
 func TestInstance_ProgressString(t *testing.T) {
-	inst := NewInstance("auth", "", "claude")
+	inst := NewInstance("auth", "", "codex")
 	inst.Status = StatusRunning
 	inst.TasksDone = 3
 	inst.TasksTotal = 12
@@ -78,7 +78,7 @@ func TestInstance_ProgressString(t *testing.T) {
 }
 
 func TestInstance_ProgressString_Empty(t *testing.T) {
-	inst := NewInstance("auth", "", "claude")
+	inst := NewInstance("auth", "", "codex")
 	if got := inst.ProgressString(); got != "" {
 		t.Errorf("ProgressString() = %q, want empty", got)
 	}

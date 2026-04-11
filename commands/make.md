@@ -5,7 +5,7 @@ argument-hint: "[FILE] [--filter PATTERN] [--peer-review] [--max-iterations N] [
 allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/setup-build.sh:*)", "Bash(${CLAUDE_PLUGIN_ROOT}/scripts/bp-config.sh:*)", "Bash(git *)"]
 ---
 
-> **Note:** `/bp:build`, `/ck:build`, `/bp:make` are deprecated aliases. Use `/ck:make` instead.
+> **Note:** `$bp-build`, `$ck-build`, `$bp-make` are deprecated aliases. Use `$ck-make` instead.
 
 # Cavekit Build — Autonomous Implementation
 
@@ -38,7 +38,7 @@ Before entering the execution loop, validate that the build site covers all cave
      - cavekit-{domain}.md R{n}: {criterion text}
      - cavekit-{domain}.md R{n}: {criterion text}
    
-   Run `/ck:map` to regenerate the build site with full coverage, or continue with known gaps.
+   Run `$ck-map` to regenerate the build site with full coverage, or continue with known gaps.
    ```
    Ask the user whether to proceed or stop. Do NOT silently continue with gaps.
 5. If no gaps are found, log: `✓ Pre-flight coverage check passed — all criteria mapped to tasks.`
@@ -127,7 +127,7 @@ Once the setup script completes (outputs the ralph prompt), you run the executio
      1. `git merge <branch> --no-edit` — merge the subagent's branch
      2. `git worktree remove <worktree-path>` — remove the worktree directory (required before branch can be deleted)
      3. `git branch -D <branch>` — delete the branch
-     Skip all three steps if the subagent reported no changes (Claude Code auto-cleans worktrees with no changes). If a merge conflicts, clean up the worktree (`git worktree remove <worktree-path> --force`) before reporting the conflict.
+     Skip all three steps if the subagent reported no changes (the agent runner auto-cleans worktrees with no changes). If a merge conflicts, clean up the worktree (`git worktree remove <worktree-path> --force`) before reporting the conflict.
    - Update `context/impl/impl-*.md` with status for each completed task
    - Record any dead ends in `context/impl/dead-ends.md`
    - Update `context/impl/loop-log.md` with an iteration entry. **If `CAVEMAN_ACTIVE` is true**, compress the loop-log entry to a dense one-liner per task using caveman-speak. Instead of verbose iteration summaries, write compact entries like:
@@ -202,7 +202,7 @@ Before updating CLAUDE.md, verify that the build actually satisfies the kits:
 4. If gaps are found (criteria not covered by completed tasks):
    - Log each gap with its cavekit reference
    - Add the gaps as new tasks to the build site (append to the highest tier + 1)
-   - Report: `{n} gap(s) found — {n} remediation tasks added to build site. Run /ck:make again to address.`
+   - Report: `{n} gap(s) found — {n} remediation tasks added to build site. Run $ck-make again to address.`
 5. If no gaps: proceed to CLAUDE.md hierarchy update
 
 ### Post-Build: Update CLAUDE.md Hierarchy

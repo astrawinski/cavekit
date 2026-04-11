@@ -12,8 +12,8 @@ type PaneStatus int
 
 const (
 	PaneUnknown PaneStatus = iota
-	PaneActive             // Content is changing (Claude is working)
-	PanePrompt             // Claude is waiting for permission approval
+	PaneActive             // Content is changing (the agent is working)
+	PanePrompt             // The agent is waiting for permission approval or input
 	PaneTrust              // Trust prompt ("Do you trust the files...")
 	PaneIdle               // Content hasn't changed (might be waiting for input)
 )
@@ -33,12 +33,13 @@ func (s PaneStatus) String() string {
 	}
 }
 
-// Permission prompt markers in Claude Code output.
+// Permission prompt markers commonly surfaced by coding-agent CLIs.
 var permissionPromptMarkers = []string{
-	"No, and tell Claude what to do differently",
+	"No, and tell Codex what to do differently",
 	"Allow once",
 	"Allow always",
 	"(Y)es",
+	"Approve this action",
 }
 
 // Trust prompt markers.

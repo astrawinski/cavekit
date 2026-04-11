@@ -50,7 +50,7 @@ func (s Status) Icon() string {
 	}
 }
 
-// Instance represents one Claude Code agent working on one site.
+// Instance represents one Codex agent working on one site.
 type Instance struct {
 	Title        string    `json:"title"`
 	SitePath     string    `json:"site_path"`
@@ -71,7 +71,7 @@ type Instance struct {
 	DiffAdded   int    `json:"diff_added"`
 	DiffRemoved int    `json:"diff_removed"`
 
-	// Health check state (from .claude/health-check.json in worktree).
+	// Health check state from worktree-local build metadata.
 	HealthStatus   string `json:"health_status"`    // "healthy", "warning", "error"
 	HealthErrors   int    `json:"health_errors"`
 	HealthWarnings int    `json:"health_warnings"`

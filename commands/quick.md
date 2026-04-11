@@ -5,13 +5,13 @@ argument-hint: "<feature description> [--skip-inspect] [--peer-review] [--max-it
 allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/setup-build.sh:*)", "Bash(${CLAUDE_PLUGIN_ROOT}/scripts/bp-config.sh:*)", "Bash(git *)"]
 ---
 
-> **Note:** `/bp:quick` is deprecated and will be removed in a future version. Use `/ck:quick` instead.
+> **Note:** `$bp-quick` is deprecated and will be removed in a future version. Use `$ck-quick` instead.
 
 # Cavekit Quick — End-to-End Feature Build
 
 Run the full Cavekit pipeline (draft → architect → build → inspect) from a single feature description with no stops for user input. Draft and architect phases are streamlined — no interactive design conversation, no user gates between phases.
 
-**When to use:** Small-to-medium features where you trust the agent's decomposition. For large or ambiguous projects, use `/ck:sketch` interactively instead.
+**When to use:** Small-to-medium features where you trust the agent's decomposition. For large or ambiguous projects, use `$ck-sketch` interactively instead.
 
 ## Phase 0: Resolve Execution Profile
 
@@ -33,9 +33,9 @@ Extract from `$ARGUMENTS`:
 - `--max-iterations N` — pass through to build phase
 
 If no feature description is provided:
-> Usage: `/ck:quick <describe what you want built>`
+> Usage: `$ck-quick <describe what you want built>`
 >
-> Example: `/ck:quick add a REST API for user profiles with CRUD operations and JWT auth`
+> Example: `$ck-quick add a REST API for user profiles with CRUD operations and JWT auth`
 
 Stop and wait for user input.
 
@@ -43,7 +43,7 @@ Stop and wait for user input.
 
 ## Phase 1: Quick Draft
 
-Streamlined version of `/ck:sketch` — no interactive Q&A, no approach proposals, no incremental presentation.
+Streamlined version of `$ck-sketch` — no interactive Q&A, no approach proposals, no incremental presentation.
 
 Do NOT run this phase inline in the parent thread. Dispatch a `ck:drafter` subagent with `model: "{REASONING_MODEL}"` and give it the quick-draft rules below. If that subagent needs helper exploration for repo scanning, it should dispatch those helpers with `model: "{EXPLORATION_MODEL}"`.
 
@@ -97,7 +97,7 @@ Proceed immediately — no user gate.
 
 ## Phase 2: Quick Architect
 
-Streamlined version of `/ck:map` — runs inline, no stopping.
+Streamlined version of `$ck-map` — runs inline, no stopping.
 
 Do NOT run this phase inline in the parent thread. Dispatch a `ck:map` subagent with `model: "{REASONING_MODEL}"` and give it the quick-architect rules below.
 
@@ -135,14 +135,14 @@ Proceed immediately — no user gate.
 
 ## Phase 3: Build
 
-Run the **full build phase** exactly as `/ck:make` defines it. This is NOT simplified — the build loop runs with all its rigor:
+Run the **full build phase** exactly as `$ck-make` defines it. This is NOT simplified — the build loop runs with all its rigor:
 
 1. Execute `"${CLAUDE_PLUGIN_ROOT}/scripts/setup-build.sh"` with any passthrough flags (`--peer-review`, `--max-iterations`)
 2. Run the execution loop: compute frontier → dispatch tasks → merge → track → repeat
 3. Follow all circuit breakers (3 consecutive failures = BLOCKED, merge conflicts = stop)
 4. All critical rules apply: form coherent work packets, delegate only the packets that benefit from parallel execution, merge after every wave
 
-The build phase continues to use the explicit `EXECUTION_MODEL` resolved by `/ck:make`.
+The build phase continues to use the explicit `EXECUTION_MODEL` resolved by `$ck-make`.
 
 The build phase is where quality matters — no shortcuts here.
 
@@ -150,7 +150,7 @@ The build phase is where quality matters — no shortcuts here.
 
 ## Phase 4: Inspect (unless `--skip-inspect`)
 
-If `--skip-inspect` was NOT passed, run the **full inspect phase** exactly as `/ck:check` defines it:
+If `--skip-inspect` was NOT passed, run the **full inspect phase** exactly as `$ck-check` defines it:
 
 1. Dispatch a `ck:surveyor` subagent with `model: "{REASONING_MODEL}"` for the gap analysis
 2. Dispatch a `ck:inspector` subagent with `model: "{REASONING_MODEL}"` for the peer review
@@ -185,5 +185,5 @@ After all phases complete, present:
 ## {If inspect ran and verdict is REVISE or REJECT}
 ### Remaining Work
 {summary of gaps or findings}
-Run `/ck:make` to address remaining tasks, or `/ck:check` for details.
+Run `$ck-make` to address remaining tasks, or `$ck-check` for details.
 ```

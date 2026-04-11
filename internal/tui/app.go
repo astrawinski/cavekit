@@ -560,7 +560,7 @@ func (a *App) createInstanceCmd(name string) tea.Cmd {
 	return func() tea.Msg {
 		prog := a.program
 		if prog == "" {
-			prog = "claude"
+			prog = "codex"
 		}
 		inst := a.sessionMgr.Create(name, "", name, prog)
 		err := a.sessionMgr.Start(context.Background(), inst, a.projectRoot, name, 3*time.Second)
@@ -622,7 +622,7 @@ func (a *App) launchSites(items []SitePickerItem) tea.Cmd {
 	return func() tea.Msg {
 		prog := a.program
 		if prog == "" {
-			prog = "claude"
+			prog = "codex"
 		}
 		item := items[0]
 		inst := a.sessionMgr.Create(item.Name, item.Path, item.Name, prog)

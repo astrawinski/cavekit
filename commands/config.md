@@ -5,7 +5,7 @@ argument-hint: "[list | preset <expensive|quality|balanced|fast> [--global]]"
 allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/bp-config.sh:*)"]
 ---
 
-> **Note:** `/bp:config` is deprecated and will be removed in a future version. Use `/ck:config` instead.
+> **Note:** `$bp-config` is deprecated and will be removed in a future version. Use `$ck-config` instead.
 
 # Cavekit Config — Execution Presets
 
@@ -13,13 +13,13 @@ Use this command to inspect or change the Cavekit execution preset that maps tas
 
 ## Supported Usage
 
-- `/ck:config`
+- `$ck-config`
   Show the effective preset, resolved models, and where the value came from.
-- `/ck:config list`
+- `$ck-config list`
   Show the built-in presets and their model mappings.
-- `/ck:config preset <name>`
+- `$ck-config preset <name>`
   Set the project override in `.cavekit/config`.
-- `/ck:config preset <name> --global`
+- `$ck-config preset <name> --global`
   Set the user-level default in `~/.cavekit/config`.
 
 If the arguments do not match one of those forms, show this usage summary and stop.

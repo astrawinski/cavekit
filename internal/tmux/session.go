@@ -1,5 +1,5 @@
 // Package tmux manages detached tmux sessions as the execution backend
-// for Claude Code instances.
+// for Cavekit agent sessions.
 package tmux
 
 import (

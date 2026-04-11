@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
 	osexec "os/exec"
 	"path/filepath"
@@ -26,6 +27,8 @@ func main() {
 	switch cmd {
 	case "monitor", "":
 		runMonitor()
+	case "hello":
+		os.Exit(runHello(os.Args[2:], os.Stdout, os.Stderr))
 	case "status":
 		runStatus()
 	case "kill":
@@ -38,14 +41,24 @@ func main() {
 		runReset()
 	default:
 		fmt.Fprintf(os.Stderr, "unknown command: %s\n", cmd)
-		fmt.Fprintln(os.Stderr, "usage: cavekit [monitor|status|kill|version|debug|reset]")
+		fmt.Fprintln(os.Stderr, "usage: cavekit [monitor|hello|status|kill|version|debug|reset]")
 		os.Exit(1)
 	}
 }
 
+func runHello(args []string, stdout, stderr io.Writer) int {
+	if len(args) != 1 {
+		fmt.Fprintln(stderr, "usage: cavekit hello <name>")
+		return 1
+	}
+
+	fmt.Fprintf(stdout, "Hello, %s!\n", args[0])
+	return 0
+}
+
 func runMonitor() {
 	// Parse flags
-	program := "claude"
+		program := "codex"
 	autoYes := false
 	for i, arg := range os.Args {
 		if (arg == "--program" || arg == "-p") && i+1 < len(os.Args) {

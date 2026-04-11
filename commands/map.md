@@ -4,7 +4,7 @@ description: "Generate a build site from kits — the task dependency graph that
 argument-hint: "[--filter PATTERN]"
 ---
 
-> **Note:** `/bp:architect`, `/ck:architect`, `/bp:map` are deprecated aliases. Use `/ck:map` instead.
+> **Note:** `$bp-architect`, `$ck-architect`, `$bp-map` are deprecated aliases. Use `$ck-map` instead.
 
 # Cavekit Architect — Generate Build Site
 
@@ -25,7 +25,7 @@ Do NOT rely on the agent frontmatter model. Dispatch the actual site-generation 
 ## Step 1: Validate Kits Exist
 
 Check `context/kits/` for cavekit files. If none found, tell the user:
-> No kits found. Run `/ck:sketch` first.
+> No kits found. Run `$ck-sketch` first.
 
 If `--filter` is set, only include kits matching the filter pattern.
 
@@ -167,8 +167,8 @@ Rules for the graph:
 ### Tier 0 Tasks: {count} (can run in parallel immediately)
 
 ### Next Step
-Run `/ck:make` to start implementation (auto-parallelizes independent tasks).
-Run `/ck:make --peer-review` to add Codex review.
+Run `$ck-make` to start implementation (auto-parallelizes independent tasks).
+Run `$ck-make --peer-review` to add Codex review.
 ```
 
 ### Rules

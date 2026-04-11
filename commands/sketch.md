@@ -4,7 +4,7 @@ description: "Write kits: decompose what you're building into domains with testa
 argument-hint: "[REFS_PATH | --from-code] [--filter PATTERN]"
 ---
 
-> **Note:** `/bp:draft`, `/ck:draft`, `/bp:sketch` are deprecated aliases. Use `/ck:sketch` instead.
+> **Note:** `$bp-draft`, `$ck-draft`, `$bp-sketch` are deprecated aliases. Use `$ck-sketch` instead.
 
 # Cavekit Draft — Write Kits
 
@@ -478,10 +478,10 @@ Wait for the user's response. If they request changes, make them and re-run Step
 - {anything that couldn't be fully specified}
 
 ### Next Step
-Run `/ck:map` to generate the build site from these kits.
+Run `$ck-map` to generate the build site from these kits.
 ```
 
-Present the report. When the user is ready, transition to `/ck:map`.
+Present the report. When the user is ready, transition to `$ck-map`.
 
 ---
 

@@ -3,14 +3,14 @@
 ## Greenfield: Task management API
 
 ```
-user: /ck:sketch
+user: $ck-sketch
 
-claude: What are you building?
+codex: What are you building?
 
 user: A task management API. Users create projects, add tasks with priorities
       and due dates, assign tasks to team members. REST API, PostgreSQL.
 
-claude: Decomposing into domains...
+codex: Decomposing into domains...
 
       Created 4 kits:
       - cavekit-users.md (4 requirements, 12 acceptance criteria)
@@ -19,11 +19,11 @@ claude: Decomposing into domains...
       - cavekit-notifications.md (3 requirements, 8 acceptance criteria)
 
       Dependency order: users → projects → tasks → notifications
-      Next: /ck:map
+      Next: $ck-map
 
-user: /ck:map
+user: $ck-map
 
-claude: Reading 4 kits, 22 requirements...
+codex: Reading 4 kits, 22 requirements...
 
       Generated build site: 34 tasks, 5 tiers
       - Tier 0: DB schema, user model (3 tasks)
@@ -32,11 +32,11 @@ claude: Reading 4 kits, 22 requirements...
       - Tier 3: Task CRUD, assignments (10 tasks)
       - Tier 4: Notifications (8 tasks)
 
-      Next: /ck:make
+      Next: $ck-make
 
-user: /ck:make
+user: $ck-make
 
-claude: Loop activated! 34 tasks, 20 max iterations.
+codex: Loop activated! 34 tasks, 20 max iterations.
 
       --- Iteration 1 ---
       T-001: Database Schema Setup (Tier 0, cavekit-users.md R1)
@@ -57,9 +57,9 @@ claude: Loop activated! 34 tasks, 20 max iterations.
 ## Brownfield: Adding collaboration to existing Next.js app
 
 ```
-user: /ck:sketch --from-code
+user: $ck-sketch --from-code
 
-claude: Exploring codebase... Next.js 14, Prisma, NextAuth.
+codex: Exploring codebase... Next.js 14, Prisma, NextAuth.
 
       Found 6 domains. Created kits:
       - cavekit-auth.md (5 requirements — all satisfied by existing code)
@@ -72,18 +72,18 @@ claude: Exploring codebase... Next.js 14, Prisma, NextAuth.
       4 requirements are gaps (not yet implemented).
 
 user: I only want the collaboration features.
-      /ck:map --filter collaboration
+      $ck-map --filter collaboration
 
-claude: Reading cavekit-collaboration.md (3 requirements)...
+codex: Reading cavekit-collaboration.md (3 requirements)...
 
       Generated build site: 8 tasks, 3 tiers
       - Tier 0: WebSocket setup, presence types
       - Tier 1: Cursor presence, CRDT integration
       - Tier 2: Conflict resolution, live sync
 
-user: /ck:make --filter collaboration
+user: $ck-make --filter collaboration
 
-claude: Loop activated! 8 tasks.
+codex: Loop activated! 8 tasks.
 
       --- Iteration 1 ---
       T-001: WebSocket Server (Tier 0, R1)
@@ -93,10 +93,10 @@ claude: Loop activated! 8 tasks.
       All done. <promise>CAVEKIT COMPLETE</promise>
 
 user: Now notifications with peer review.
-      /ck:map --filter notifications
-      /ck:make --filter notifications --peer-review
+      $ck-map --filter notifications
+      $ck-make --filter notifications --peer-review
 
-claude: Archived previous cycle → context/impl/archive/20260314-201500/
+codex: Archived previous cycle → context/impl/archive/20260314-201500/
       Configured Codex (gpt-5.4) as peer reviewer.
 
       --- Iteration 1 (BUILD) ---
@@ -116,7 +116,7 @@ claude: Archived previous cycle → context/impl/archive/20260314-201500/
 ## The flow
 
 ```
-/ck:sketch      →  kits
-/ck:map  →  build site
-/ck:make      →  code
+$ck-sketch      →  kits
+$ck-map  →  build site
+$ck-make      →  code
 ```

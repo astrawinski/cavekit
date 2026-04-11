@@ -4,7 +4,7 @@ description: "Create or update the project's DESIGN.md — the visual design sys
 argument-hint: "[--import <name>] [--from-site <url>] [--audit] [--section <1-9>]"
 ---
 
-> **Note:** `/bp:design` is deprecated and will be removed in a future version. Use `/ck:design` instead.
+> **Note:** `$bp-design` is deprecated and will be removed in a future version. Use `$ck-design` instead.
 
 # Cavekit Design — Create or Update DESIGN.md
 
@@ -42,9 +42,9 @@ Extract from `$ARGUMENTS`:
 - `--section <1-9>` → **Update mode**: update a specific section of an existing DESIGN.md
 - No arguments → **Interactive mode** (Step 3c): collaborative design conversation
 
-If `--audit` is set and no DESIGN.md exists, report: "No DESIGN.md found. Run `/ck:design` to create one." and stop.
+If `--audit` is set and no DESIGN.md exists, report: "No DESIGN.md found. Run `$ck-design` to create one." and stop.
 
-If `--section` is set and no DESIGN.md exists, report: "No DESIGN.md found. Run `/ck:design` to create the full design system first." and stop.
+If `--section` is set and no DESIGN.md exists, report: "No DESIGN.md found. Run `$ck-design` to create the full design system first." and stop.
 
 ## Step 3a: Import from Collection
 
@@ -229,7 +229,7 @@ Wait for response. If changes requested, make them and re-run Step 5.
    ## Conventions
    - DESIGN.md at project root is the canonical source
    - All UI implementation must reference DESIGN.md tokens and patterns
-   - Updated via /ck:design or automatically during /ck:check and /ck:revise
+   - Updated via $ck-design or automatically during $ck-check and $ck-revise
    - Agents read this before implementing any user-facing component
    ```
 
@@ -241,7 +241,7 @@ Wait for response. If changes requested, make them and re-run Step 5.
 
    | Date | Section | Change | Source |
    |------|---------|--------|--------|
-   | {today} | All | Initial design system created | /ck:design |
+   | {today} | All | Initial design system created | $ck-design |
    ```
 
 4. **Report:**
@@ -256,9 +256,9 @@ Wait for response. If changes requested, make them and re-run Step 5.
    **Responsive Breakpoints:** {count}
 
    ### Next Steps
-   - Run `/ck:sketch` to create kits — they'll reference this design system
-   - Run `/ck:design --audit` anytime to check design system health
-   - Run `/ck:design --section N` to update a specific section
+   - Run `$ck-sketch` to create kits — they'll reference this design system
+   - Run `$ck-design --audit` anytime to check design system health
+   - Run `$ck-design --section N` to update a specific section
    ```
 
 ---

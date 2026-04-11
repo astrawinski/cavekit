@@ -32,7 +32,7 @@ func TestManager_CreateSession(t *testing.T) {
 	})
 
 	mgr := NewManager(mock)
-	err := mgr.CreateSession(context.Background(), "test", "/tmp", "claude")
+	err := mgr.CreateSession(context.Background(), "test", "/tmp", "codex")
 	if err != nil {
 		t.Fatalf("CreateSession: %v", err)
 	}

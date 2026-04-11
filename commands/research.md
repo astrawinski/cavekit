@@ -4,7 +4,7 @@ description: "Deep research for grounding kits in evidence — current best prac
 argument-hint: "<description> [--depth quick|standard|deep] [--web-only] [--codebase-only]"
 ---
 
-> **Note:** `/bp:research` is deprecated and will be removed in a future version. Use `/ck:research` instead.
+> **Note:** `$bp-research` is deprecated and will be removed in a future version. Use `$ck-research` instead.
 
 # Cavekit Research — Deep Multi-Agent Research
 

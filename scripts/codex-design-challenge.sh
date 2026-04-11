@@ -482,7 +482,7 @@ bp_design_challenge_cycle() {
 }
 
 # ── T-306: Draft Flow Integration Point ───────────────────────────────
-# Entry point for the /ck:sketch command to call after Step 8 (cavekit-reviewer).
+# Entry point for the $ck-sketch skill flow to call after Step 8 (cavekit-reviewer).
 # Runs the design challenge and returns results for insertion before Step 9 (user gate).
 #
 # Arguments:

@@ -13,7 +13,7 @@ import (
 func TestPreviewTab_Content(t *testing.T) {
 	mock := exec.NewMockExecutor()
 	mock.OnCommand("tmux", func(c exec.Call) (exec.Result, error) {
-		return exec.Result{Stdout: "$ claude\nWorking...\n", ExitCode: 0}, nil
+		return exec.Result{Stdout: "$ codex\nWorking...\n", ExitCode: 0}, nil
 	})
 	mgr := tmux.NewManager(mock)
 	preview := NewPreviewTab(mgr)

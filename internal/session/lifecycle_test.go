@@ -33,7 +33,7 @@ func newTestManager() (*Manager, *exec.MockExecutor) {
 
 func TestManager_Create(t *testing.T) {
 	mgr, _ := newTestManager()
-	inst := mgr.Create("auth", "/path/site.md", "auth", "claude")
+	inst := mgr.Create("auth", "/path/site.md", "auth", "codex")
 
 	if inst.Title != "auth" {
 		t.Errorf("Title = %q", inst.Title)
@@ -51,7 +51,7 @@ func TestManager_Create(t *testing.T) {
 
 func TestManager_Start(t *testing.T) {
 	mgr, mock := newTestManager()
-	inst := mgr.Create("auth", "/path/site.md", "auth", "claude")
+	inst := mgr.Create("auth", "/path/site.md", "auth", "codex")
 
 	err := mgr.Start(context.Background(), inst, "/code/project", "auth", 0)
 	if err != nil {
@@ -65,24 +65,24 @@ func TestManager_Start(t *testing.T) {
 		t.Error("WorktreePath should be set")
 	}
 
-	// Verify tmux send-keys was called with the build command
+	// Verify tmux send-keys was called with the build prompt
 	foundBuild := false
 	for _, c := range mock.Calls {
 		if c.Name == "tmux" {
 			args := strings.Join(c.Args, " ")
-			if strings.Contains(args, "/ck:make") && strings.Contains(args, "auth") {
+			if strings.Contains(args, "$ck-make") && strings.Contains(args, "auth") {
 				foundBuild = true
 			}
 		}
 	}
 	if !foundBuild {
-		t.Error("should have sent /ck:make command to tmux")
+		t.Error("should have sent $ck-make prompt to tmux")
 	}
 }
 
 func TestManager_Pause(t *testing.T) {
 	mgr, _ := newTestManager()
-	inst := mgr.Create("auth", "", "auth", "claude")
+	inst := mgr.Create("auth", "", "auth", "codex")
 	inst.Status = StatusRunning
 
 	mgr.Pause(inst)
@@ -93,7 +93,7 @@ func TestManager_Pause(t *testing.T) {
 
 func TestManager_Kill(t *testing.T) {
 	mgr, _ := newTestManager()
-	inst := mgr.Create("auth", "", "auth", "claude")
+	inst := mgr.Create("auth", "", "auth", "codex")
 	inst.Status = StatusRunning
 
 	err := mgr.Kill(context.Background(), inst, "/code/project", false)

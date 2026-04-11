@@ -4,11 +4,11 @@ description: "Inspect the last loop: gap analysis against kits + peer review cod
 argument-hint: "[--filter PATTERN]"
 ---
 
-> **Note:** `/bp:inspect`, `/ck:inspect`, `/bp:check` are deprecated aliases. Use `/ck:check` instead.
+> **Note:** `$bp-inspect`, `$ck-inspect`, `$bp-check` are deprecated aliases. Use `$ck-check` instead.
 
 # Cavekit Inspect — Post-Loop Analysis
 
-Run this after `/ck:make` completes (or is stopped). It does two things:
+Run this after `$ck-make` completes (or is stopped). It does two things:
 
 1. **Gap analysis** — compares what was built against what the kits require
 2. **Peer review** — finds bugs, security issues, and quality problems in the code that was written
@@ -38,7 +38,7 @@ Read these files to understand what happened:
 7. **Design system** — read `DESIGN.md` at project root if it exists (for design compliance checking in Steps 2-3)
 
 If no impl tracking or loop log exists, tell the user:
-> No loop artifacts found. Run `/ck:make` first, then `/ck:check` after it completes.
+> No loop artifacts found. Run `$ck-make` first, then `$ck-check` after it completes.
 
 ## Step 2: Gap Analysis
 
@@ -200,8 +200,8 @@ Present this to the user:
 ## Recommended Next Steps
 1. {highest priority action}
 2. {next action}
-3. {if gaps exist: run `/ck:make` again to address remaining work}
-4. {if cavekit gaps found: kits will be updated below, then `/ck:map` + `/ck:make`}
+3. {if gaps exist: run `$ck-make` again to address remaining work}
+4. {if cavekit gaps found: kits will be updated below, then `$ck-map` + `$ck-make`}
 ```
 
 ## Step 5: Revise
@@ -242,7 +242,7 @@ If new requirements were added to kits, add corresponding tasks to the site:
 
 ### Restore Archived Impl Tracking
 
-If the verdict is **REVISE** or **REJECT** and `context/impl/` has no `impl-*.md` files (they were archived by a previous `/ck:make` run), restore them so the next build cycle knows which tasks are already done:
+If the verdict is **REVISE** or **REJECT** and `context/impl/` has no `impl-*.md` files (they were archived by a previous `$ck-make` run), restore them so the next build cycle knows which tasks are already done:
 
 1. Find the most recent archive: `ls -td context/impl/archive/*/ 2>/dev/null | head -1`
 2. If found, copy all `impl-*.md` files (NOT `loop-log.md` or `peer-review-findings.md`) back to `context/impl/`:
@@ -257,7 +257,7 @@ If the verdict is **REVISE** or **REJECT** and `context/impl/` has no `impl-*.md
    ```
 3. Report the restoration to the user
 
-This ensures the next `/ck:make` cycle can compute the correct frontier (skipping already-done tasks).
+This ensures the next `$ck-make` cycle can compute the correct frontier (skipping already-done tasks).
 
 ### Update Impl Tracking
 
@@ -280,7 +280,7 @@ last_edited: "{CURRENT_DATE_UTC}"
 | F-002: {title} | P1 | {path} | NEW |
 ```
 
-These findings will be picked up by the next `/ck:make` loop — the build prompt reads impl tracking and prioritizes P0 issues first.
+These findings will be picked up by the next `$ck-make` loop — the build prompt reads impl tracking and prioritizes P0 issues first.
 
 ### Report What Changed
 
@@ -302,5 +302,5 @@ After revision, tell the user:
 ### Findings Logged
 {n} findings written to context/impl/impl-review-findings.md
 
-Ready for next cycle: `/ck:make`
+Ready for next cycle: `$ck-make`
 ```

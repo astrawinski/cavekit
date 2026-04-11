@@ -6,7 +6,7 @@ last_edited: "2026-03-31T00:00:00Z"
 # Cavekit: Speculative Pre-Build Review
 
 ## Scope
-Run Codex adversarial review of the previous tier in the background while Claude builds the current tier. By the time the current tier finishes, the review of the previous tier is already complete, cutting tier gate latency to near-zero.
+Run Codex adversarial review of the previous tier in the background while the active build loop works on the current tier. By the time the current tier finishes, the review of the previous tier is already complete, cutting tier gate latency to near-zero.
 
 ## Requirements
 
@@ -46,7 +46,7 @@ Settings to control speculative review behavior.
 ## Out of Scope
 - Speculative building (starting Tier N+1 before Tier N's review is resolved) — too risky, findings could invalidate Tier N+1's work
 - Reviewing multiple tiers ahead — only one tier of overlap
-- Modifying the Codex plugin's background job mechanism
+- Modifying Codex's background job mechanism
 
 ## Cross-References
 - See also: cavekit-tier-gate.md (speculative review feeds into tier gate gating logic)

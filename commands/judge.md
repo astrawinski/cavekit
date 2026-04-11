@@ -5,9 +5,9 @@ argument-hint: "[--base REF]"
 allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/codex-review.sh:*)"]
 ---
 
-> **Note:** `/bp:codex-review`, `/ck:codex-review`, `/bp:judge` are deprecated aliases. Use `/ck:judge` instead.
+> **Note:** `$bp-codex-review`, `$ck-codex-review`, `$bp-judge` are deprecated aliases. Use `$ck-judge` instead.
 
-# /ck:judge — Codex Adversarial Review
+# $ck-judge — Codex Adversarial Review
 
 Run an on-demand adversarial code review using the Codex CLI. This sends the current diff to Codex for analysis of bugs, security issues, logic errors, and spec violations.
 

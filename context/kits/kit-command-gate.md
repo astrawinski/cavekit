@@ -6,15 +6,15 @@ last_edited: "2026-03-31T00:00:00Z"
 # Cavekit: Command Gate
 
 ## Scope
-A PreToolUse hook that intercepts Bash tool calls, classifies command safety using Codex (gpt-5.4-mini), and blocks unsafe commands before execution. Integrates with Claude Code's existing allow/block permission system and caches verdicts by normalized command pattern.
+A PreToolUse hook that intercepts Bash tool calls, classifies command safety using Codex (gpt-5.4-mini), and blocks unsafe commands before execution. Integrates with the active agent allow/block permission flow and caches verdicts by normalized command pattern.
 
 ## Requirements
 
 ### R1: PreToolUse Hook
-Intercept Bash tool calls before execution via Claude Code's PreToolUse hook system.
+Intercept Bash tool calls before execution via the active agent's PreToolUse hook system.
 - [ ] Register a PreToolUse hook that matches on Bash tool invocations
 - [ ] Extract the command string from the tool call parameters
-- [ ] Return one of: approve (allow execution), block (prevent execution with reason), or passthrough (defer to Claude's default permission system)
+- [ ] Return one of: approve (allow execution), block (prevent execution with reason), or passthrough (defer to the runtime's default permission system)
 - [ ] Hook timeout must be short enough to not noticeably delay interactive use (under 5 seconds)
 
 ### R2: Fast-Path Classification
@@ -31,15 +31,15 @@ Send ambiguous commands to Codex (gpt-5.4-mini) for safety classification.
 - [ ] Codex returns a structured verdict: safe (bool), reason (string), severity (info/warn/block)
 - [ ] `info` severity: approve silently
 - [ ] `warn` severity: approve but log the warning to stderr
-- [ ] `block` severity: block execution, return reason to Claude
+- [ ] `block` severity: block execution, return reason to the agent runtime
 - [ ] Model configurable via settings (default: gpt-5.4-mini)
 
-### R4: Claude Permission Integration
-Integrate with Claude Code's existing allow/block permission system rather than replacing it.
-- [ ] Commands already explicitly allowed in Claude's settings (e.g., `Bash(go test:*)`) bypass the gate entirely
-- [ ] Commands already explicitly blocked in Claude's settings are blocked before the gate runs
+### R4: Agent Permission Integration
+Integrate with the active agent's existing allow/block permission system rather than replacing it.
+- [ ] Commands already explicitly allowed in the runtime's settings (e.g., `Bash(go test:*)`) bypass the gate entirely
+- [ ] Commands already explicitly blocked in the runtime's settings are blocked before the gate runs
 - [ ] The gate only evaluates commands that would otherwise prompt the user for permission
-- [ ] Gate verdicts respect the same format Claude's permission system uses
+- [ ] Gate verdicts respect the same format the runtime's permission system uses
 
 ### R5: Pattern-Based Verdict Cache
 Cache Codex verdicts by normalized command pattern to avoid redundant API calls within a session.
@@ -65,7 +65,7 @@ User settings for the command gate.
 
 ## Out of Scope
 - Reviewing non-Bash tool calls (Edit, Write, etc.)
-- Modifying Claude Code's core permission system
+- Modifying the runtime's core permission system
 - Persistent cross-session learning from past verdicts
 - Reviewing commands after execution (post-hoc audit)
 
