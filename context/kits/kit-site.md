@@ -6,7 +6,7 @@ last_edited: "2026-03-19T00:00:00Z"
 # Spec: Site Discovery and Tracking
 
 ## Scope
-Finding site files, parsing their task structure, and tracking task completion from implementation files. This is the Cavekit-specific intelligence that claude-squad doesn't have.
+Finding site files, parsing their task structure, and tracking task completion from implementation files. This is the Cavekit-specific intelligence that the generic orchestration layer doesn't have.
 
 ## Requirements
 
@@ -45,7 +45,7 @@ Finding site files, parsing their task structure, and tracking task completion f
 - [ ] "done" — all tasks complete
 - [ ] "in-progress" — has an active worktree with Ralph Loop running
 - [ ] "available" — has incomplete tasks, no active worktree
-- [ ] Status detection checks for `.claude/ralph-loop.local.md` in the site's worktree
+- [ ] Status detection checks for the Cavekit loop state file in the site's worktree
 **Dependencies:** R3
 
 ### R5: Progress Summary
@@ -63,7 +63,7 @@ Finding site files, parsing their task structure, and tracking task completion f
 - [ ] Ranking priority: active worktree with Ralph Loop (score 3) > worktree exists or has incomplete tasks (score 2) > base (score 1)
 - [ ] Ties break deterministically: first candidate in alphabetical order wins (use `>` not `>=` in score comparison)
 - [ ] All task ID grep patterns use `$TASK_ID_PATTERN` variable, never hardcoded subsets
-- [ ] When listing candidates, mark the selected one with `→` for Claude visibility
+- [ ] When listing candidates, mark the selected one with `→` for clear agent visibility
 **Dependencies:** R1, R3
 
 ## Back-Propagated

@@ -24,7 +24,7 @@ last_edited: "2026-03-31T00:00:00Z"
 | Task | Title | Cavekit | Requirement | blockedBy | Effort |
 |------|-------|-----------|-------------|-----------|--------|
 | T-104 | Fast-path classifier (allowlist/blocklist lookup in hook) | cavekit-command-gate.md | R2 | T-101, T-102 | M |
-| T-105 | Claude permission system integration (skip gate for pre-allowed/blocked) | cavekit-command-gate.md | R4 | T-101, T-103 | M |
+| T-105 | Runtime permission system integration (skip gate for pre-allowed/blocked) | cavekit-command-gate.md | R4 | T-101, T-103 | M |
 | T-106 | Command normalizer (strip variable args, preserve structure + flags) | cavekit-command-gate.md | R5 | T-102 | M |
 
 ---

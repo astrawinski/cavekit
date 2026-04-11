@@ -6,12 +6,12 @@ last_edited: "2026-03-17T00:00:00Z"
 # Spec: Tmux Session Management
 
 ## Scope
-Managing detached tmux sessions as the execution backend for Claude Code instances. Each agent runs in its own isolated tmux session. The TUI never renders tmux panes directly — it captures snapshots for preview and attaches for full interaction.
+Managing detached tmux sessions as the execution backend for Cavekit agent sessions. Each agent runs in its own isolated tmux session. The TUI never renders tmux panes directly — it captures snapshots for preview and attaches for full interaction.
 
 ## Requirements
 
 ### R1: Session Lifecycle
-**Description:** Create, restore, and destroy detached tmux sessions running Claude Code (or other programs).
+**Description:** Create, restore, and destroy detached tmux sessions running Codex (or other programs).
 **Acceptance Criteria:**
 - [ ] Can create a new detached tmux session with a given name, working directory, and program
 - [ ] Session names are sanitized (no whitespace, dots replaced with underscores, prefixed with `sdd_`)
@@ -40,10 +40,10 @@ Managing detached tmux sessions as the execution backend for Claude Code instanc
 **Dependencies:** R1
 
 ### R4: Status Detection
-**Description:** Detect whether Claude Code is actively working or waiting for input.
+**Description:** Detect whether the active agent is working or waiting for input.
 **Acceptance Criteria:**
 - [ ] Detects "active" state by hashing pane content and comparing to previous hash
-- [ ] Detects "prompt" state by checking for Claude Code permission prompts ("No, and tell Claude what to do differently")
+- [ ] Detects "prompt" state by checking for permission prompts such as "No, and tell Codex what to do differently"
 - [ ] Detects trust prompts ("Do you trust the files in this folder?") and auto-dismisses them
 **Dependencies:** R2
 

@@ -111,7 +111,7 @@ echo "$BP_PRESET_SUMMARY"
 
 # ─── Clean stale state ──────────────────────────────────────────────────────
 
-rm -f .claude/ralph-loop.local.md
+rm -f .cavekit/loop-state.local.md .claude/ralph-loop.local.md
 
 # ─── Find build site ────────────────────────────────────────────────────────
 #
@@ -539,11 +539,11 @@ which existing code satisfies which criterion — with file paths and line numbe
 5. Commit after each task
 6. NEVER skip implementation because code 'looks related'"
 
-# ─── Write Ralph Loop state ─────────────────────────────────────────────────
+# ─── Write Cavekit loop state ───────────────────────────────────────────────
 
-mkdir -p .claude
+mkdir -p .cavekit
 
-cat > .claude/ralph-loop.local.md <<EOF
+cat > .cavekit/loop-state.local.md <<EOF
 ---
 active: true
 iteration: 1

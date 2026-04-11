@@ -6,13 +6,13 @@ last_edited: "2026-03-31T00:00:00Z"
 # Cavekit: Codex Bridge
 
 ## Scope
-Everything related to detecting, configuring, and communicating with the Codex Claude Code plugin (`openai/codex-plugin-cc`) from within Cavekit. This domain makes Codex available as an adversary and provides a standalone review command.
+Everything related to detecting, configuring, and communicating with Codex from within Cavekit. This domain makes Codex available as an adversary and provides a standalone review command.
 
 ## Requirements
 
 ### R1: Plugin Detection
-Detect whether the Codex Claude Code plugin is installed and the `codex` binary is available.
-- [ ] Check for Codex plugin presence at Cavekit command entry (not a persistent daemon — a one-shot check)
+Detect whether local Codex integration is available and the `codex` binary is available.
+- [ ] Check for local Codex integration at Cavekit command entry (not a persistent daemon — a one-shot check)
 - [ ] Check `codex` binary is on PATH and responsive (`codex --version` or equivalent)
 - [ ] Expose a boolean `codex_available` flag consumable by other Cavekit components (e.g., as a shell function or variable in the build scripts)
 - [ ] When Codex is absent, emit a one-time suggestion to install it, then proceed with existing inspector-only review
@@ -42,9 +42,9 @@ A `$ck-judge` command that invokes Codex adversarial review on demand.
 - [ ] Error gracefully with a clear message if Codex is not installed
 
 ## Out of Scope
-- Codex plugin installation (that's `/codex:setup`'s job)
+- Codex installation itself
 - Build-loop orchestration and tier gating (that's Tier Gate's job)
-- Modifying the Codex plugin itself
+- Modifying Codex itself
 - MCP-based adversary as a fallback option (removed — Codex replaces it entirely when present)
 
 ## Cross-References

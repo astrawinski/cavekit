@@ -6,7 +6,7 @@
 # T-102: Built-in allowlist and blocklist
 # T-103: Configuration schema and defaults
 # T-104: Fast-path classifier
-# T-105: Claude permission integration
+# T-105: Agent permission integration
 # T-106: Command normalizer
 # T-107: Codex safety classification
 # T-108: Pattern-based verdict cache
@@ -343,20 +343,20 @@ Working directory: ${workdir}"
   esac
 }
 
-# ── T-105: Claude Permission Integration ──────────────────────────────
-# Check if the command is already handled by Claude's permission system.
+# ── T-105: Agent Permission Integration ───────────────────────────────
+# Check if the command is already handled by the runtime permission system.
 # This is signaled via environment variables set by the hook framework.
 #
 # BP_HOOK_ALREADY_ALLOWED=1  — command pre-approved in settings
 # BP_HOOK_ALREADY_BLOCKED=1  — command pre-blocked in settings
 
-bp_gate_check_claude_permissions() {
+bp_gate_check_runtime_permissions() {
   if [[ "${BP_HOOK_ALREADY_ALLOWED:-}" == "1" ]]; then
-    echo "SKIP|Already allowed by Claude permission system"
+    echo "SKIP|Already allowed by runtime permission system"
     return 0
   fi
   if [[ "${BP_HOOK_ALREADY_BLOCKED:-}" == "1" ]]; then
-    echo "SKIP|Already blocked by Claude permission system"
+    echo "SKIP|Already blocked by runtime permission system"
     return 0
   fi
   echo "EVALUATE"
@@ -365,7 +365,7 @@ bp_gate_check_claude_permissions() {
 # ── T-101: PreToolUse Hook Main Entry ─────────────────────────────────
 # Called as a PreToolUse hook. Reads tool call context, classifies command.
 #
-# Input (from Claude Code hook framework):
+# Input (from the agent hook framework):
 #   $1 — tool name (should be "Bash")
 #   $2 — command string
 # Or reads JSON from stdin with tool_name and input.command
@@ -404,9 +404,9 @@ bp_command_gate() {
     return 0
   fi
 
-  # T-105: Check Claude's permission system first
+  # T-105: Check the runtime permission system first
   local perm_check
-  perm_check="$(bp_gate_check_claude_permissions)"
+  perm_check="$(bp_gate_check_runtime_permissions)"
   if [[ "$perm_check" == SKIP* ]]; then
     return 0
   fi

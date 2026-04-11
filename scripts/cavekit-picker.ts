@@ -157,8 +157,9 @@ function detectStatus(
   const worktreePath = resolve(projectRoot, `../${projectName}-cavekit-${name}`);
   if (existsSync(worktreePath)) {
     // Check if ralph loop is active in the worktree
-    const ralphState = join(worktreePath, ".claude/ralph-loop.local.md");
-    if (existsSync(ralphState)) return "in-progress";
+    const loopState = join(worktreePath, ".cavekit/loop-state.local.md");
+    const legacyLoopState = join(worktreePath, ".claude/ralph-loop.local.md");
+    if (existsSync(loopState) || existsSync(legacyLoopState)) return "in-progress";
     // Worktree exists but no active loop — could be finished or stale
     if (doneTasks > 0) return "in-progress";
   }

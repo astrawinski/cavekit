@@ -11,12 +11,12 @@ The session (or "instance") model that ties together a tmux session, git worktre
 ## Requirements
 
 ### R1: Instance Model
-**Description:** A session instance represents one Claude Code agent working on one site.
+**Description:** A session instance represents one Codex agent working on one site.
 **Acceptance Criteria:**
 - [ ] Instance has: title, site path, worktree path, tmux session reference, status, program name, creation timestamp
 - [ ] Status enum: Loading, Running, Ready, Paused, Done
-- [ ] "Running" = Claude is actively generating output (pane content changing)
-- [ ] "Ready" = Claude is waiting for input (permission prompt or idle)
+- [ ] "Running" = the active agent is actively generating output (pane content changing)
+- [ ] "Ready" = the active agent is waiting for input (permission prompt or idle)
 - [ ] "Paused" = session checked out / detached from TUI management
 **Dependencies:** none
 
@@ -24,7 +24,7 @@ The session (or "instance") model that ties together a tmux session, git worktre
 **Description:** Create, start, pause, resume, and kill instances.
 **Acceptance Criteria:**
 - [ ] Creating an instance: allocates title, sets site path, derives worktree name
-- [ ] Starting: creates worktree (if needed), creates tmux session, sends `$ck-make --filter {name}` after startup delay
+- [ ] Starting: creates worktree (if needed), creates tmux session, sends the `$ck-make` build prompt for that site after startup delay
 - [ ] Pausing: detaches tmux session from TUI tracking (session keeps running)
 - [ ] Resuming: re-attaches tmux session to TUI tracking
 - [ ] Killing: kills tmux session, optionally removes worktree and branch
@@ -48,7 +48,7 @@ The session (or "instance") model that ties together a tmux session, git worktre
 **Dependencies:** R2
 
 ### R5: Auto-Yes Mode
-**Description:** Automatically approve Claude Code permission prompts.
+**Description:** Automatically approve runtime permission prompts.
 **Acceptance Criteria:**
 - [ ] When enabled, monitors pane content for permission prompts
 - [ ] Sends Enter keystroke to approve

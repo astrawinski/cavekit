@@ -7,7 +7,7 @@ last_edited: "2026-03-31T00:00:00Z"
 | Task | Status | Notes |
 |------|--------|-------|
 | T-001 | DONE | Codex binary detection via `codex --version`. scripts/codex-detect.sh |
-| T-002 | DONE | Plugin presence check across standard Claude Code plugin locations. scripts/codex-detect.sh |
+| T-002 | DONE | Local Codex integration check across legacy plugin locations and current Codex config paths. scripts/codex-detect.sh |
 | T-003 | DONE | Config schema: codex_review (auto/off), codex_model, codex_effort. scripts/codex-config.sh |
 | T-004 | DONE | Gate config: tier_gate_mode (severity/strict/permissive/off). scripts/codex-config.sh |
 | T-005 | DONE | codex_available flag and bp_codex_nudge already in codex-detect.sh |

@@ -6,7 +6,7 @@ last_edited: "2026-04-01T11:50:00Z"
 # Cavekit Overview
 
 ## Project
-Premium GitHub Pages website for the Cavekit Claude Code plugin. Two static HTML files deployed to the `gh-pages` branch: a marketing landing page and a single-page documentation reference. "Neon cavekit evolved" visual identity — dark backgrounds, glassmorphism surfaces, neon-blue accents, scroll-driven animations. Zero dependencies, zero build step.
+Premium GitHub Pages website for the Codex-first Cavekit project. Two static HTML files deployed to the `gh-pages` branch: a marketing landing page and a single-page documentation reference. "Neon cavekit evolved" visual identity — dark backgrounds, glassmorphism surfaces, neon-blue accents, scroll-driven animations. Zero dependencies, zero build step.
 
 ## Domain Index
 | Domain | Cavekit File | Requirements | Status | Description |

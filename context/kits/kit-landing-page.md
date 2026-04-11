@@ -7,7 +7,7 @@ last_edited: "2026-04-01T11:50:00Z"
 
 ## Scope
 
-A single-file (`index.html`) premium marketing landing page for the Cavekit Claude Code plugin, deployed to the `gh-pages` branch. Replaces the current site at `juliusbrussee.github.io/cavekit/`. Zero dependencies, zero build step. The page communicates what Cavekit does, why it matters, and how to install it through 8 scroll-driven sections with a "neon cavekit evolved" visual identity.
+A single-file (`index.html`) premium marketing landing page for the Codex-first Cavekit project, deployed to the `gh-pages` branch. Replaces the current site at `juliusbrussee.github.io/cavekit/`. Zero dependencies, zero build step. The page communicates what Cavekit does, why it matters, and how to install it through 8 scroll-driven sections with a "neon cavekit evolved" visual identity.
 
 ## Requirements
 
@@ -58,9 +58,9 @@ A single-file (`index.html`) premium marketing landing page for the Cavekit Clau
 **Acceptance Criteria:**
 - [ ] Section label: "ADVERSARIAL REVIEW"
 - [ ] Headline: "Two models. Different blind spots. Higher confidence."
-- [ ] Subheadline explaining Claude + Codex dual-model approach
+- [ ] Subheadline explaining the Codex-first build loop plus optional external review approach
 - [ ] Three full-width cards stacked vertically:
-  - Design Challenge (badge: PRE-BUILD): diagram showing Claude drafts → Reviewer approves → Codex challenges → User reviews
+  - Design Challenge (badge: PRE-BUILD): diagram showing primary drafting flow → Reviewer approves → Codex challenges → User reviews
   - Tier Gate (badge: BUILD-TIME): severity table with P0-P3 levels and colored indicators
   - Command Safety (badge: RUNTIME): flow diagram command → fast-path → Codex classifies → verdict
 - [ ] Each card has glassmorphism surface and a colored badge
@@ -101,7 +101,7 @@ A single-file (`index.html`) premium marketing landing page for the Cavekit Clau
 - [ ] Typewriter animation types both install commands at ~40ms/char with random jitter
 - [ ] Blinking cursor follows insertion point during typewriter
 - [ ] Copy button in terminal: "COPY" → "COPIED ✓" with green glow, `scale(0.97)` on `:active`
-- [ ] Requirements line: "Requires Claude Code, git, macOS/Linux."
+- [ ] Requirements line: "Requires Codex CLI, git, macOS/Linux."
 - [ ] Optional line: "Recommended: Codex for adversarial review, tmux for parallel agents."
 - [ ] Two CTA buttons: "View on GitHub →" (primary, blue glow) and "Read the Docs →" (secondary, links to docs.html)
 - [ ] `<noscript>` fallback shows full commands without typewriter

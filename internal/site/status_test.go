@@ -23,8 +23,8 @@ func TestClassifySite_Done(t *testing.T) {
 
 func TestClassifySite_InProgress(t *testing.T) {
 	tmp := t.TempDir()
-	os.MkdirAll(filepath.Join(tmp, ".claude"), 0755)
-	os.WriteFile(filepath.Join(tmp, ".claude", "ralph-loop.local.md"), []byte("active"), 0644)
+	os.MkdirAll(filepath.Join(tmp, ".cavekit"), 0755)
+	os.WriteFile(filepath.Join(tmp, ".cavekit", "loop-state.local.md"), []byte("active"), 0644)
 
 	s := &Site{
 		Tasks: []Task{{ID: "T-001"}, {ID: "T-002"}},

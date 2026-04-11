@@ -18,9 +18,9 @@ func TestDiscoverAll(t *testing.T) {
 
 	wt2 := filepath.Join(parent, "myproject-cavekit-payments")
 	os.MkdirAll(wt2, 0755)
-	// Add ralph loop marker to payments
-	os.MkdirAll(filepath.Join(wt2, ".claude"), 0755)
-	os.WriteFile(filepath.Join(wt2, ".claude", "ralph-loop.local.md"), []byte("active"), 0644)
+	// Add loop state marker to payments
+	os.MkdirAll(filepath.Join(wt2, ".cavekit"), 0755)
+	os.WriteFile(filepath.Join(wt2, ".cavekit", "loop-state.local.md"), []byte("active"), 0644)
 
 	// Non-cavekit dir (should be excluded)
 	os.MkdirAll(filepath.Join(parent, "myproject-other"), 0755)

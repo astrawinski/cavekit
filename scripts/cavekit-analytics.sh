@@ -189,8 +189,14 @@ echo ""
 # ─── Active Agents ────────────────────────────────────────────────────────────
 
 echo "${B}Active Agent${R}"
-if [[ -f "$PROJECT_ROOT/.claude/ralph-loop.local.md" ]]; then
-  iter=$(grep -m1 '^iteration:' "$PROJECT_ROOT/.claude/ralph-loop.local.md" 2>/dev/null | awk '{print $2}' || echo "?")
+STATE_FILE=""
+if [[ -f "$PROJECT_ROOT/.cavekit/loop-state.local.md" ]]; then
+  STATE_FILE="$PROJECT_ROOT/.cavekit/loop-state.local.md"
+elif [[ -f "$PROJECT_ROOT/.claude/ralph-loop.local.md" ]]; then
+  STATE_FILE="$PROJECT_ROOT/.claude/ralph-loop.local.md"
+fi
+if [[ -n "$STATE_FILE" ]]; then
+  iter=$(grep -m1 '^iteration:' "$STATE_FILE" 2>/dev/null | awk '{print $2}' || echo "?")
   echo "  ${GR}⟳${R} active — iteration ${iter}"
 else
   echo "  ${D}No active agent.${R}"

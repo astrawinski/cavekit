@@ -46,10 +46,12 @@ func ClassifySite(s *Site, statuses TaskStatusMap, worktreePath string) SiteStat
 		return SiteDone
 	}
 
-	// Check for active Ralph Loop in worktree
+	// Check for active Cavekit loop state in worktree
 	if worktreePath != "" {
-		ralphLoopPath := filepath.Join(worktreePath, ".claude", "ralph-loop.local.md")
-		if _, err := os.Stat(ralphLoopPath); err == nil {
+		if _, err := os.Stat(filepath.Join(worktreePath, ".cavekit", "loop-state.local.md")); err == nil {
+			return SiteInProgress
+		}
+		if _, err := os.Stat(filepath.Join(worktreePath, ".claude", "ralph-loop.local.md")); err == nil {
 			return SiteInProgress
 		}
 	}

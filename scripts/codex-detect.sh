@@ -29,11 +29,11 @@ CODEX_PLUGIN_PRESENT=false
 
 # Check legacy plugin and current Codex config locations
 _bp_check_codex_plugin() {
-  local claude_dir="${HOME}/.claude"
+  local legacy_plugin_dir="${HOME}/.claude"
 
   # Check plugins cache (marketplace installs)
-  if [[ -d "${claude_dir}/plugins" ]]; then
-    for d in "${claude_dir}/plugins/"*/; do
+  if [[ -d "${legacy_plugin_dir}/plugins" ]]; then
+    for d in "${legacy_plugin_dir}/plugins/"*/; do
       [[ -d "$d" ]] || continue
       if [[ -d "${d}codex" ]] || [[ -d "${d}openai-codex" ]] || \
          find "$d" -maxdepth 2 -name "plugin.json" -exec grep -ql "codex" {} + 2>/dev/null | grep -q .; then
@@ -43,8 +43,8 @@ _bp_check_codex_plugin() {
   fi
 
   # Check local plugin links
-  if [[ -d "${claude_dir}/plugins/local" ]]; then
-    for d in "${claude_dir}/plugins/local/"*/; do
+  if [[ -d "${legacy_plugin_dir}/plugins/local" ]]; then
+    for d in "${legacy_plugin_dir}/plugins/local/"*/; do
       [[ -d "$d" ]] || continue
       if find "$d" -maxdepth 2 -name "*.json" -exec grep -ql "codex" {} + 2>/dev/null | grep -q .; then
         return 0

@@ -36,6 +36,15 @@ command -v codex &>/dev/null || { echo "codex not found." >&2; exit 1; }
 
 PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
+loop_state_file() {
+  local project_root="$1"
+  if [[ -f "$project_root/.cavekit/loop-state.local.md" ]]; then
+    echo "$project_root/.cavekit/loop-state.local.md"
+  elif [[ -f "$project_root/.claude/ralph-loop.local.md" ]]; then
+    echo "$project_root/.claude/ralph-loop.local.md"
+  fi
+}
+
 # Kill existing session if running
 if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
   echo "Existing '$SESSION_NAME' session found. Killing it..."
@@ -58,7 +67,7 @@ for frontier in "${FRONTIERS[@]}"; do
   NAMES+=("$name")
 
   # Check if this is a resumable session (has ralph-loop state or impl progress)
-  if [[ -f "$PROJECT_ROOT/.claude/ralph-loop.local.md" ]] || \
+  if [[ -n "$(loop_state_file "$PROJECT_ROOT")" ]] || \
      ls "$PROJECT_ROOT/context/impl/impl-"*.md &>/dev/null 2>&1; then
     RESUMING+=("true")
     echo "  $name: will resume existing session"

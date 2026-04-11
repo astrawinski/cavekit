@@ -118,7 +118,7 @@ render() {
 
   [[ -n "$current_task" ]] && emit "  ${YL}>${R} Working on ${B}${current_task}${R}" && emit ""
 
-  if [[ ! -f ".claude/ralph-loop.local.md" ]]; then
+  if [[ ! -f ".cavekit/loop-state.local.md" && ! -f ".claude/ralph-loop.local.md" ]]; then
     emit "  ${D}Loop not active${R}"
   fi
 

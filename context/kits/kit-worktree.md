@@ -33,7 +33,7 @@ Creating and managing git worktrees for isolated agent execution. Each agent get
 **Acceptance Criteria:**
 - [ ] Scans `{project_root}/../{project_name}-cavekit-*` directories
 - [ ] Returns worktree path, branch name, and derived site name for each
-- [ ] Detects if a worktree has an active Ralph Loop (`.claude/ralph-loop.local.md` exists)
+- [ ] Detects if a worktree has active Cavekit loop state (`.cavekit/loop-state.local.md` exists, with legacy fallback)
 **Dependencies:** R1
 
 ### R4: Branch Push

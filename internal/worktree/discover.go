@@ -10,8 +10,8 @@ import (
 type DiscoveredWorktree struct {
 	Path         string // Full worktree path
 	Branch       string // Branch name (cavekit/xxx)
-	SiteName string // Derived site name
-	HasRalphLoop bool   // .claude/ralph-loop.local.md exists
+	SiteName     string // Derived site name
+	HasRalphLoop bool   // Cavekit loop state file exists
 }
 
 // DiscoverAll finds all existing Cavekit worktrees for the given project.
@@ -39,14 +39,14 @@ func DiscoverAll(projectRoot string) ([]DiscoveredWorktree, error) {
 		siteName := strings.TrimPrefix(name, pattern)
 		wtPath := filepath.Join(parentDir, name)
 
-		// Check for active Ralph Loop
-		ralphLoopPath := filepath.Join(wtPath, ".claude", "ralph-loop.local.md")
-		hasRalphLoop := fileExists(ralphLoopPath)
+		// Check for active Cavekit loop state
+		hasRalphLoop := fileExists(filepath.Join(wtPath, ".cavekit", "loop-state.local.md")) ||
+			fileExists(filepath.Join(wtPath, ".claude", "ralph-loop.local.md"))
 
 		results = append(results, DiscoveredWorktree{
 			Path:         wtPath,
 			Branch:       BranchName(siteName),
-			SiteName: siteName,
+			SiteName:     siteName,
 			HasRalphLoop: hasRalphLoop,
 		})
 	}

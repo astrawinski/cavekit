@@ -44,7 +44,7 @@ The command-line interface that replaces the current `cavekit` bash script. Prov
 - [ ] `cavekit kill` kills all `cavekit_*` tmux sessions
 - [ ] Removes all `{project}-cavekit-*` worktrees
 - [ ] Deletes all `cavekit/*` branches
-- [ ] Cleans up `.claude/ralph-loop.local.md` from project root and worktrees
+- [ ] Cleans up the Cavekit loop state file from project root and worktrees
 - [ ] Reports count of killed sessions, cleaned worktrees, deleted branches
 **Dependencies:** R1, cavekit-tmux R1, cavekit-worktree R1
 

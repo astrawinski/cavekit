@@ -11,6 +11,15 @@ TASK_ID_PATTERN='T-([A-Za-z0-9]+-)*[A-Za-z0-9]+'
 
 PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
+loop_state_file() {
+  local project_root="$1"
+  if [[ -f "$project_root/.cavekit/loop-state.local.md" ]]; then
+    echo "$project_root/.cavekit/loop-state.local.md"
+  elif [[ -f "$project_root/.claude/ralph-loop.local.md" ]]; then
+    echo "$project_root/.claude/ralph-loop.local.md"
+  fi
+}
+
 # Wait for session to exist
 for _ in {1..10}; do
   tmux has-session -t "$SESSION_NAME" 2>/dev/null && break
@@ -63,7 +72,7 @@ get_status_icon() {
     return
   fi
 
-  if [[ -f "$project_dir/.claude/ralph-loop.local.md" ]]; then
+  if [[ -n "$(loop_state_file "$project_dir")" ]]; then
     echo "⟳"
   else
     echo "○"

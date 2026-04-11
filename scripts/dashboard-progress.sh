@@ -62,8 +62,9 @@ render() {
   emit "${B}${BL} CAVEKIT${R}"
   emit "${BL}${D}${hr}${R}"
 
-  # ── Ralph Loop state ──
-  local state_file=".claude/ralph-loop.local.md"
+  # ── Loop state ──
+  local state_file=".cavekit/loop-state.local.md"
+  [[ -f "$state_file" ]] || state_file=".claude/ralph-loop.local.md"
   local iteration="-" max_iter="-" started_at="" active=false
 
   if [[ -f "$state_file" ]]; then
