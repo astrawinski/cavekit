@@ -52,24 +52,24 @@ assert_fail() {
 }
 
 assert_eq "quality" "$(run_cfg effective-preset)" "default preset"
-assert_eq "opus" "$(run_cfg model reasoning)" "default reasoning model"
-assert_eq "opus" "$(run_cfg model execution)" "default execution model"
-assert_eq "sonnet" "$(run_cfg model exploration)" "default exploration model"
+assert_eq "gpt-5.4" "$(run_cfg model reasoning)" "default reasoning model"
+assert_eq "gpt-5.3-codex" "$(run_cfg model execution)" "default execution model"
+assert_eq "gpt-5.4-mini" "$(run_cfg model exploration)" "default exploration model"
 assert_eq "default" "$(run_cfg source bp_model_preset)" "default source"
 
 run_cfg init
 run_cfg set bp_model_preset fast --global
 assert_eq "fast" "$(run_cfg effective-preset)" "global preset"
 assert_eq "global" "$(run_cfg source bp_model_preset)" "global source"
-assert_eq "sonnet" "$(run_cfg model reasoning)" "fast reasoning model"
-assert_eq "haiku" "$(run_cfg model exploration)" "fast exploration model"
+assert_eq "gpt-5.4-mini" "$(run_cfg model reasoning)" "fast reasoning model"
+assert_eq "gpt-5.3-codex-spark" "$(run_cfg model exploration)" "fast exploration model"
 
 run_cfg set bp_model_preset balanced --project
 assert_eq "balanced" "$(run_cfg effective-preset)" "project override preset"
 assert_eq "project" "$(run_cfg source bp_model_preset)" "project source"
-assert_eq "opus" "$(run_cfg model reasoning)" "balanced reasoning model"
-assert_eq "sonnet" "$(run_cfg model execution)" "balanced execution model"
-assert_eq "haiku" "$(run_cfg model exploration)" "balanced exploration model"
+assert_eq "gpt-5.4" "$(run_cfg model reasoning)" "balanced reasoning model"
+assert_eq "gpt-5.4-mini" "$(run_cfg model execution)" "balanced execution model"
+assert_eq "gpt-5.3-codex-spark" "$(run_cfg model exploration)" "balanced exploration model"
 
 assert_fail "invalid preset rejected" run_cfg set bp_model_preset invalid --project
 

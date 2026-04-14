@@ -11,8 +11,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [[ -f "$SCRIPT_DIR/bp-config.sh" ]]; then
   source "$SCRIPT_DIR/bp-config.sh"
 else
-  bp_config_summary_line() { echo "Cavekit preset: quality (reasoning=opus, execution=opus, exploration=sonnet)"; }
-  bp_config_model() { echo "opus"; }
+  bp_config_summary_line() { echo "Cavekit preset: quality (reasoning=gpt-5.4, execution=gpt-5.3-codex, exploration=gpt-5.4-mini)"; }
+  bp_config_model() { echo "gpt-5.4"; }
 fi
 
 FILTER=""

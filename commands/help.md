@@ -43,10 +43,10 @@ Built-in presets:
 
 | Preset | Reasoning | Execution | Exploration |
 |--------|-----------|-----------|-------------|
-| `expensive` | `opus` | `opus` | `opus` |
-| `quality` | `opus` | `opus` | `sonnet` |
-| `balanced` | `opus` | `sonnet` | `haiku` |
-| `fast` | `sonnet` | `sonnet` | `haiku` |
+| `expensive` | `gpt-5.4` | `gpt-5.4` | `gpt-5.4` |
+| `quality` | `gpt-5.4` | `gpt-5.3-codex` | `gpt-5.4-mini` |
+| `balanced` | `gpt-5.4` | `gpt-5.4-mini` | `gpt-5.3-codex-spark` |
+| `fast` | `gpt-5.4-mini` | `gpt-5.3-codex-spark` | `gpt-5.3-codex-spark` |
 
 Precedence: `.cavekit/config` overrides `~/.cavekit/config`, which overrides the built-in default (`quality`).
 

@@ -9,7 +9,7 @@ allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/bp-config.sh:*)"]
 
 # Cavekit Config — Execution Presets
 
-Use this command to inspect or change the Cavekit execution preset that maps task types to `opus`, `sonnet`, and `haiku`.
+Use this command to inspect or change the Cavekit execution preset that maps task types to OpenAI/Codex models.
 
 ## Supported Usage
 

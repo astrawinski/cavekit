@@ -320,25 +320,31 @@ bp_config_model() {
 
   case "$preset:$task_type" in
     expensive:reasoning|expensive:execution|expensive:exploration)
-      echo "opus"
+      echo "gpt-5.4"
       ;;
-    quality:reasoning|quality:execution)
-      echo "opus"
+    quality:reasoning)
+      echo "gpt-5.4"
+      ;;
+    quality:execution)
+      echo "gpt-5.3-codex"
       ;;
     quality:exploration)
-      echo "sonnet"
+      echo "gpt-5.4-mini"
       ;;
     balanced:reasoning)
-      echo "opus"
+      echo "gpt-5.4"
       ;;
     balanced:execution)
-      echo "sonnet"
+      echo "gpt-5.4-mini"
       ;;
-    balanced:exploration|fast:exploration)
-      echo "haiku"
+    balanced:exploration)
+      echo "gpt-5.3-codex-spark"
       ;;
-    fast:reasoning|fast:execution)
-      echo "sonnet"
+    fast:reasoning)
+      echo "gpt-5.4-mini"
+      ;;
+    fast:execution|fast:exploration)
+      echo "gpt-5.3-codex-spark"
       ;;
     *)
       echo "bp_config_model: unknown task type '$task_type' (allowed: reasoning execution exploration)" >&2
@@ -412,10 +418,10 @@ bp_config_presets() {
   cat <<'EOF'
 | Preset | Reasoning | Execution | Exploration |
 |---|---|---|---|
-| expensive | opus | opus | opus |
-| quality | opus | opus | sonnet |
-| balanced | opus | sonnet | haiku |
-| fast | sonnet | sonnet | haiku |
+| expensive | gpt-5.4 | gpt-5.4 | gpt-5.4 |
+| quality | gpt-5.4 | gpt-5.3-codex | gpt-5.4-mini |
+| balanced | gpt-5.4 | gpt-5.4-mini | gpt-5.3-codex-spark |
+| fast | gpt-5.4-mini | gpt-5.3-codex-spark | gpt-5.3-codex-spark |
 EOF
 }
 

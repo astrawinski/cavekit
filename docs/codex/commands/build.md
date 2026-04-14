@@ -19,7 +19,7 @@ Before starting waves:
 1. Run `"<local Cavekit plugin root>/scripts/bp-config.sh" summary` and report that exact line once.
 2. Run `"<local Cavekit plugin root>/scripts/bp-config.sh" model execution` and treat the result as `EXECUTION_MODEL`.
 3. Run `"<local Cavekit plugin root>/scripts/bp-config.sh" caveman-active build` and treat the result as `CAVEMAN_ACTIVE` (true/false).
-4. Use that exact `EXECUTION_MODEL` string in every `ck:task-builder` delegation below. Do not hard-code `opus`, `sonnet`, or `haiku` in this command.
+4. Use that exact `EXECUTION_MODEL` string in every `ck:task-builder` delegation below. Do not hard-code model names in this command.
 5. If `CAVEMAN_ACTIVE` is `true`, all your own wave logs, iteration summaries, and status reports in this command should use caveman-speak (drop articles, filler, pleasantries — keep technical terms exact, code blocks unchanged). Spec artifacts (kits, build sites, impl tracking field values) stay in normal prose.
 
 ## Pre-flight Coverage Check

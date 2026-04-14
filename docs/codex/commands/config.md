@@ -6,7 +6,7 @@ _Generated from `commands/config.md`. Upstream command docs are canonical; this 
 
 # Cavekit Config — Execution Presets
 
-Use this skill to inspect or change the Cavekit execution preset that maps task types to `opus`, `sonnet`, and `haiku`.
+Use this skill to inspect or change the Cavekit execution preset that maps task types to OpenAI/Codex models.
 
 ## Supported Usage
 
