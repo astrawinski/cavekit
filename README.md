@@ -125,17 +125,44 @@ Spec is the product. Code is the derivative.
 
 ## Install
 
+### Full Install
+
 ```bash
 git clone https://github.com/astrawinski/cavekit.git ~/.cavekit
 cd ~/.cavekit
+./install.sh
+```
+
+This is the repo's full installer today. It:
+- sets up the local Cavekit marketplace/plugin wiring
+- runs `scripts/sync-codex-plugin.sh` to sync the Codex plugin surface
+- installs the `cavekit` command into `/usr/local/bin/cavekit`
+
+Current behavior note: the installer still configures Claude-side plugin wiring if Claude is present, because this fork preserves a lot of the upstream install flow. In this fork, Codex is the primary runtime surface, and Claude is used as the default adversarial reviewer backend.
+
+**Requires:** git, macOS/Linux, `python3`.
+
+**Recommended runtimes:**
+- [Codex CLI](https://github.com/openai/codex) for the primary runtime surface
+- Claude CLI if you want the default reviewer backend to be available on this machine
+
+### Update After Changes
+
+```bash
+git pull
 bash scripts/sync-codex-plugin.sh
 ```
 
-This links the fork into your local Codex plugin surface, installs generated `$ck-*` skill wrappers, and refreshes the Codex-native prompts/docs layer.
+Use this when the repo is already installed and you just want to refresh the local Codex plugin surface after pulling or making changes.
 
-**Requires:** [Codex CLI](https://github.com/openai/codex), git, macOS/Linux.
+This updates:
+- `~/plugins/ck`
+- `~/.codex/prompts`
+- `~/.codex/skills`
+- `~/.agents/plugins/marketplace.json`
+- `~/.codex/config.toml`
 
-**After syncing:** restart Codex if it is already running.
+Restart Codex after syncing if it is already running.
 
 ---
 
@@ -153,8 +180,8 @@ Four phases. Each one a Codex skill.
                    kits with        + dependency graph   subagent packets   Trace to specs.
   Produces:        R-numbered                            tier by tier
   research brief   requirements     Produces:                               Produces:
-                                    task graph           Codex reviews      findings report
-                   Codex challenges                      every tier gate
+                                    task graph           Claude reviews     findings report
+                   Claude challenges                     every tier gate
                    the design
 ```
 
@@ -189,7 +216,7 @@ $ck-sketch
 
 Describe what you're building in natural language. Cavekit decomposes it into **domain kits** — structured documents with numbered requirements (R1, R2, ...) and testable acceptance criteria. Stack-independent. Human-readable.
 
-After internal review, kits go to Codex for a [design challenge](#design-challenge--catch-spec-flaws-before-building) — adversarial review that catches decomposition flaws, missing requirements, and ambiguous criteria before any code is written.
+After internal review, kits go to Claude for a [design challenge](#design-challenge--catch-spec-flaws-before-building) — adversarial review that catches decomposition flaws, missing requirements, and ambiguous criteria before any code is written.
 
 For existing codebases: `$ck-sketch --from-code` reverse-engineers kits from your code and identifies gaps.
 
