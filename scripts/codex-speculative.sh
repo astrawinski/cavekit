@@ -15,24 +15,24 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Source dependencies
-if [[ -f "$SCRIPT_DIR/codex-detect.sh" ]]; then
-  source "$SCRIPT_DIR/codex-detect.sh"
+if [[ -f "$SCRIPT_DIR/reviewer-detect.sh" ]]; then
+  source "$SCRIPT_DIR/reviewer-detect.sh"
 else
-  codex_available=false
+  reviewer_available=false
 fi
 
-if [[ -f "$SCRIPT_DIR/codex-config.sh" ]]; then
-  source "$SCRIPT_DIR/codex-config.sh"
+if [[ -f "$SCRIPT_DIR/reviewer-config.sh" ]]; then
+  source "$SCRIPT_DIR/reviewer-config.sh"
 else
   bp_config_get() { echo "${2:-}"; }
 fi
 
-if [[ -f "$SCRIPT_DIR/codex-findings.sh" ]]; then
-  source "$SCRIPT_DIR/codex-findings.sh"
+if [[ -f "$SCRIPT_DIR/reviewer-findings.sh" ]]; then
+  source "$SCRIPT_DIR/reviewer-findings.sh"
 fi
 
-if [[ -f "$SCRIPT_DIR/codex-gate.sh" ]]; then
-  source "$SCRIPT_DIR/codex-gate.sh"
+if [[ -f "$SCRIPT_DIR/reviewer-gate.sh" ]]; then
+  source "$SCRIPT_DIR/reviewer-gate.sh"
 fi
 
 # Guard against double-sourcing
@@ -41,7 +41,7 @@ _BP_SPECULATIVE_LOADED=1
 
 # ── T-201: Configuration Schema and Defaults ──────────────────────────
 
-# Register speculative review config keys with codex-config.sh defaults.
+# Register speculative review config keys with reviewer config defaults.
 # Extends the _bp_config_default function if possible, otherwise uses wrappers.
 
 bp_speculative_config_get() {
@@ -54,7 +54,7 @@ bp_speculative_config_get() {
         # Default: on when codex available and tier gate not off
         local gate_mode
         gate_mode="$(bp_config_get tier_gate_mode severity)"
-        if [[ "$codex_available" == "true" && "$gate_mode" != "off" ]]; then
+        if [[ "$reviewer_available" == "true" && "$gate_mode" != "off" ]]; then
           echo "on"
         else
           echo "off"
@@ -80,7 +80,7 @@ bp_speculative_enabled() {
 
 # ── T-202: Background Job ID Tracking ─────────────────────────────────
 
-# Session-scoped tracking of background Codex review jobs.
+# Session-scoped tracking of background reviewer jobs.
 # Uses a temp file keyed by session to track job state.
 
 _BP_SPECULATIVE_STATE_DIR="${TMPDIR:-/tmp}/bp-speculative-$$"
@@ -146,8 +146,8 @@ bp_speculative_cleanup() {
   rm -rf "$_BP_SPECULATIVE_STATE_DIR" 2>/dev/null || true
 }
 
-# ── T-203: Background Codex Review Dispatch ───────────────────────────
-# Launch a Codex adversarial review in the background at tier completion.
+# ── T-203: Background Review Dispatch ─────────────────────────────────
+# Launch an adversarial review in the background at tier completion.
 #
 # $1 — tier number (just completed)
 # $2 — base ref (TIER_START_REF)
@@ -160,8 +160,8 @@ bp_speculative_dispatch() {
     return 0
   fi
 
-  if [[ "$codex_available" != "true" ]]; then
-    echo "[ck:speculative] Codex unavailable. Skipping speculative dispatch."
+  if [[ "$reviewer_available" != "true" ]]; then
+    echo "[ck:speculative] Reviewer unavailable. Skipping speculative dispatch."
     return 0
   fi
 
@@ -176,8 +176,8 @@ bp_speculative_dispatch() {
 
   echo "[ck:speculative] Dispatching background review of tier $((tier - 1)) (diff from $base_ref)..."
 
-  # Run codex-review.sh in background, capture output
-  bash "$SCRIPT_DIR/codex-review.sh" --base "$base_ref" > "$output_file" 2>&1 &
+  # Run reviewer-review.sh in background, capture output
+  bash "$SCRIPT_DIR/reviewer-review.sh" --base "$base_ref" > "$output_file" 2>&1 &
   local pid=$!
 
   bp_speculative_record_job "$tier" "$pid" "$output_file" "$base_ref"
@@ -308,7 +308,7 @@ _bp_speculative_consume_results() {
     return 0
   fi
 
-  # Findings exist — they've already been appended to the findings file by codex-review.sh
+  # Findings exist — they've already been appended to the findings file by reviewer-review.sh
   echo "[ck:speculative] Tier $((tier - 1)) speculative review found issues."
   echo "$content"
   bp_speculative_update_job "$tier" "consumed"
@@ -322,7 +322,7 @@ _bp_speculative_consume_results() {
 bp_speculative_reconcile() {
   local tier="$1"
 
-  # The findings from codex-review.sh are already tagged with source: codex.
+  # The findings from reviewer-review.sh are already tagged with source: the active backend.
   # We re-tag speculative ones with codex-speculative for traceability.
   local fpath
   fpath="$(bp_findings_path)"

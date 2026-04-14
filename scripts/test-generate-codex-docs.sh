@@ -38,9 +38,14 @@ assert "CLAUDE.md" not in init_doc
 assert "AGENTS.md hierarchy" in make_doc
 assert "AGENTS.md" in make_doc
 assert "Claude Code auto-cleans" not in make_doc
+assert "reviewer-detect.sh" in make_doc
+assert "scripts/reviewer-review.sh" in make_doc
+assert "Codex unavailable" not in make_doc
 
-assert "calling Codex through the configured review path." in help_doc
+assert "configured reviewer backend" in help_doc
 assert "via MCP" not in help_doc
+assert "--reviewer-model" in help_doc
+assert "On-Demand Adversarial Review" in help_doc
 
 assert ".codex/ralph-loop.local.md" in progress_doc
 assert ".claude/ralph-loop.local.md" not in progress_doc

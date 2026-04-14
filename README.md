@@ -21,7 +21,7 @@
   <a href="#how-it-works">How It Works</a> •
   <a href="#quick-start">Quick Start</a> •
   <a href="#parallel-execution">Parallel Execution</a> •
-  <a href="#codex-adversarial-review">Codex Review</a> •
+  <a href="#adversarial-review">Adversarial Review</a> •
   <a href="#commands">Commands</a> •
   <a href="example.md">Examples</a>
 </p>
@@ -233,7 +233,7 @@ Pre-flight coverage check validates all acceptance criteria are covered. Then th
   └──────────────────────────────────────────────────────┘
 ```
 
-At every tier boundary, [Codex adversarial review](#codex-adversarial-review) gates advancement. P0/P1 findings must be fixed before the next tier starts. With speculative review (default), this adds near-zero latency.
+At every tier boundary, [adversarial review](#adversarial-review) gates advancement. P0/P1 findings must be fixed before the next tier starts. With speculative review (default), this adds near-zero latency.
 
 Post-flight verification cross-references what was built against original kits. Gaps get remediation tasks.
 
@@ -328,16 +328,16 @@ Circuit breakers prevent infinite loops: 3 test failures → task BLOCKED, all b
 
 ---
 
-## Codex Adversarial Review
+## Adversarial Review
 
-Cavekit uses [Codex](https://github.com/openai/codex) as an adversarial reviewer. In this fork, Codex is both the primary runtime and the review surface. Review operates at three levels:
+This fork is built around a split architecture: Codex builds, Claude reviews. Review operates at three levels:
 
 ### Design Challenge — catch spec flaws before building
 
-After kits are drafted and internally reviewed, the full set goes to Codex:
+After kits are drafted and internally reviewed, the full set goes to the reviewer:
 
 ```
-Cavekit drafts           Kit set             Codex challenges         User reviews
+Cavekit drafts           Kit set             Claude challenges        User reviews
 kits ──────► reviewer approves ──────► the design ──────► kits + findings
 ```
 
@@ -350,11 +350,11 @@ No implementation feedback allowed. No framework suggestions. Only design-level 
 
 ### Tier Gate — catch code defects between tiers
 
-Every completed tier triggers a Codex code review before advancing:
+Every completed tier triggers a reviewer code review before advancing:
 
 ```
 ═══ Tier 0 Complete ═══
-Codex reviews diff (T-001, T-002, T-003) ...
+Reviewer reviews diff (T-001, T-002, T-003) ...
 Review: 2 findings (1 P0, 1 P3)
 Gate: BLOCKED → fix cycle 1/2
 
@@ -378,12 +378,12 @@ Fix cycle runs up to 2 iterations per tier. After that, advances with warning. N
 
 ### Speculative Review — eliminate gate latency
 
-Codex reviews the *previous* tier in the background while the current tier keeps moving:
+The reviewer checks the *previous* tier in the background while the current tier keeps moving:
 
 ```
 Tier 0 complete ───────────────────────────► Tier 1 complete
      │                                            │
-     └── Codex reviews Tier 0 (background) ──────►│
+     └── Reviewer checks Tier 0 (background) ────►│
                                                    │
                          Results ready ◄───────────┘
                          before gate runs
@@ -413,7 +413,7 @@ Integrates with the runtime permission system. Cached per session. Falls back to
 
 ### Graceful Degradation
 
-All Codex features are **additive**. Without Codex installed:
+All reviewer features are **additive**. Without the configured reviewer installed:
 
 | Feature | Fallback |
 |---------|----------|
@@ -437,8 +437,9 @@ Settings live in two places:
 | Setting | Values | Default | Purpose |
 |---------|--------|---------|---------|
 | `bp_model_preset` | `expensive` `quality` `balanced` `fast` | `quality` | Model selection for Cavekit commands |
-| `codex_review` | `auto` `off` | `auto` | Enable/disable Codex reviews |
-| `codex_model` | model string | (Codex default) | Model for Codex calls |
+| `reviewer_backend` | `claude` `codex` | `claude` | External adversarial reviewer backend |
+| `reviewer_mode` | `auto` `off` | `auto` | Enable/disable adversarial reviews |
+| `reviewer_model` | model string | (reviewer default) | Model override for the reviewer backend |
 | `tier_gate_mode` | `severity` `strict` `permissive` `off` | `severity` | How findings gate tier advancement |
 | `command_gate` | `all` `interactive` `off` | `all` | Which sessions get command gating |
 | `command_gate_timeout` | milliseconds | `3000` | Codex safety classification timeout |
@@ -477,7 +478,7 @@ $ck-config preset fast --global # change default
 | `$ck-make` | Build | Auto-parallel build with validation loop |
 | `$ck-check` | Inspect | Gap analysis + peer review against kits |
 | `$ck-config` | — | Show or update execution preset |
-| `$ck-judge` | — | Standalone Codex adversarial review on diff |
+| `$ck-judge` | — | Standalone adversarial review on diff |
 | `$ck-progress` | — | Check build site progress |
 | `$ck-scan` | — | Compare built vs. intended |
 | `$ck-revise` | — | Trace manual fixes back into kits |

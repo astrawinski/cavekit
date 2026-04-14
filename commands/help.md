@@ -112,14 +112,14 @@ Reads kits, decomposes requirements into tasks, organizes into dependency tiers.
 ```bash
 /ck:make                       # auto-parallel build from site
 /ck:make --filter v2           # scope to v2
-/ck:make --peer-review         # add Codex (GPT-5.4) review
+/ck:make --peer-review         # add adversarial review
 /ck:make --max-iterations 30   # iteration limit
-/ck:make --peer-review --codex-model gpt-5.4-mini
+/ck:make --peer-review --reviewer-model sonnet
 ```
 
 Auto-archives any previous cycle, then builds the site. Automatically parallelizes by grouping ready tasks into a few coherent work packets based on shared files, subsystem, and complexity. Progresses through tiers autonomously without manual intervention. If multiple build sites exist, asks which one to implement.
 
-With `--peer-review`: alternates build and review iterations, calling Codex via MCP.
+With `--peer-review`: alternates build and review iterations using the configured reviewer backend. In this fork, the default reviewer backend is Claude.
 
 ### `/ck:check` — Post-Loop Inspection
 
@@ -155,20 +155,20 @@ Shows or updates the active Cavekit execution preset. Presets map three task buc
 
 Shows tasks done/ready/blocked, progress bar, current tier, and next tasks.
 
-### `/ck:judge` — On-Demand Codex Review
+### `/ck:judge` — On-Demand Adversarial Review
 
 ```bash
 /ck:judge                  # review current tier diff
 /ck:judge --base v1.0     # review diff against a specific ref
 ```
 
-Sends the current diff to Codex for adversarial review. Outputs findings in Cavekit format and appends them to `context/impl/impl-review-findings.md`. Requires Codex CLI to be installed.
+Sends the current diff to the configured reviewer backend for adversarial review. Outputs findings in Cavekit format and appends them to `context/impl/impl-review-findings.md`. In this fork, the default reviewer backend is Claude.
 
 ### Maintenance (optional)
 
 | Command | When |
 |---------|------|
-| `/ck:judge` | On-demand Codex adversarial review of current diff |
+| `/ck:judge` | On-demand adversarial review of current diff |
 | `/ck:scan` | After a loop — compare built vs intended |
 | `/ck:revise` | After manual code fixes — trace back to kits |
 | `/ck:compact-specs` | When impl tracking files exceed ~500 lines |

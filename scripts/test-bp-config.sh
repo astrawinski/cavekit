@@ -6,6 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 CONFIG_SCRIPT="$ROOT_DIR/scripts/bp-config.sh"
 LEGACY_SCRIPT="$ROOT_DIR/scripts/codex-config.sh"
+REVIEWER_SCRIPT="$ROOT_DIR/scripts/reviewer-config.sh"
 
 TMPDIR="$(mktemp -d)"
 trap 'rm -rf "$TMPDIR"' EXIT
@@ -25,6 +26,12 @@ run_legacy_cfg() {
   BP_PROJECT_ROOT="$PROJECT_ROOT" \
   BP_GLOBAL_CONFIG_PATH="$GLOBAL_CONFIG" \
   bash "$LEGACY_SCRIPT" "$@"
+}
+
+run_reviewer_cfg() {
+  BP_PROJECT_ROOT="$PROJECT_ROOT" \
+  BP_GLOBAL_CONFIG_PATH="$GLOBAL_CONFIG" \
+  bash "$REVIEWER_SCRIPT" "$@"
 }
 
 assert_eq() {
@@ -52,6 +59,8 @@ assert_fail() {
 }
 
 assert_eq "quality" "$(run_cfg effective-preset)" "default preset"
+assert_eq "claude" "$(run_reviewer_cfg backend)" "default reviewer backend"
+assert_eq "auto" "$(run_reviewer_cfg mode)" "default reviewer mode"
 assert_eq "gpt-5.4" "$(run_cfg model reasoning)" "default reasoning model"
 assert_eq "gpt-5.3-codex" "$(run_cfg model execution)" "default execution model"
 assert_eq "gpt-5.4-mini" "$(run_cfg model exploration)" "default exploration model"
@@ -65,8 +74,12 @@ assert_eq "gpt-5.4-mini" "$(run_cfg model reasoning)" "fast reasoning model"
 assert_eq "gpt-5.3-codex-spark" "$(run_cfg model exploration)" "fast exploration model"
 
 run_cfg set bp_model_preset balanced --project
+run_cfg set reviewer_backend codex --project
+run_cfg set reviewer_model gpt-5.4-mini --project
 assert_eq "balanced" "$(run_cfg effective-preset)" "project override preset"
 assert_eq "project" "$(run_cfg source bp_model_preset)" "project source"
+assert_eq "codex" "$(run_reviewer_cfg backend)" "project reviewer backend"
+assert_eq "gpt-5.4-mini" "$(run_reviewer_cfg model)" "project reviewer model"
 assert_eq "gpt-5.4" "$(run_cfg model reasoning)" "balanced reasoning model"
 assert_eq "gpt-5.4-mini" "$(run_cfg model execution)" "balanced execution model"
 assert_eq "gpt-5.3-codex-spark" "$(run_cfg model exploration)" "balanced exploration model"

@@ -21,6 +21,10 @@ _BP_CONFIG_LOADED=1
 _bp_config_default() {
   case "$1" in
     bp_model_preset) echo "quality" ;;
+    reviewer_backend) echo "claude" ;;
+    reviewer_mode) echo "auto" ;;
+    reviewer_model) echo "" ;;
+    reviewer_effort) echo "" ;;
     codex_review) echo "auto" ;;
     codex_model) echo "" ;;
     codex_effort) echo "" ;;
@@ -47,7 +51,12 @@ _bp_config_validate() {
       echo "bp_config_set: invalid value '$value' for '$key' (allowed: expensive quality balanced fast)" >&2
       return 1
       ;;
-    codex_review)
+    reviewer_backend)
+      case "$value" in claude|codex) return 0 ;; esac
+      echo "bp_config_set: invalid value '$value' for '$key' (allowed: claude codex)" >&2
+      return 1
+      ;;
+    reviewer_mode|codex_review)
       case "$value" in auto|off) return 0 ;; esac
       echo "bp_config_set: invalid value '$value' for '$key' (allowed: auto off)" >&2
       return 1
@@ -94,7 +103,7 @@ _bp_config_validate() {
   esac
 }
 
-_BP_CONFIG_KEYS="bp_model_preset codex_review codex_model codex_effort tier_gate_mode command_gate command_gate_model command_gate_timeout command_gate_allowlist command_gate_blocklist speculative_review speculative_review_timeout caveman_mode caveman_phases"
+_BP_CONFIG_KEYS="bp_model_preset reviewer_backend reviewer_mode reviewer_model reviewer_effort codex_review codex_model codex_effort tier_gate_mode command_gate command_gate_model command_gate_timeout command_gate_allowlist command_gate_blocklist speculative_review speculative_review_timeout caveman_mode caveman_phases"
 
 bp_global_config_path() {
   if [[ -n "${BP_GLOBAL_CONFIG_PATH:-}" ]]; then
@@ -372,17 +381,27 @@ bp_config_caveman_active() {
 }
 
 bp_config_summary_line() {
-  local preset reasoning execution exploration
+  local preset reasoning execution exploration reviewer_backend reviewer_mode reviewer_model
 
   preset="$(bp_config_effective_preset)" || return 1
   reasoning="$(bp_config_model reasoning)" || return 1
   execution="$(bp_config_model execution)" || return 1
   exploration="$(bp_config_model exploration)" || return 1
+  reviewer_backend="$(bp_config_get reviewer_backend "$(_bp_config_default reviewer_backend)")"
+  reviewer_mode="$(bp_config_get reviewer_mode "$(_bp_config_default reviewer_mode)")"
+  reviewer_model="$(bp_config_get reviewer_model "$(_bp_config_default reviewer_model)")"
+  if [[ -z "$reviewer_model" ]]; then
+    reviewer_model="$(bp_config_get codex_model "")"
+  fi
 
   local caveman_mode
   caveman_mode="$(bp_config_get caveman_mode on)"
 
-  echo "Cavekit preset: ${preset} (reasoning=${reasoning}, execution=${execution}, exploration=${exploration}, caveman=${caveman_mode})"
+  if [[ -n "$reviewer_model" ]]; then
+    echo "Cavekit preset: ${preset} (reasoning=${reasoning}, execution=${execution}, exploration=${exploration}, reviewer=${reviewer_backend}:${reviewer_model}, review=${reviewer_mode}, caveman=${caveman_mode})"
+  else
+    echo "Cavekit preset: ${preset} (reasoning=${reasoning}, execution=${execution}, exploration=${exploration}, reviewer=${reviewer_backend}, review=${reviewer_mode}, caveman=${caveman_mode})"
+  fi
 }
 
 bp_config_show() {
@@ -399,6 +418,11 @@ bp_config_show() {
   local caveman_mode caveman_phases
   caveman_mode="$(bp_config_get caveman_mode on)"
   caveman_phases="$(bp_config_get caveman_phases build,inspect)"
+  local reviewer_backend reviewer_mode reviewer_model reviewer_effort
+  reviewer_backend="$(bp_config_get reviewer_backend "$(_bp_config_default reviewer_backend)")"
+  reviewer_mode="$(bp_config_get reviewer_mode "$(_bp_config_default reviewer_mode)")"
+  reviewer_model="$(bp_config_get reviewer_model "")"
+  reviewer_effort="$(bp_config_get reviewer_effort "")"
 
   cat <<EOF
 bp_model_preset=${preset}
@@ -407,6 +431,10 @@ bp_model_preset_source_path=${preset_source_path}
 reasoning_model=${reasoning}
 execution_model=${execution}
 exploration_model=${exploration}
+reviewer_backend=${reviewer_backend}
+reviewer_mode=${reviewer_mode}
+reviewer_model=${reviewer_model}
+reviewer_effort=${reviewer_effort}
 caveman_mode=${caveman_mode}
 caveman_phases=${caveman_phases}
 project_config=$(bp_project_config_path)

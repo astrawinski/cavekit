@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# codex-design-challenge.sh — Design Challenge: Codex adversarial cavekit review
+# codex-design-challenge.sh — Design Challenge: reviewer-backed adversarial cavekit review
 # T-301: Design challenge prompt template
 # T-302: Challenge output parser
 #
@@ -10,14 +10,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Source dependencies
-if [[ -f "$SCRIPT_DIR/codex-detect.sh" ]]; then
-  source "$SCRIPT_DIR/codex-detect.sh"
+if [[ -f "$SCRIPT_DIR/reviewer-detect.sh" ]]; then
+  source "$SCRIPT_DIR/reviewer-detect.sh"
 else
-  codex_available=false
+  reviewer_available=false
 fi
 
-if [[ -f "$SCRIPT_DIR/codex-config.sh" ]]; then
-  source "$SCRIPT_DIR/codex-config.sh"
+if [[ -f "$SCRIPT_DIR/reviewer-config.sh" ]]; then
+  source "$SCRIPT_DIR/reviewer-config.sh"
 else
   bp_config_get() { echo "${2:-}"; }
 fi
@@ -111,8 +111,8 @@ PROMPT
 
 # ── T-302: Challenge Output Parser ────────────────────────────────────
 
-# Parse Codex design challenge output into structured findings.
-# Input: raw Codex output (stdin or $1)
+# Parse reviewer design challenge output into structured findings.
+# Input: raw reviewer output (stdin or $1)
 # Output: structured findings, one per line:
 #   CATEGORY|SEVERITY|CAVEKIT|REQUIREMENT|DESCRIPTION
 #
@@ -173,7 +173,7 @@ bp_parse_challenge_findings() {
 }
 
 # ── bp_design_challenge ───────────────────────────────────────────────
-# Main entry point: send kits to Codex for design challenge.
+# Main entry point: send kits to configured reviewer for design challenge.
 #
 # Arguments:
 #   --kits-dir <path>  Directory containing kits (default: context/kits/)
@@ -181,7 +181,7 @@ bp_parse_challenge_findings() {
 # Returns:
 #   0 — no critical issues (clean or advisory-only)
 #   1 — critical issues found (findings printed to stdout)
-#   2 — Codex unavailable or invocation failed (graceful skip)
+#   2 — reviewer unavailable or invocation failed (graceful skip)
 
 bp_design_challenge() {
   local kits_dir="${PROJECT_ROOT}/context/kits"
@@ -195,15 +195,15 @@ bp_design_challenge() {
   done
 
   # Check availability
-  if [[ "$codex_available" != "true" ]]; then
-    echo "[ck:design-challenge] Codex unavailable — skipping design challenge."
+  if [[ "$reviewer_available" != "true" ]]; then
+    echo "[ck:design-challenge] Reviewer unavailable — skipping design challenge."
     return 2
   fi
 
   local review_mode
-  review_mode="$(bp_config_get codex_review auto)"
+  review_mode="$(bp_reviewer_mode)"
   if [[ "$review_mode" == "off" ]]; then
-    echo "[ck:design-challenge] Codex review disabled (codex_review=off). Skipping."
+    echo "[ck:design-challenge] Reviewer disabled (reviewer_mode=off). Skipping."
     return 2
   fi
 
@@ -227,31 +227,49 @@ bp_design_challenge() {
     return 2
   fi
 
-  echo "[ck:design-challenge] Sending $file_count cavekit(s) to Codex for design challenge..."
+  local reviewer_name backend model
+  backend="$(bp_reviewer_backend)"
+  reviewer_name="$([[ "$backend" == "claude" ]] && echo Claude || echo Codex)"
+  echo "[ck:design-challenge] Sending $file_count cavekit(s) to ${reviewer_name} for design challenge..."
 
   # Build the full prompt
   local full_prompt
   full_prompt="$(_bp_design_challenge_prompt)${cavekit_content}"
 
-  # Build Codex invocation
-  local model
-  model="$(bp_config_get codex_model o4-mini)"
+  model="$(bp_reviewer_model)"
   local start_time
   start_time="$(date +%s)"
 
-  local codex_cmd=(codex --approval-mode full-auto --model "$model" --quiet -p "$full_prompt")
-
-  if [[ "${BP_CODEX_DRY_RUN:-}" == "1" ]]; then
-    echo "[ck:design-challenge] DRY RUN — would send $file_count kits to Codex"
+  if [[ "${BP_CODEX_DRY_RUN:-}" == "1" || "${BP_REVIEWER_DRY_RUN:-}" == "1" ]]; then
+    echo "[ck:design-challenge] DRY RUN — would send $file_count kits to ${reviewer_name}"
     return 0
   fi
 
   local raw_output
-  raw_output="$(echo "" | "${codex_cmd[@]}" 2>&1)" || {
-    echo "[ck:design-challenge] Codex invocation failed. Skipping design challenge."
-    echo "[ck:design-challenge] Error: ${raw_output:0:500}"
-    return 2
-  }
+  case "$backend" in
+    claude)
+      local claude_cmd=(claude -p "$full_prompt")
+      [[ -n "$model" ]] && claude_cmd+=(--model "$model")
+      raw_output="$("${claude_cmd[@]}" 2>&1)" || {
+        echo "[ck:design-challenge] ${reviewer_name} invocation failed. Skipping design challenge."
+        echo "[ck:design-challenge] Error: ${raw_output:0:500}"
+        return 2
+      }
+      ;;
+    codex)
+      local codex_cmd=(codex --approval-mode full-auto --quiet -p "$full_prompt")
+      [[ -n "$model" ]] && codex_cmd+=(--model "$model")
+      raw_output="$(echo "" | "${codex_cmd[@]}" 2>&1)" || {
+        echo "[ck:design-challenge] ${reviewer_name} invocation failed. Skipping design challenge."
+        echo "[ck:design-challenge] Error: ${raw_output:0:500}"
+        return 2
+      }
+      ;;
+    *)
+      echo "[ck:design-challenge] Unsupported reviewer backend: $backend" >&2
+      return 2
+      ;;
+  esac
 
   local end_time duration
   end_time="$(date +%s)"
@@ -262,7 +280,7 @@ bp_design_challenge() {
   findings="$(bp_parse_challenge_findings "$raw_output")"
 
   if [[ -z "$findings" ]]; then
-    echo "[ck:design-challenge] Codex found no design issues. Clean review. (${duration}s)"
+    echo "[ck:design-challenge] ${reviewer_name} found no design issues. Clean review. (${duration}s)"
     return 0
   fi
 
@@ -317,13 +335,13 @@ bp_collect_challenge_findings() {
 
 bp_format_advisory_for_user() {
   if [[ -z "$_BP_CHALLENGE_ADVISORY_FINDINGS" ]]; then
-    echo "No advisory findings from Codex design challenge."
+    echo "No advisory findings from reviewer design challenge."
     return 0
   fi
 
-  echo "### Codex Design Challenge — Advisory Findings"
+  echo "### Reviewer Design Challenge — Advisory Findings"
   echo ""
-  echo "These findings are informational — Codex flagged them as worth considering but not blocking."
+  echo "These findings are informational — the reviewer flagged them as worth considering but not blocking."
   echo ""
   echo "| Category | Cavekit | Requirement | Finding |"
   echo "|----------|-----------|-------------|---------|"
@@ -376,7 +394,7 @@ EOF
 # Returns:
 #   0 — no critical issues remain
 #   1 — critical issues remain after max cycles (advisory + remaining criticals printed)
-#   2 — Codex unavailable (skip)
+#   2 — reviewer unavailable (skip)
 #
 # The caller (draft flow) is responsible for implementing fixes between cycles.
 # This function outputs AWAITING_FIXES when fixes are needed, along with the
@@ -413,7 +431,7 @@ bp_design_challenge_cycle() {
         return 0
         ;;
       2)
-        # Codex unavailable
+        # Reviewer unavailable
         return 2
         ;;
       1)
@@ -495,7 +513,7 @@ bp_design_challenge_cycle() {
 # Returns:
 #   0 — challenge passed (clean or advisory-only), proceed to user gate
 #   1 — critical issues remain after auto-fix, user must decide
-#   2 — skipped (Codex unavailable), proceed to user gate without challenge
+#   2 — skipped (reviewer unavailable), proceed to user gate without challenge
 
 bp_draft_challenge_hook() {
   local kits_dir="${PROJECT_ROOT}/context/kits"
@@ -513,7 +531,7 @@ bp_draft_challenge_hook() {
   local start_time
   start_time="$(date +%s)"
 
-  echo "[ck:sketch] Running Codex design challenge..."
+  echo "[ck:sketch] Running reviewer design challenge..."
 
   local result
   result="$(bp_design_challenge_cycle --kits-dir "$kits_dir" 2>&1)"
@@ -533,7 +551,7 @@ bp_draft_challenge_hook() {
       return 0
       ;;
     2)
-      echo "[ck:sketch] Design challenge skipped — Codex unavailable (${BP_CHALLENGE_DURATION}s)."
+      echo "[ck:sketch] Design challenge skipped — reviewer unavailable (${BP_CHALLENGE_DURATION}s)."
       return 2
       ;;
     *)

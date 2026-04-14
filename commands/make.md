@@ -137,24 +137,24 @@ Once the setup script completes (outputs the ralph prompt), you run the executio
      ```
      The log stays searchable but uses a fraction of the context window. Field names (Task, Status, Files, Validation, Next) can be abbreviated. If `CAVEMAN_ACTIVE` is false, use the standard verbose format.
 
-6. **Tier boundary check** — after updating impl tracking, check whether all tasks in the current tier are now done. If the current tier still has undone tasks, skip this step. If the tier is complete, run the Codex tier gate review (the `TIER_START_REF` was captured in step 1 at the start of this tier):
+6. **Tier boundary check** — after updating impl tracking, check whether all tasks in the current tier are now done. If the current tier still has undone tasks, skip this step. If the tier is complete, run the reviewer tier gate review (the `TIER_START_REF` was captured in step 1 at the start of this tier):
 
-   a. Source `codex-config.sh` and check `tier_gate_mode` via `bp_config_get tier_gate_mode`. If the value is `"off"`, skip the review and log:
+   a. Source `reviewer-config.sh` and check `tier_gate_mode` via `bp_config_get tier_gate_mode`. If the value is `"off"`, skip the review and log:
       ```
       [ck:tier-gate] Tier gate review disabled (tier_gate_mode=off). Skipping.
       ```
 
-   b. Source `codex-detect.sh` and check `codex_available`. If `false`, log a note and continue:
+   b. Source `reviewer-detect.sh` and check `reviewer_available`. If `false`, log a note and continue:
       ```
-      [ck:tier-gate] Codex unavailable — skipping tier boundary review. Continuing to next tier.
+      [ck:tier-gate] Reviewer unavailable — skipping tier boundary review. Continuing to next tier.
       ```
 
    c. Otherwise, run the review inline (wait for it to complete before advancing):
       ```
-      scripts/codex-review.sh --base $TIER_START_REF
+      scripts/reviewer-review.sh --base $TIER_START_REF
       ```
 
-   d. **Severity-based gating** — after the review, source `scripts/codex-gate.sh` and run `bp_tier_gate`:
+   d. **Severity-based gating** — after the review, source `scripts/reviewer-gate.sh` and run `bp_tier_gate`:
       - If `GATE_RESULT=proceed`: log the tier review summary and advance.
       - If `GATE_RESULT=blocked`: the tier has P0/P1 findings (or all findings in `strict` mode) that must be fixed before advancing.
 
@@ -167,7 +167,7 @@ Once the setup script completes (outputs the ralph prompt), you run the executio
       - If the function returns 0, all blocking findings are resolved — advance normally
 
    ```
-   ═══ Tier {N} Complete — Codex Review ═══
+   ═══ Tier {N} Complete — Reviewer Review ═══
    Review: {CLEAN | N findings (M blocking, K deferred)}
    Gate: {PROCEED | BLOCKED → fix cycle {1|2}}
    ```

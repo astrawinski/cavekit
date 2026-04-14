@@ -2,7 +2,7 @@
 
 # Cavekit Build Setup Script
 # Archives old cycle, reads build site, starts Ralph Loop.
-# Optionally configures Codex MCP for peer review.
+# Optionally enables adversarial peer review via the configured reviewer backend.
 
 set -euo pipefail
 
@@ -19,7 +19,7 @@ FILTER=""
 PEER_REVIEW=false
 MAX_ITERATIONS=20
 COMPLETION_PROMISE="CAVEKIT COMPLETE"
-CODEX_MODEL="gpt-5.4"
+REVIEWER_MODEL_OVERRIDE=""
 REVIEW_INTERVAL=2
 EXPLICIT_FILE=""
 
@@ -38,8 +38,9 @@ ARGUMENTS:
 
 OPTIONS:
   --filter <pattern>             Scope to kits/build site matching pattern
-  --peer-review                  Add Codex (GPT-5.4) peer review
-  --codex-model <model>          Codex model (default: gpt-5.4)
+  --peer-review                  Add adversarial peer review
+  --reviewer-model <model>       Override reviewer model for this run
+  --codex-model <model>          Legacy alias for --reviewer-model
   --review-interval <n>          Review every Nth iteration (default: 2)
   --max-iterations <n>           Max iterations (default: 20)
   --completion-promise '<text>'  Completion phrase (default: "CAVEKIT COMPLETE")
@@ -63,9 +64,9 @@ HELP_EOF
       PEER_REVIEW=true
       shift
       ;;
-    --codex-model)
-      [[ -z "${2:-}" ]] && { echo "❌ --codex-model requires a model name" >&2; exit 1; }
-      CODEX_MODEL="$2"
+    --reviewer-model|--codex-model)
+      [[ -z "${2:-}" ]] && { echo "❌ $1 requires a model name" >&2; exit 1; }
+      REVIEWER_MODEL_OVERRIDE="$2"
       shift 2
       ;;
     --review-interval)
@@ -331,64 +332,28 @@ for f in "${SPEC_FILES[@]+"${SPEC_FILES[@]}"}"; do
   SPEC_LISTING="${SPEC_LISTING}\n- \`$f\`"
 done
 
-# ─── Configure Codex peer review ────────────────────────────────────────────
-# Primary path: Codex CLI delegation via codex-review.sh (no MCP overhead).
-# Legacy fallback: Codex as MCP server when CLI delegation is unavailable.
+# ─── Configure adversarial peer review ──────────────────────────────────────
 
-CODEX_CLI_REVIEW=false
+REVIEWER_CLI_REVIEW=false
+REVIEWER_LABEL="Reviewer"
 
 if [[ ""$PEER_REVIEW"" == "true" ]]; then
-  # Try primary path: source codex-review.sh for bp_codex_review function
-  if [[ -f "$SCRIPT_DIR/codex-review.sh" ]]; then
-    source "$SCRIPT_DIR/codex-review.sh"
-    if [[ "${codex_available:-false}" == "true" ]]; then
-      CODEX_CLI_REVIEW=true
-      echo "📡 Codex CLI review enabled (model: $(bp_config_get codex_model o4-mini))"
-    fi
+  if [[ -n "${REVIEWER_MODEL_OVERRIDE:-}" ]]; then
+    export BP_REVIEWER_MODEL_OVERRIDE="$REVIEWER_MODEL_OVERRIDE"
   fi
-
-  # Legacy fallback: configure Codex as MCP server
-  if [[ "$CODEX_CLI_REVIEW" == "false" ]]; then
-    MCP_FILE=".mcp.json"
-    NEEDS_MCP=false
-
-    if [[ ! -f "$MCP_FILE" ]]; then
-      NEEDS_MCP=true
-    elif ! python3 -c "
-import json, sys
-with open('$MCP_FILE') as f:
-    d = json.load(f)
-sys.exit(0 if 'codex-reviewer' in d.get('mcpServers', {}) else 1)
-" 2>/dev/null; then
-      NEEDS_MCP=true
-    fi
-
-    if [[ "$NEEDS_MCP" == "true" ]]; then
-      if ! command -v codex &>/dev/null; then
-        echo "❌ Codex CLI not found. Install: npm install -g @openai/codex" >&2
-        exit 1
-      fi
-      if [[ -f "$MCP_FILE" ]]; then
-        python3 -c "
-import json
-with open('$MCP_FILE') as f:
-    d = json.load(f)
-d.setdefault('mcpServers', {})['codex-reviewer'] = {
-    'command': 'codex',
-    'args': ['mcp-server', '-c', 'model=\"$CODEX_MODEL\"']
-}
-with open('$MCP_FILE', 'w') as f:
-    json.dump(d, f, indent=2)
-"
+  if [[ -f "$SCRIPT_DIR/reviewer-review.sh" ]]; then
+    source "$SCRIPT_DIR/reviewer-review.sh"
+    REVIEWER_LABEL="$(_reviewer_cli_label)"
+    if [[ "${reviewer_available:-false}" == "true" ]]; then
+      REVIEWER_CLI_REVIEW=true
+      local_reviewer_model="$(bp_reviewer_model)"
+      if [[ -n "$local_reviewer_model" ]]; then
+        echo "📡 ${REVIEWER_LABEL} review enabled (model: ${local_reviewer_model})"
       else
-        python3 -c "
-import json
-d = {'mcpServers': {'codex-reviewer': {'command': 'codex', 'args': ['mcp-server', '-c', 'model=\"$CODEX_MODEL\"']}}}
-with open('$MCP_FILE', 'w') as f:
-    json.dump(d, f, indent=2)
-"
+        echo "📡 ${REVIEWER_LABEL} review enabled"
       fi
-      echo "📡 Configured Codex ($CODEX_MODEL) as MCP peer reviewer (legacy fallback)"
+    else
+      echo "⚠ ${REVIEWER_LABEL} review requested but reviewer is unavailable. Build will proceed without peer review."
     fi
   fi
 fi
@@ -397,18 +362,18 @@ fi
 
 PEER_REVIEW_SECTION=""
 if [[ ""$PEER_REVIEW"" == "true" ]]; then
-  if [[ "$CODEX_CLI_REVIEW" == "true" ]]; then
+  if [[ "$REVIEWER_CLI_REVIEW" == "true" ]]; then
     PEER_REVIEW_SECTION="
 ## Peer Review (every ${REVIEW_INTERVAL}th iteration)
 
 Check the iteration number from the Ralph system message.
 If iteration % $REVIEW_INTERVAL == 0, this is a REVIEW iteration:
 
-1. Run the Codex CLI review:
+1. Run the reviewer CLI pass:
    \`\`\`bash
-   source scripts/codex-review.sh && bp_codex_review --base main
+   source scripts/reviewer-review.sh && bp_reviewer_review --base main
    \`\`\`
-   This sends the diff to Codex for adversarial review and writes parsed findings
+   This sends the diff to the configured reviewer for adversarial review and writes parsed findings
    to \`context/impl/impl-review-findings.md\` automatically.
 
 2. Read the findings output and fix all P0 (critical) and P1 (high) findings immediately
@@ -417,26 +382,10 @@ If iteration % $REVIEW_INTERVAL == 0, this is a REVIEW iteration:
 Completion requires: no P0/P1 findings remain unfixed."
   else
     PEER_REVIEW_SECTION="
-## Peer Review (every ${REVIEW_INTERVAL}th iteration) — MCP Legacy
+## Peer Review (requested, but reviewer unavailable)
 
-Check the iteration number from the Ralph system message.
-If iteration % $REVIEW_INTERVAL == 0, this is a REVIEW iteration:
-
-1. Run \`git diff main...HEAD\` to get all changes
-2. Call the \`codex-reviewer\` MCP server with this prompt:
-
-   > You are a senior engineer performing peer review code review.
-   > Your job is to find what the builder MISSED — not to agree.
-   > SPEC REQUIREMENTS: [include relevant spec content]
-   > CODE CHANGES: [include diff]
-   > For each issue: Severity (CRITICAL/HIGH/MEDIUM/LOW), File, Issue, Suggestion.
-   > If you find zero issues, explain what you checked and why it's correct.
-
-3. Write findings to \`context/impl/peer-review-findings.md\`
-4. Fix all CRITICAL and HIGH findings immediately
-5. Mark fixed findings as FIXED
-
-Completion requires: no CRITICAL/HIGH findings remain unfixed."
+Peer review was requested, but the configured reviewer backend is not available in this environment.
+Continue the build loop without external adversarial review."
   fi
 fi
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# codex-config.sh — Backward-compatible wrapper around scripts/bp-config.sh
+# codex-config.sh — backward-compatible wrapper around scripts/bp-config.sh
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/bp-config.sh"
