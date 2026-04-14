@@ -32,6 +32,20 @@ def transform(text: str) -> str:
     text = text.replace("slash command", "Codex skill")
     text = text.replace("slash commands", "Codex skills")
     text = text.replace("Use this command", "Use this skill")
+    text = text.replace("CLAUDE.md hierarchy", "AGENTS.md hierarchy")
+    text = text.replace("Source-Tree CLAUDE.md Updates", "Source-Tree AGENTS.md Updates")
+    text = text.replace("Read README, CLAUDE.md if present", "Read README, AGENTS.md if present")
+    text = text.replace("Read project docs, README, CLAUDE.md if present", "Read project docs, README, AGENTS.md if present")
+    text = text.replace("context CLAUDE.md", "context AGENTS.md")
+    text = text.replace("source-tree CLAUDE.md", "source-tree AGENTS.md")
+    text = text.replace("CLAUDE.md files", "AGENTS.md files")
+    text = text.replace("CLAUDE.md file", "AGENTS.md file")
+    text = text.replace("CLAUDE.md", "AGENTS.md")
+    text = text.replace("Claude Code auto-cleans worktrees with no changes", "the runtime may auto-clean worktrees with no changes")
+    text = text.replace("calling Codex via MCP.", "calling Codex through the configured review path.")
+    text = text.replace(".claude/ralph-loop.local.md", ".codex/ralph-loop.local.md")
+    text = text.replace("Think of it as AGENTS.md for visual design.", "Think of it as the AGENTS.md equivalent for visual design.")
+    text = re.sub(r"\ba AGENTS\.md\b", "an AGENTS.md", text)
     return text
 
 def strip_frontmatter(text: str) -> str:

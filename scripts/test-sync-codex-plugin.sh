@@ -42,6 +42,7 @@ assert "Cavekit Command Adapter" in wrapper
 assert f"Canonical source: `{(repo / 'commands' / 'sketch.md').as_posix()}`" in wrapper
 assert "Treat `${CLAUDE_PLUGIN_ROOT}` as the local Cavekit plugin root" in wrapper
 assert "Treat `$ARGUMENTS` as the user's extra text or flags" in wrapper
+assert "Treat upstream references to `CLAUDE.md` files or hierarchies as `AGENTS.md` files or hierarchies in this fork." in wrapper
 PY
 
 echo '[test-sync-codex-plugin] Codex sync wiring looks good'

@@ -124,7 +124,7 @@ Once the setup script completes (outputs the ralph prompt), you run the executio
      1. `git merge <branch> --no-edit` — merge the subagent's branch
      2. `git worktree remove <worktree-path>` — remove the worktree directory (required before branch can be deleted)
      3. `git branch -D <branch>` — delete the branch
-     Skip all three steps if the subagent reported no changes (Claude Code auto-cleans worktrees with no changes). If a merge conflicts, clean up the worktree (`git worktree remove <worktree-path> --force`) before reporting the conflict.
+     Skip all three steps if the subagent reported no changes (the runtime may auto-clean worktrees with no changes). If a merge conflicts, clean up the worktree (`git worktree remove <worktree-path> --force`) before reporting the conflict.
    - Update `context/impl/impl-*.md` with status for each completed task
    - Record any dead ends in `context/impl/dead-ends.md`
    - Update `context/impl/loop-log.md` with an iteration entry. **If `CAVEMAN_ACTIVE` is true**, compress the loop-log entry to a dense one-liner per task using caveman-speak. Instead of verbose iteration summaries, write compact entries like:
@@ -183,7 +183,7 @@ Tasks completed: {done}/{total}
 
 ### Post-Build: Cavekit Verification
 
-Before updating CLAUDE.md, verify that the build actually satisfies the kits:
+Before updating AGENTS.md, verify that the build actually satisfies the kits:
 
 1. Read all cavekit files and the build site's Coverage Matrix (if present)
 2. For each cavekit requirement and its acceptance criteria, cross-reference against impl tracking:
@@ -200,16 +200,16 @@ Before updating CLAUDE.md, verify that the build actually satisfies the kits:
    - Log each gap with its cavekit reference
    - Add the gaps as new tasks to the build site (append to the highest tier + 1)
    - Report: `{n} gap(s) found — {n} remediation tasks added to build site. Run $ck-make again to address.`
-5. If no gaps: proceed to CLAUDE.md hierarchy update
+5. If no gaps: proceed to AGENTS.md hierarchy update
 
-### Post-Build: Update CLAUDE.md Hierarchy
+### Post-Build: Update AGENTS.md Hierarchy
 
 After BUILD COMPLETE and before the completion promise, update the context hierarchy:
 
 1. **Read the build site** to get task-to-cavekit-requirement mappings
 2. **Read `git diff --name-only` against the pre-build ref** to identify which source files were created/modified during the build
 3. **For each source directory that was touched** (e.g., `src/auth/`, `src/api/`):
-   - If no `CLAUDE.md` exists in that directory: create one with cavekit/plan references derived from the tasks that touched those files:
+   - If no `AGENTS.md` exists in that directory: create one with cavekit/plan references derived from the tasks that touched those files:
      ```markdown
      # {Module Name}
 
@@ -218,15 +218,15 @@ After BUILD COMPLETE and before the completion promise, update the context hiera
 
      Build tasks: T-{ids} (build-site.md)
      ```
-   - If `CLAUDE.md` already exists: append any new cavekit references not already listed (never remove existing content)
-   - For UI component directories: if `DESIGN.md` exists at project root, include `Visual design: follows DESIGN.md Section {N} ({section name})` in the CLAUDE.md
+   - If `AGENTS.md` already exists: append any new cavekit references not already listed (never remove existing content)
+   - For UI component directories: if `DESIGN.md` exists at project root, include `Visual design: follows DESIGN.md Section {N} ({section name})` in the AGENTS.md
 4. **Update `context/impl/impl-overview.md`** with current domain statuses (tasks done/total per domain)
 5. **Update `context/plans/plan-overview.md`** (or `context/sites/` equivalent if legacy) with build site completion status
 
 **Constraints:**
 - Only write mappings you are certain about — tasks you completed and files you created
-- Never remove existing content from a CLAUDE.md
-- Source-tree CLAUDE.md files are kept minimal (references only, no duplicated content)
+- Never remove existing content from an AGENTS.md
+- Source-tree AGENTS.md files are kept minimal (references only, no duplicated content)
 
 Then output the completion promise from the ralph prompt.
 

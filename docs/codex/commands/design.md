@@ -8,7 +8,7 @@ _Generated from `commands/design.md`. Upstream command docs are canonical; this 
 
 Create, import, update, or audit the project's visual design system document. DESIGN.md follows the 9-section Google Stitch format and serves as the authoritative visual reference for all UI-building agents across the Hunt pipeline.
 
-**DESIGN.md is a parallel constraint layer** — it is not a cavekit or a plan, but a cross-cutting visual specification that every phase consults. Think of it as CLAUDE.md for visual design.
+**DESIGN.md is a parallel constraint layer** — it is not a cavekit or a plan, but a cross-cutting visual specification that every phase consults. Think of it as the AGENTS.md equivalent for visual design.
 
 ## Step 0: Resolve Execution Profile
 
@@ -218,7 +218,7 @@ Wait for response. If changes requested, make them and re-run Step 5.
 ## Step 7: Finalize and Report
 
 1. **Ensure context directory:** Create `context/designs/` if missing
-2. **Write context CLAUDE.md** (if missing):
+2. **Write context AGENTS.md** (if missing):
    ```markdown
    # Design System
 

@@ -42,7 +42,7 @@ Create these if missing (no separate init needed):
 Before asking ANY questions, understand what already exists:
 
 1. Check for existing `context/kits/` — are there prior kits?
-2. Read project docs, README, CLAUDE.md if present
+2. Read project docs, README, AGENTS.md if present
 3. Check recent git commits to understand current momentum
 4. Scan the codebase structure (directory layout, key files)
 5. Check `context/refs/` for reference materials already provided

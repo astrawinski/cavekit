@@ -52,7 +52,7 @@ Create if missing: `context/kits/`, `context/plans/`, `context/impl/`, `context/
 
 Silently gather context (do NOT present findings to user):
 1. Check for existing kits in `context/kits/`
-2. Read README, CLAUDE.md if present
+2. Read README, AGENTS.md if present
 3. Scan codebase structure (directory layout, key files, package.json/Cargo.toml/etc.)
 4. Check recent git commits (`git log --oneline -10`)
 5. Check for `DESIGN.md` at project root — if present, it constrains UI decisions

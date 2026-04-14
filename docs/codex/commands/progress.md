@@ -72,7 +72,7 @@ For each task in the site:
 ### Loop Status
 - Iterations completed: {n}
 - Last iteration: {timestamp}
-- Active: {yes/no — .claude/ralph-loop.local.md exists?}
+- Active: {yes/no — .codex/ralph-loop.local.md exists?}
 ```
 
 Display this to the user.

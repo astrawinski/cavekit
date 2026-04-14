@@ -46,13 +46,13 @@ For each commit classified as a manual fix, determine:
 
 ## Step 3: Map Changes to Cavekit Requirements
 
-For each manual fix, identify which cavekit requirements are affected using the CLAUDE.md hierarchy as the primary traversal path:
+For each manual fix, identify which cavekit requirements are affected using the AGENTS.md hierarchy as the primary traversal path:
 
-1. **Check source-tree CLAUDE.md files first** — for each changed file, read the nearest `CLAUDE.md` in its directory (or parent directories). These files contain direct cavekit references like "implements cavekit-auth.md R2". This is the fastest path to the affected requirements.
+1. **Check source-tree AGENTS.md files first** — for each changed file, read the nearest `AGENTS.md` in its directory (or parent directories). These files contain direct cavekit references like "implements cavekit-auth.md R2". This is the fastest path to the affected requirements.
 2. **Read all kits** in `context/kits/` to build a requirement index (cavekit file → R-numbers → descriptions)
 3. **Read the build site** in `context/plans/` (or `context/sites/` for legacy projects) to map tasks → requirements → kits
 4. **Match changed files** to tasks in the build site (check task titles, impl tracking files, and git blame for task-ID references in commit messages)
-5. **Identify affected requirements** by tracing: changed file → CLAUDE.md → cavekit requirement → cavekit
+5. **Identify affected requirements** by tracing: changed file → AGENTS.md → cavekit requirement → cavekit
 
 For CSS/styling/UI component changes, also check `DESIGN.md` at project root. If the fix changes colors, typography, spacing, or component appearance, trace to the relevant DESIGN.md section.
 
@@ -69,7 +69,7 @@ For each affected requirement, record:
 ## Step 3b: Discover Governing Plan Files
 
 For each changed source file, determine which plan file governs it:
-- First check the directory's `CLAUDE.md` for build task references (e.g., "Build tasks: T-004, T-005")
+- First check the directory's `AGENTS.md` for build task references (e.g., "Build tasks: T-004, T-005")
 - Search `context/plans/` (or `context/sites/` for legacy projects) for plan files that reference the changed paths
 - If no plan covers the file, flag it as an **untracked file** (potential cavekit gap)
 
@@ -100,9 +100,9 @@ Changelog rules:
 - If the plan had incorrect sequencing, fix the dependency graph
 - Update plan-known-issues.md if the fix reveals a systemic issue
 
-### Source-Tree CLAUDE.md Updates
-- If the fix affects a module whose `CLAUDE.md` doesn't reference the relevant cavekit requirement, add the reference
-- If a new source directory was created, create a `CLAUDE.md` with the appropriate cavekit references
+### Source-Tree AGENTS.md Updates
+- If the fix affects a module whose `AGENTS.md` doesn't reference the relevant cavekit requirement, add the reference
+- If a new source directory was created, create a `AGENTS.md` with the appropriate cavekit references
 
 ### DESIGN.md Updates (project root)
 
@@ -177,7 +177,7 @@ Generate a summary report:
 - DESIGN.md: {list of design system updates, or "no visual changes"}
 - plans: {list of updated plan files}
 - impl: {list of updated impl files}
-- CLAUDE.md: {list of source-tree CLAUDE.md files created or updated}
+- AGENTS.md: {list of source-tree AGENTS.md files created or updated}
 
 ### Test Results
 - Pass: {count}

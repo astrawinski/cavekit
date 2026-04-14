@@ -54,7 +54,7 @@ Precedence: `.cavekit/config` overrides `~/.cavekit/config`, which overrides the
 ### `$ck-init` — Bootstrap Context Hierarchy
 
 ```bash
-$ck-init                         # create all context dirs, CLAUDE.md files, index files
+$ck-init                         # create all context dirs, AGENTS.md files, index files
 ```
 
 Creates the full context hierarchy for a Cavekit project. Idempotent — only creates what's missing. Detects legacy `context/sites/` layout and offers migration to `context/plans/`.
@@ -118,7 +118,7 @@ $ck-make --peer-review --codex-model gpt-5.4-mini
 
 Auto-archives any previous cycle, then builds the site. Automatically parallelizes by grouping ready tasks into a few coherent work packets based on shared files, subsystem, and complexity. Progresses through tiers autonomously without manual intervention. If multiple build sites exist, asks which one to implement.
 
-With `--peer-review`: alternates build and review iterations, calling Codex via MCP.
+With `--peer-review`: alternates build and review iterations, calling Codex through the configured review path.
 
 ### `$ck-check` — Post-Loop Inspection
 

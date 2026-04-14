@@ -22,7 +22,7 @@ Detect top-level directories that contain source code or other project artifacts
 - `scripts/` (utility scripts)
 - Any other directories that contain code files (`.ts`, `.js`, `.py`, `.go`, `.rs`, `.java`, etc.)
 
-Record which directories exist — you'll create CLAUDE.md files for them in Step 3.
+Record which directories exist — you'll create AGENTS.md files for them in Step 3.
 
 ## Step 2: Create Context Directories
 
@@ -35,11 +35,11 @@ Create these directories if they don't exist:
 - `context/impl/`
 - `context/impl/archive/`
 
-## Step 3: Create CLAUDE.md Files
+## Step 3: Create AGENTS.md Files
 
 Create each file below **only if it does not already exist**. Never overwrite.
 
-### `context/CLAUDE.md`
+### `context/AGENTS.md`
 
 ```markdown
 # Context Hierarchy
@@ -59,7 +59,7 @@ Only load domain-specific files when the overview points you there.
 For UI work, always read DESIGN.md at the project root first.
 ```
 
-### `context/refs/CLAUDE.md`
+### `context/refs/AGENTS.md`
 
 ```markdown
 # Reference Materials
@@ -72,7 +72,7 @@ Source of truth that kits are derived from. Read-only.
 - Kits reference specific files and sections via file:line
 ```
 
-### `context/kits/CLAUDE.md`
+### `context/kits/AGENTS.md`
 
 ```markdown
 # Kits
@@ -88,7 +88,7 @@ Kits define WHAT needs implementing. They are implementation-agnostic.
 - Decompose into subdirectories when a domain covers multiple independent concerns
 ```
 
-### `context/plans/CLAUDE.md`
+### `context/plans/AGENTS.md`
 
 ```markdown
 # Plans
@@ -103,7 +103,7 @@ Plans define HOW to implement kits. They contain task dependency graphs.
 - build-site-{feature}.md for feature-specific sites
 ```
 
-### `context/impl/CLAUDE.md`
+### `context/impl/AGENTS.md`
 
 ```markdown
 # Implementation Tracking
@@ -118,7 +118,7 @@ Impls record what was built, what is pending, what failed.
 - Update after every implementation session
 ```
 
-### `context/designs/CLAUDE.md`
+### `context/designs/AGENTS.md`
 
 ```markdown
 # Design System
@@ -133,11 +133,11 @@ The project's visual design system in DESIGN.md format (9-section Google Stitch)
 - design-changelog.md tracks all design system changes
 ```
 
-### Source-tree CLAUDE.md files
+### Source-tree AGENTS.md files
 
-For each detected source directory from Step 1 (e.g., `src/`, `tests/`, `scripts/`), create a minimal CLAUDE.md **only if one does not already exist**:
+For each detected source directory from Step 1 (e.g., `src/`, `tests/`, `scripts/`), create a minimal AGENTS.md **only if one does not already exist**:
 
-**`src/CLAUDE.md`** (or equivalent source directory):
+**`src/AGENTS.md`** (or equivalent source directory):
 ```markdown
 # Source Code
 
@@ -145,7 +145,7 @@ See context/kits/ for requirements this code implements.
 See context/plans/ for task dependency graphs.
 ```
 
-**`tests/CLAUDE.md`** (or equivalent test directory):
+**`tests/AGENTS.md`** (or equivalent test directory):
 ```markdown
 # Tests
 
@@ -153,7 +153,7 @@ Test conventions for this project.
 See context/impl/ for test health tracking.
 ```
 
-**`scripts/CLAUDE.md`** (if scripts/ exists):
+**`scripts/AGENTS.md`** (if scripts/ exists):
 ```markdown
 # Scripts
 
@@ -253,8 +253,8 @@ Report what was created:
 ### Directories Created
 - {list of new directories}
 
-### CLAUDE.md Files Created
-- {list of new CLAUDE.md files}
+### AGENTS.md Files Created
+- {list of new AGENTS.md files}
 
 ### Index Files Created
 - {list of new index files}
