@@ -38,8 +38,10 @@ assert (home / ".codex" / "skills" / "ck-methodology").resolve() == (repo / "ski
 
 wrapper = (home / ".codex" / "skills" / "ck-sketch" / "SKILL.md").read_text()
 assert "name: ck-sketch" in wrapper
-assert "Cavekit Command Wrapper" in wrapper
-assert "This is the first phase of Cavekit." in wrapper
+assert "Cavekit Command Adapter" in wrapper
+assert f"Canonical source: `{(repo / 'commands' / 'sketch.md').as_posix()}`" in wrapper
+assert "Treat `${CLAUDE_PLUGIN_ROOT}` as the local Cavekit plugin root" in wrapper
+assert "Treat `$ARGUMENTS` as the user's extra text or flags" in wrapper
 PY
 
 echo '[test-sync-codex-plugin] Codex sync wiring looks good'
