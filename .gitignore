@@ -3,5 +3,8 @@
 .DS_Store
 /.superpowers
 /docs
+!/docs/
+!/docs/codex/
+!/docs/codex/**
 /.playwright-mcp
 current-site-full.png

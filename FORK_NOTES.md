@@ -21,6 +21,9 @@ closely as possible while adapting the runtime surface for Codex CLI.
   - exposes upstream `skills/` under `~/.codex/skills/ck-*`
   - generates thin `ck-*` command adapter skills that point back to upstream
     `commands/*.md`
+- `scripts/generate-codex-docs.sh`
+  - renders a Codex-native docs layer in `docs/codex/`
+  - rewrites command usage into `$ck-*` form for daily reading
 - `scripts/test-sync-codex-plugin.sh`
   - validates the generated Codex adapter surface
 
